@@ -1,0 +1,1 @@
+- [GitHub connector push fallback](github-connector-push-fallback.md) — preserve Git history with a temporary deploy key when connector writes or HTTPS Git auth are blocked.

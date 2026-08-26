@@ -5,6 +5,36 @@ export interface CalculationResult {
   warning?: string;
 }
 
+export const PNEUMATIC_AIR_BRAKE_GOVERNOR_PRESSURE_LIMITS = {
+  cutIn: {
+    minBar: 6.5,
+    maxBar: 7.0,
+    minKpa: 650,
+    maxKpa: 700,
+  },
+  cutOut: {
+    minBar: 8.1,
+    maxBar: 8.5,
+    minKpa: 810,
+    maxKpa: 850,
+  },
+} as const;
+
+export const HPCR_FUEL_INJECTION_TEST_WARNING =
+  'HPCR SAFETY WARNING: Fuel under pressure above 1,600 bar is a fluid-injection hazard that can penetrate skin and cause fatal injury. Never use hands or cardboard to find leaks; isolate and depressurize before opening the system.';
+
+export function getHpcrFuelInjectionTestWarning(
+  testPressureBar: number,
+): string | undefined {
+  if (!Number.isFinite(testPressureBar) || testPressureBar < 0) {
+    throw new Error('Fuel injection test pressure must be zero or greater.');
+  }
+
+  return testPressureBar > 1600
+    ? `${HPCR_FUEL_INJECTION_TEST_WARNING} Test pressure: ${testPressureBar.toFixed(0)} bar.`
+    : undefined;
+}
+
 /**
  * 1. Heavy Diesel Compression Ratio (CR)
  * Formula: CR = (Vs + Vc) / Vc

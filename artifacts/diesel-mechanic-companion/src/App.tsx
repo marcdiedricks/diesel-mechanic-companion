@@ -29,6 +29,10 @@ import { type ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { TradeCalculators } from '@/components/TradeCalculators';
+import {
+  getHpcrFuelInjectionTestWarning,
+  PNEUMATIC_AIR_BRAKE_GOVERNOR_PRESSURE_LIMITS,
+} from '@/engines/calculations/dieselMechanic';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
@@ -96,11 +100,13 @@ const copy: Record<Language, {
 };
 
 const tradeTerms = {
-  English: ['Common Rail Injector', 'Turbocharger Boost', 'Cylinder Liner Protrusion', 'Air Brake Slack Adjuster', 'Flash Point'],
+  English: ['Common Rail Injector', 'Turbocharger Boost', 'Cylinder Liner Protrusion', 'Air Brake Slack Adjuster', 'Slack Adjuster', 'Air Dryer Cartridge', 'Governor Valve', 'Injector Return Flow', 'Jake/Retarder Brake', 'Flash Point'],
   Afrikaans: ['Gemeenskaplike Spuitbuis', 'Turbo-aanjaer Druk', 'Silindervoering Uitsteeksel', 'Lugrem Slakversteller', 'Vlampunt'],
   isiXhosa: ['Isitshisi se-Common Rail', 'Uxinzelelo lwe-Turbocharger', 'Ubude be-Cylinder Liner', 'Isilungisi sebhuleki yomoya'],
   isiZulu: ['Isitshisi se-Common Rail', 'Umfutho we-Turbocharger', 'Ukuphakama kwe-Cylinder Liner', 'Isilungisi samabhuleki omoya'],
 } as const;
+
+const SMART_SEARCH_FALLBACK = 'No direct match found in offline knowledge base. Try launching the 📐 Workshop Calculators (Hydraulics, Compression, Power, Boost) or selecting a topic chip below.';
 
 const videoUnits = [
   ['01', 'Common Rail Injection & High Pressure Safety', 'https://www.youtube.com/results?search_query=common+rail+diesel+fuel+system+diagnostics+pressure+safety'],
@@ -249,9 +255,10 @@ function LinerCalculator() {
 }
 
 function AirBrakePanel() {
+  const { cutIn, cutOut } = PNEUMATIC_AIR_BRAKE_GOVERNOR_PRESSURE_LIMITS;
   const rows = [
-    ['Cut-in', '6.5 bar', '650 kPa', 'Compressor loads'],
-    ['Cut-out', '8.5 bar', '850 kPa', 'Compressor unloads'],
+    ['Cut-in', `${cutIn.minBar.toFixed(1)}–${cutIn.maxBar.toFixed(1)} bar`, `${cutIn.minKpa}–${cutIn.maxKpa} kPa`, 'Compressor loads'],
+    ['Cut-out', `${cutOut.minBar.toFixed(1)}–${cutOut.maxBar.toFixed(1)} bar`, `${cutOut.minKpa}–${cutOut.maxKpa} kPa`, 'Compressor unloads'],
     ['Low air buzzer', '4.5 bar', '450 kPa', 'Stop and investigate'],
   ];
   return (
@@ -270,6 +277,7 @@ function AirBrakePanel() {
 }
 
 function InjectorPanel() {
+  const hpcrSafetyWarning = getHpcrFuelInjectionTestWarning(2000);
   const rows = [
     ['Bosch CRD', '≤ 30 ml / 30 s', '≤ 80 ml / min', 'Compare all injectors in the bank'],
     ['Denso CRD', '≤ 25 ml / 30 s', '≤ 60 ml / min', 'Check return restriction first'],
@@ -284,12 +292,13 @@ function InjectorPanel() {
           <tbody>{rows.map((row) => <tr key={row[0]} className="border-b border-[rgba(255,255,255,.05)] last:border-0"><td className="px-2 py-3 font-bold text-[hsl(var(--foreground))]">{row[0]}</td><td className="mono-font px-2 py-3 text-[hsl(var(--primary))]">{row[1]}</td><td className="mono-font px-2 py-3 text-[hsl(var(--primary))]">{row[2]}</td><td className="px-2 py-3 text-[hsl(var(--muted-foreground))]">{row[3]}</td></tr>)}</tbody>
         </table>
       </div>
-      <div className="mt-4 flex items-start gap-2 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]"><Gauge className="mt-0.5 shrink-0 text-[hsl(var(--primary))]" size={14} />A single high-return injector can pull rail pressure down. Confirm test kit limits and manufacturer data before condemning a component.</div>
+       <div className="mt-4 flex items-start gap-2 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]"><Gauge className="mt-0.5 shrink-0 text-[hsl(var(--primary))]" size={14} />A single high-return injector can pull rail pressure down. Confirm test kit limits and manufacturer data before condemning a component.</div>
+       {hpcrSafetyWarning && <div className="mt-3 flex items-start gap-2 border border-[rgba(234,96,83,.28)] bg-[rgba(234,96,83,.08)] p-3 text-xs font-semibold leading-relaxed text-[hsl(var(--foreground))]" role="alert" data-testid="warning-hpcr-fuel-injection-test"><ShieldAlert className="mt-0.5 shrink-0 text-[hsl(var(--destructive))]" size={15} />{hpcrSafetyWarning}</div>}
     </section>
   );
 }
 
-function TradeTerms({ language }: { language: Language }) {
+function TradeTerms({ language, onOpenCalculators }: { language: Language; onOpenCalculators: () => void }) {
   const [search, setSearch] = useState('');
   const groups = useMemo(() => Object.entries(tradeTerms).map(([language, terms]) => ({ language, terms: terms.filter((term) => term.toLowerCase().includes(search.toLowerCase())) })).filter((group) => group.terms.length > 0), [search]);
   return (
@@ -298,7 +307,7 @@ function TradeTerms({ language }: { language: Language }) {
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {groups.map((group) => <div key={group.language} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.1)] p-3" data-testid={`terms-group-${group.language}`}><h3 className="mono-font mb-3 text-[.68rem] font-bold uppercase tracking-[.13em] text-[hsl(var(--primary))]">{group.language}</h3><ul className="space-y-2">{group.terms.map((term, index) => <li key={term} className="flex gap-2 text-xs leading-snug text-[hsl(var(--foreground))]"><span className="mono-font shrink-0 text-[.65rem] text-[hsl(var(--muted-foreground))]">0{index + 1}</span>{term}</li>)}</ul></div>)}
       </div>
-      {groups.length === 0 && <div className="border border-dashed border-[hsl(var(--border))] p-6 text-center text-sm text-[hsl(var(--muted-foreground))]">No trade terms match “{search}”.</div>}
+      {groups.length === 0 && <div className="border border-dashed border-[hsl(var(--primary))] bg-[rgba(233,184,54,.05)] p-5 text-sm leading-relaxed text-[hsl(var(--muted-foreground))]" data-testid="search-smart-fallback"><p>{SMART_SEARCH_FALLBACK}</p><div className="mt-4"><QuickNav onOpenCalculators={onOpenCalculators} /></div></div>}
     </section>
   );
 }
@@ -325,10 +334,11 @@ function VideoModal({ language, selected, onSelect, onClose }: { language: Langu
   );
 }
 
-function QuickNav({ onClose }: { onClose?: () => void }) {
+function QuickNav({ onClose, onOpenCalculators }: { onClose?: () => void; onOpenCalculators?: () => void }) {
   const jump = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); onClose?.(); };
   return (
     <nav className="flex flex-wrap gap-2" aria-label="Quick reference navigation">
+      {onOpenCalculators && <button type="button" onClick={onOpenCalculators} className="flex items-center gap-2 border border-[hsl(var(--primary))] bg-[rgba(233,184,54,.08)] px-3 py-2 text-[.68rem] font-bold uppercase tracking-wide text-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]" data-testid="button-fallback-open-calculators"><Calculator size={14} /> Workshop calculators</button>}
       <button type="button" onClick={() => jump('liner-calculator')} className="flex items-center gap-2 border border-[hsl(var(--border))] bg-[rgba(255,255,255,.025)] px-3 py-2 text-[.68rem] font-bold uppercase tracking-wide text-[hsl(var(--muted-foreground))] hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]" data-testid="button-jump-liner"><Calculator size={14} /> Liner calculator</button>
       <button type="button" onClick={() => jump('air-brake-reference')} className="flex items-center gap-2 border border-[hsl(var(--border))] bg-[rgba(255,255,255,.025)] px-3 py-2 text-[.68rem] font-bold uppercase tracking-wide text-[hsl(var(--muted-foreground))] hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]" data-testid="button-jump-air-brake"><Wind size={14} /> Air brake matrix</button>
       <button type="button" onClick={() => jump('injector-reference')} className="flex items-center gap-2 border border-[hsl(var(--border))] bg-[rgba(255,255,255,.025)] px-3 py-2 text-[.68rem] font-bold uppercase tracking-wide text-[hsl(var(--muted-foreground))] hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]" data-testid="button-jump-injector"><Fuel size={14} /> Injector return</button>
@@ -367,7 +377,7 @@ function Home() {
 
         <section className="mt-10" aria-labelledby="tools-heading"><div className="mb-4 flex items-end justify-between gap-4"><div><div className="eyebrow mb-2">{current.toolLabel} <span className="mx-1 text-[hsl(var(--border))]">/</span> {current.referenceLabel}</div><h2 id="tools-heading" className="section-heading">Measure before you diagnose</h2></div><span className="mono-font hidden text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--muted-foreground))] sm:block">local calculations / no signal required</span></div><div className="grid gap-4 lg:grid-cols-2"><LinerCalculator /><AirBrakePanel /><InjectorPanel /><section className="panel data-grid flex flex-col justify-between border-[hsl(var(--primary))] p-5"><div><div className="eyebrow mb-3 flex items-center gap-2"><BookOpen size={14} /> {current.videoLabel}</div><h2 className="section-heading max-w-sm">Ten units. One practical route to Red Seal.</h2><p className="mt-4 max-w-md text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">Open a focused YouTube search from the curriculum. Use the lesson beside the truck, then verify the method against your workshop manual.</p></div><button type="button" onClick={() => setIsVideoOpen(true)} className="mt-8 flex w-full items-center justify-between border border-[hsl(var(--primary))] bg-[rgba(233,184,54,.1)] px-4 py-3 text-left text-xs font-bold uppercase tracking-[.13em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]" data-testid="button-open-video-resources"><span>Browse 10 curriculum units</span><ArrowUpRight size={17} /></button></section></div></section>
 
-        <section className="mt-10"><TradeTerms language={language} /></section>
+         <section className="mt-10"><TradeTerms language={language} onOpenCalculators={() => setIsCalculatorsOpen(true)} /></section>
         <footer className="mt-8 flex flex-col justify-between gap-3 border-t border-[hsl(var(--border))] pt-4 text-[.65rem] uppercase tracking-[.12em] text-[hsl(var(--muted-foreground))] sm:flex-row"><div className="flex items-center gap-2"><span className="status-dot" /> Built for the South African workshop floor</div><div>Educational reference · verify against OEM and statutory procedure</div></footer>
       </main>
       {isVideoOpen && <VideoModal language={language} selected={selectedVideo} onSelect={setSelectedVideo} onClose={closeVideo} />}
