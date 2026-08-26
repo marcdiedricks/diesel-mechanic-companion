@@ -28,6 +28,7 @@ import {
 import { type ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/error-boundary';
+import { TradeCalculators } from '@/components/TradeCalculators';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
@@ -127,7 +128,7 @@ function TurboInjectorMark() {
   );
 }
 
-function Header({ language, onLanguageChange, onOpenMenu }: { language: Language; onLanguageChange: (language: Language) => void; onOpenMenu: () => void }) {
+function Header({ language, onLanguageChange, onOpenMenu, onOpenCalculators }: { language: Language; onLanguageChange: (language: Language) => void; onOpenMenu: () => void; onOpenCalculators: () => void }) {
   return (
     <header className="border-b border-[hsl(var(--border))] bg-[rgba(8,15,23,.86)]">
       <div className="mx-auto flex max-w-[1500px] items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-10">
@@ -156,13 +157,26 @@ function Header({ language, onLanguageChange, onOpenMenu }: { language: Language
             <Languages size={15} />
             <span className="hidden text-[.68rem] font-semibold uppercase tracking-[.14em] sm:inline">Language / taal / ulwimi</span>
           </div>
-          <nav className="flex items-center gap-1" aria-label="Language selection">
-            {languages.map((item) => (
-              <button type="button" key={item} onClick={() => onLanguageChange(item)} className={`language-button px-3 py-1.5 text-[.7rem] font-bold tracking-[.12em] ${language === item ? 'active' : 'text-[hsl(var(--muted-foreground))] hover:bg-[rgba(255,255,255,.06)] hover:text-[hsl(var(--foreground))]'}`} aria-pressed={language === item} data-testid={`button-language-${item.toLowerCase()}`}>
-                {item}
-              </button>
-            ))}
-          </nav>
+           <div className="flex min-w-0 items-center gap-2">
+             <nav className="flex items-center gap-1" aria-label="Language selection">
+               {languages.map((item) => (
+                 <button type="button" key={item} onClick={() => onLanguageChange(item)} className={`language-button px-3 py-1.5 text-[.7rem] font-bold tracking-[.12em] ${language === item ? 'active' : 'text-[hsl(var(--muted-foreground))] hover:bg-[rgba(255,255,255,.06)] hover:text-[hsl(var(--foreground))]'}`} aria-pressed={language === item} data-testid={`button-language-${item.toLowerCase()}`}>
+                   {item}
+                 </button>
+               ))}
+             </nav>
+             <button
+               type="button"
+               onClick={onOpenCalculators}
+               className="flex shrink-0 items-center gap-2 border border-[hsl(var(--primary))] bg-[rgba(233,184,54,.08)] px-2.5 py-1.5 text-[.65rem] font-bold uppercase tracking-[.08em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))] sm:px-3"
+               aria-label="Open Workshop Calculators"
+               data-testid="button-open-trade-calculators"
+             >
+               <span aria-hidden="true">📐</span>
+               <span className="hidden sm:inline">Workshop Calculators</span>
+               <span className="sm:hidden">Calculators</span>
+             </button>
+           </div>
         </div>
       </div>
     </header>
@@ -328,11 +342,12 @@ function Home() {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(0);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const [isCalculatorsOpen, setIsCalculatorsOpen] = useState(false);
   const current = copy[language];
   const closeVideo = () => setIsVideoOpen(false);
   return (
     <div className="workshop-app">
-      <Header language={language} onLanguageChange={setLanguage} onOpenMenu={() => setIsMobileNavOpen(true)} />
+       <Header language={language} onLanguageChange={setLanguage} onOpenMenu={() => setIsMobileNavOpen(true)} onOpenCalculators={() => setIsCalculatorsOpen(true)} />
       {isMobileNavOpen && <div className="fixed inset-0 z-40 bg-[rgba(6,11,17,.8)] md:hidden" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setIsMobileNavOpen(false); }}><aside className="h-full w-[min(320px,88vw)] border-r border-[hsl(var(--border))] bg-[hsl(var(--sidebar))] p-5 shadow-2xl"><div className="mb-8 flex items-center justify-between"><span className="eyebrow">quick navigation</span><button type="button" onClick={() => setIsMobileNavOpen(false)} className="text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--primary))]" aria-label="Close quick navigation" data-testid="button-close-navigation"><X size={19} /></button></div><QuickNav onClose={() => setIsMobileNavOpen(false)} /><div className="mt-10 border-t border-[hsl(var(--border))] pt-5"><div className="mono-font text-xs text-[hsl(var(--muted-foreground))]">FIELD MODE</div><div className="mt-2 flex items-center gap-2 text-sm font-semibold text-[hsl(var(--foreground))]"><span className="status-dot" /> Cached reference active</div></div></aside></div>}
       <main className="mx-auto max-w-[1500px] px-4 pb-12 pt-5 sm:px-6 lg:px-10 lg:pt-8">
         <div className="mb-5 hidden items-center justify-between gap-4 md:flex"><QuickNav /><div className="flex items-center gap-2 text-[.68rem] uppercase tracking-[.12em] text-[hsl(var(--muted-foreground))]"><HardHat size={14} className="text-[hsl(var(--primary))]" /> Workshop reference / 2024.1</div></div>
@@ -356,6 +371,7 @@ function Home() {
         <footer className="mt-8 flex flex-col justify-between gap-3 border-t border-[hsl(var(--border))] pt-4 text-[.65rem] uppercase tracking-[.12em] text-[hsl(var(--muted-foreground))] sm:flex-row"><div className="flex items-center gap-2"><span className="status-dot" /> Built for the South African workshop floor</div><div>Educational reference · verify against OEM and statutory procedure</div></footer>
       </main>
       {isVideoOpen && <VideoModal language={language} selected={selectedVideo} onSelect={setSelectedVideo} onClose={closeVideo} />}
+      <TradeCalculators isOpen={isCalculatorsOpen} onClose={() => setIsCalculatorsOpen(false)} />
     </div>
   );
 }
