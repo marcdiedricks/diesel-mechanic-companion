@@ -1,6 +1,6 @@
-# [Project name]
+# Diesel Mechanic Companion™
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+An installable multilingual field companion for South African diesel mechanic learners, with safety gates, workshop calculators, diagnostic reference matrices, and Red Seal curriculum resources.
 
 ## Run & Operate
 
@@ -9,7 +9,7 @@ _Replace the heading above with the project's name, and this line with one sente
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- No database or external integrations are required; the companion is intentionally local-first and works offline after its first load.
 
 ## Stack
 
@@ -22,23 +22,33 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/diesel-mechanic-companion/src/App.tsx` — product UI, multilingual copy, calculations, diagnostic matrices, and curriculum modal.
+- `artifacts/diesel-mechanic-companion/src/index.css` — workshop theme tokens, typography, responsive layout, and interaction states.
+- `artifacts/diesel-mechanic-companion/public/manifest.json` — standalone home-screen installation metadata.
+- `artifacts/diesel-mechanic-companion/public/icon.svg` — amber turbocharger and inline-injector app mark.
+- `artifacts/diesel-mechanic-companion/public/sw.js` — cache-first offline app shell.
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Keep the first release local-first: all calculations and reference content are deterministic and available without a network connection.
+- Preserve the English safety gate verbatim and expose localized guidance through a persistent language selector.
+- Use exact YouTube search URLs rather than embedding third-party content, keeping the companion lightweight and respectful of resource owners.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- Safety-first welcome and statutory controls for Common Rail injection, tilted cabs, heavy lifting, air discharge, wet tanks, and maxi-brakes.
+- Liner protrusion/shimming calculator with live D − F + S evaluation against the 0.08–0.15 mm target.
+- Air-brake threshold and Bosch/Denso CRD return-flow reference matrices.
+- Searchable English, Afrikaans, isiXhosa, and isiZulu trade-term reference plus 10-unit curriculum resource modal.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+The user specified a high-contrast slate workshop theme with diesel yellow/amber accents and compact field-oriented information density.
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- The service worker uses a versioned shell cache; bump `CACHE_NAME` when changing the static app shell or installable assets.
+- The app is rooted at `/`; keep manifest `start_url`, scope, and service-worker shell paths aligned with the artifact preview path.
 
 ## Pointers
 

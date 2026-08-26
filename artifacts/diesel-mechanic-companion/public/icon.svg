@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Diesel Mechanic Companion icon</title>
+  <desc id="desc">Amber heavy-duty turbocharger with inline fuel injector on a dark slate background</desc>
+  <defs>
+    <linearGradient id="amber" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#fde047"/>
+      <stop offset=".52" stop-color="#f59e0b"/>
+      <stop offset="1" stop-color="#b45309"/>
+    </linearGradient>
+    <linearGradient id="steel" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#475569"/>
+      <stop offset=".5" stop-color="#1e293b"/>
+      <stop offset="1" stop-color="#0f172a"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="#020617"/>
+  <path d="M92 348h328" stroke="#334155" stroke-width="10" stroke-linecap="round"/>
+  <g filter="url(#glow)" opacity=".28" fill="none" stroke="#f59e0b" stroke-width="10">
+    <circle cx="214" cy="254" r="104"/>
+    <path d="M320 114v248"/>
+  </g>
+  <path d="M113 252c0-67 43-118 102-118 61 0 107 48 107 114 0 66-46 119-107 119-59 0-102-50-102-115Z" fill="url(#steel)" stroke="#64748b" stroke-width="9"/>
+  <circle cx="214" cy="248" r="72" fill="#0b1220" stroke="url(#amber)" stroke-width="10"/>
+  <path d="M214 188c-19 21-26 42-19 60 5 13 20 23 30 27-2-22 5-35 18-49 5 32-2 52-18 69-23 23-60 8-66-25-7-37 18-65 55-82Z" fill="url(#amber)"/>
+  <path d="M214 188c31 16 52 39 53 67 2 31-14 55-42 65 11-18 12-33 7-45-8-18-27-29-34-47-7-15-1-28 16-40Z" fill="#fbbf24" opacity=".78"/>
+  <path d="M255 156 288 126l49 49-30 31" fill="none" stroke="#94a3b8" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="m314 170 22-22 30 30-22 22" fill="none" stroke="url(#amber)" stroke-width="13" stroke-linejoin="round"/>
+  <path d="M366 149v158M391 162v132" stroke="#64748b" stroke-width="10" stroke-linecap="round"/>
+  <path d="M356 211h44M356 244h44M356 277h44" stroke="#f59e0b" stroke-width="6" stroke-linecap="round"/>
+  <path d="M366 307v53M391 307v53" stroke="#94a3b8" stroke-width="12" stroke-linecap="round"/>
+  <path d="M357 359h43l-8 31h-27Z" fill="url(#amber)" stroke="#fbbf24" stroke-width="5"/>
+  <circle cx="214" cy="248" r="13" fill="#fef3c7"/>
+  <circle cx="214" cy="248" r="6" fill="#f59e0b"/>
+  <g fill="#fbbf24">
+    <circle cx="118" cy="170" r="6"/><circle cx="310" cy="315" r="6"/>
+    <circle cx="106" cy="293" r="5"/><circle cx="304" cy="146" r="5"/>
+  </g>
+</svg>

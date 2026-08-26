@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Diesel Mechanic Companion"
+description = "A production-ready multilingual workshop companion for South African diesel mechanic learners, with safety gates, trade vocabulary, liner protrusion calculations, pneumatic testing references, injector diagnostics, and curriculum video links."
+version = "1.0.0"
+id = "artifacts/diesel-mechanic-companion"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23037
+
+[services.development]
+run = "pnpm --filter @workspace/diesel-mechanic-companion run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/diesel-mechanic-companion", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/diesel-mechanic-companion/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23037"
+BASE_PATH = "/"
