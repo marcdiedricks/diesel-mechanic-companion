@@ -455,6 +455,39 @@ const pm02Activities = [
   },
 ] as const;
 
+const pm03Activities = [
+  {
+    id: 'PM03-A01',
+    title: 'Recognise metal-cutting and joining process categories',
+    summary: 'Identify broad process families such as mechanical cutting, thermal cutting, welding, brazing and fastening from classroom images, labels and approved training material.',
+    evidence: 'Learner classification sheet matching process categories to their general purpose and major hazard type.'
+  },
+  {
+    id: 'PM03-A02',
+    title: 'Identify hazards and required escalation',
+    summary: 'Recognise heat, sparks, fumes, sharp edges, electrical energy, gas cylinders and fire risks from scenarios without performing any cutting or joining task.',
+    evidence: 'Hazard-recognition worksheet showing the hazard, why work should stop, and who must supervise the task.'
+  },
+  {
+    id: 'PM03-A03',
+    title: 'Interpret symbols, drawings and job information',
+    summary: 'Practise reading simple joint symbols, material notes, dimensions and controlled job information to understand what a fabrication task is asking for.',
+    evidence: 'Completed drawing-reading activity reviewed by a facilitator.'
+  },
+  {
+    id: 'PM03-A04',
+    title: 'Plan quality checks conceptually',
+    summary: 'Understand why fit-up, alignment, cleanliness, dimensional checks and visual inspection matter to quality without giving operational fabrication steps.',
+    evidence: 'A simple quality-check plan listing what should be verified before and after supervised practical work.'
+  },
+  {
+    id: 'PM03-A05',
+    title: 'Document completed supervised work',
+    summary: 'Practise recording the material, drawing reference, supervisor, observed result and any non-conformance after an authorised practical session.',
+    evidence: 'Sample evidence record with practical status left unverified until authorised review.'
+  },
+] as const;
+
 const queryClient = new QueryClient();
 
 
@@ -1135,6 +1168,73 @@ function PM02Module() {
   );
 }
 
+
+function PM03Module() {
+  const [completed, setCompleted] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('diesel-pm03-progress') || '[]'); } catch { return []; }
+  });
+
+  const toggle = (id: string) => {
+    setCompleted((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+      localStorage.setItem('diesel-pm03-progress', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  return (
+    <section id="pm03" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm03-heading">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <div className="eyebrow mb-2 flex items-center gap-2"><ClipboardCheck size={14} /> PM-03 • Cut and Join Metals</div>
+          <h2 id="pm03-heading" className="section-heading">Practical Skill Support — PM-03</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            Preparation and evidence support mapped to 653306-000-01-PM-03, NQF Level 2, 5 credits. This section supports process recognition, drawing interpretation, hazard awareness, quality planning and evidence capture without teaching cutting or joining techniques.
+          </p>
+        </div>
+        <div className="mono-font shrink-0 text-right text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">{completed.length}/5 prepared</div>
+      </div>
+
+      <div className="mb-5 border border-[rgba(234,96,83,.35)] bg-[rgba(234,96,83,.08)] p-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+        <strong>Supervision boundary:</strong> The app does not provide welding, brazing, grinding, gas-cutting, plasma-cutting, arc setup, torch setup, cylinder handling, electrical setup or metal-cutting procedures. All hot work and powered cutting must remain within approved provider/workplace controls and competent adult supervision.
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        {pm03Activities.map((activity, index) => {
+          const done = completed.includes(activity.id);
+          return (
+            <article key={activity.id} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <div className="mono-font text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Preparation activity {index + 1} of 5</div>
+                  <h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-[hsl(var(--foreground))]">{activity.title}</h3>
+                </div>
+                {done && <CheckCircle2 size={18} className="shrink-0 text-[hsl(var(--chart-3))]" />}
+              </div>
+              <p className="text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">{activity.summary}</p>
+              <div className="mt-3 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+                <strong>Suggested evidence:</strong> {activity.evidence}
+              </div>
+              <button
+                type="button"
+                onClick={() => toggle(activity.id)}
+                className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
+                aria-pressed={done}
+              >
+                {done ? 'Mark not prepared' : 'Mark preparation complete'}
+              </button>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 border-t border-[hsl(var(--border))] pt-4 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
+        <strong>Evidence status:</strong> Preparation records and learner reflections are not proof of practical competence. Any cutting or joining evidence must be generated and verified through the authorised training/workplace process.
+      </div>
+    </section>
+  );
+}
+
 function TurboInjectorMark() {
   return (
     <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1388,6 +1488,7 @@ function Home() {
         <KM08Module />
         <PM01Module />
         <PM02Module />
+        <PM03Module />
 
         <section className="mt-4 grid gap-3 sm:grid-cols-3" aria-label="Workshop baseline values">
           <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]"><Gauge size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">CRD rail warning</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">2,000+ <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">bar</span></div></div></div>
