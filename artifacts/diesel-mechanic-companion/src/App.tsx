@@ -422,6 +422,39 @@ const pm01Activities = [
   },
 ] as const;
 
+const pm02Activities = [
+  {
+    id: 'PM02-A01',
+    title: 'Identify tool categories and intended purpose',
+    summary: 'Recognise broad categories of hand tools, measuring equipment and workshop support equipment from images, labels and approved training material.',
+    evidence: 'Learner identification sheet matching tool categories to intended non-operational purpose.'
+  },
+  {
+    id: 'PM02-A02',
+    title: 'Read condition and safety information',
+    summary: 'Practise recognising damaged, incorrect, unsuitable or unserviceable tools and equipment from classroom examples and inspection photographs.',
+    evidence: 'Completed condition-check worksheet showing which items should be removed from use and escalated.'
+  },
+  {
+    id: 'PM02-A03',
+    title: 'Match tools to task requirements conceptually',
+    summary: 'Use scenario cards to choose the correct type of tool or measuring instrument without performing the physical task.',
+    evidence: 'Facilitator-reviewed task-to-tool matching activity with a short reason for each choice.'
+  },
+  {
+    id: 'PM02-A04',
+    title: 'Interpret measurement displays and units',
+    summary: 'Read example scales, digital displays, units and simple tolerances from classroom images and sample readings.',
+    evidence: 'Measurement-reading worksheet completed without operating real workshop equipment.'
+  },
+  {
+    id: 'PM02-A05',
+    title: 'Plan safe storage, care and reporting',
+    summary: 'Understand why tools must be cleaned, stored, accounted for and reported when damaged or missing.',
+    evidence: 'Short checklist or handover record demonstrating correct care, storage and reporting decisions.'
+  },
+] as const;
+
 const queryClient = new QueryClient();
 
 
@@ -1035,6 +1068,73 @@ function PM01Module() {
   );
 }
 
+
+function PM02Module() {
+  const [completed, setCompleted] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('diesel-pm02-progress') || '[]'); } catch { return []; }
+  });
+
+  const toggle = (id: string) => {
+    setCompleted((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+      localStorage.setItem('diesel-pm02-progress', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  return (
+    <section id="pm02" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm02-heading">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <div className="eyebrow mb-2 flex items-center gap-2"><ClipboardCheck size={14} /> PM-02 • Use Tools and Equipment</div>
+          <h2 id="pm02-heading" className="section-heading">Practical Skill Support — PM-02</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            Preparation and evidence support mapped to 653306-000-01-PM-02, NQF Level 2, 20 credits. This section develops recognition, selection reasoning, condition awareness and measurement interpretation without teaching physical tool operation.
+          </p>
+        </div>
+        <div className="mono-font shrink-0 text-right text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">{completed.length}/5 prepared</div>
+      </div>
+
+      <div className="mb-5 border border-[rgba(234,96,83,.35)] bg-[rgba(234,96,83,.08)] p-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+        <strong>Supervision boundary:</strong> The app does not teach the operation of powered tools, cutting equipment, presses, lifting equipment, jacks, grinders, drills or other hazardous workshop equipment. Physical use must occur only through the approved provider/workplace process with competent adult supervision.
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        {pm02Activities.map((activity, index) => {
+          const done = completed.includes(activity.id);
+          return (
+            <article key={activity.id} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <div className="mono-font text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Preparation activity {index + 1} of 5</div>
+                  <h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-[hsl(var(--foreground))]">{activity.title}</h3>
+                </div>
+                {done && <CheckCircle2 size={18} className="shrink-0 text-[hsl(var(--chart-3))]" />}
+              </div>
+              <p className="text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">{activity.summary}</p>
+              <div className="mt-3 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+                <strong>Suggested evidence:</strong> {activity.evidence}
+              </div>
+              <button
+                type="button"
+                onClick={() => toggle(activity.id)}
+                className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
+                aria-pressed={done}
+              >
+                {done ? 'Mark not prepared' : 'Mark preparation complete'}
+              </button>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 border-t border-[hsl(var(--border))] pt-4 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
+        <strong>Evidence status:</strong> Preparation records are learning evidence only and do not certify safe or competent tool use. Practical competence must be assessed by an authorised provider or workplace assessor.
+      </div>
+    </section>
+  );
+}
+
 function TurboInjectorMark() {
   return (
     <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1287,6 +1387,7 @@ function Home() {
         <KM07Module />
         <KM08Module />
         <PM01Module />
+        <PM02Module />
 
         <section className="mt-4 grid gap-3 sm:grid-cols-3" aria-label="Workshop baseline values">
           <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]"><Gauge size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">CRD rail warning</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">2,000+ <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">bar</span></div></div></div>
