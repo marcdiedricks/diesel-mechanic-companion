@@ -179,6 +179,39 @@ const km02Lessons = [
   },
 ] as const;
 
+const km03Lessons = [
+  {
+    id: 'KM03-L01',
+    title: 'Vehicle and equipment system overview',
+    summary: 'Identify the main vehicle and equipment systems at a high level and understand how engine, driveline, braking, steering, suspension, electrical and fluid-power systems interact.',
+    check: 'System recognition helps with learning and fault reasoning, but does not authorise inspection or repair of a real vehicle.'
+  },
+  {
+    id: 'KM03-L02',
+    title: 'Engine, driveline and chassis relationships',
+    summary: 'Understand how power is produced, transferred and supported through the engine, clutch or torque-transfer elements, transmission, final drive and chassis structure.',
+    check: 'Use diagrams and component names for learning only; removal, adjustment and disassembly remain supervised practical work.'
+  },
+  {
+    id: 'KM03-L03',
+    title: 'Braking, steering and suspension fundamentals',
+    summary: 'Recognise the purpose of braking, steering and suspension systems and the types of hazards associated with stored energy, vehicle movement and heavy components.',
+    check: 'Do not use the app to release, support, dismantle, adjust or test braking, steering or suspension systems.'
+  },
+  {
+    id: 'KM03-L04',
+    title: 'Basic electrical and electronic system awareness',
+    summary: 'Learn the purpose of batteries, starting and charging systems, basic circuits, sensors, actuators and electronic control units at a conceptual level.',
+    check: 'Live electrical testing, isolation and component replacement require approved procedures and competent supervision.'
+  },
+  {
+    id: 'KM03-L05',
+    title: 'Hydraulic and pneumatic system awareness',
+    summary: 'Recognise basic pressure, flow, actuators, valves and stored-energy concepts used in hydraulic and pneumatic vehicle systems.',
+    check: 'Pressurised fluid and air systems are high risk. The app supports theory only and does not teach release, disconnection or testing procedures.'
+  },
+] as const;
+
 const queryClient = new QueryClient();
 
 
@@ -311,6 +344,74 @@ function KM02Module() {
 
       <div className="mt-5 flex flex-col gap-2 border-t border-[hsl(var(--border))] pt-4 text-xs text-[hsl(var(--muted-foreground))] sm:flex-row sm:items-center sm:justify-between">
         <span>Official qualification source: SAQA 117237 • 653306-000-01-KM-02 • 14 credits</span>
+        <a className="text-[hsl(var(--primary))] underline-offset-4 hover:underline" href="https://pcqs.saqa.org.za/viewQualification.php?id=117237" target="_blank" rel="noopener noreferrer">Open SAQA qualification</a>
+      </div>
+    </section>
+  );
+}
+
+
+function KM03Module() {
+  const [completed, setCompleted] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('diesel-km03-progress') || '[]'); } catch { return []; }
+  });
+
+  const toggle = (id: string) => {
+    setCompleted((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+      localStorage.setItem('diesel-km03-progress', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  return (
+    <section id="km03" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="km03-heading">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <div className="eyebrow mb-2 flex items-center gap-2"><BookOpen size={14} /> KM-03 • Vehicle and Equipment Fundamentals</div>
+          <h2 id="km03-heading" className="section-heading">Vehicle and Equipment Fundamentals</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            Controlled learning support mapped to 653306-000-01-KM-03, NQF Level 2, 8 credits. This internal five-lesson sequence builds whole-vehicle understanding before later diagnostic learning.
+          </p>
+        </div>
+        <div className="mono-font shrink-0 text-right text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">{completed.length}/5 complete</div>
+      </div>
+
+      <div className="mb-5 border border-[rgba(233,184,54,.25)] bg-[rgba(233,184,54,.06)] p-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+        <strong>Safety boundary:</strong> KM-03 teaches system purpose, component recognition and conceptual relationships only. It does not provide disassembly, adjustment, testing, lifting, release-of-pressure or repair procedures.
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        {km03Lessons.map((lesson, index) => {
+          const done = completed.includes(lesson.id);
+          return (
+            <article key={lesson.id} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <div className="mono-font text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Lesson {index + 1} of 5</div>
+                  <h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-[hsl(var(--foreground))]">{lesson.title}</h3>
+                </div>
+                {done && <CheckCircle2 size={18} className="shrink-0 text-[hsl(var(--chart-3))]" />}
+              </div>
+              <p className="text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">{lesson.summary}</p>
+              <div className="mt-3 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+                <strong>Learning check:</strong> {lesson.check}
+              </div>
+              <button
+                type="button"
+                onClick={() => toggle(lesson.id)}
+                className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
+                aria-pressed={done}
+              >
+                {done ? 'Mark not complete' : 'Mark lesson complete'}
+              </button>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 flex flex-col gap-2 border-t border-[hsl(var(--border))] pt-4 text-xs text-[hsl(var(--muted-foreground))] sm:flex-row sm:items-center sm:justify-between">
+        <span>Official qualification source: SAQA 117237 • 653306-000-01-KM-03 • 8 credits</span>
         <a className="text-[hsl(var(--primary))] underline-offset-4 hover:underline" href="https://pcqs.saqa.org.za/viewQualification.php?id=117237" target="_blank" rel="noopener noreferrer">Open SAQA qualification</a>
       </div>
     </section>
@@ -562,6 +663,7 @@ function Home() {
 
         <KM01Module />
         <KM02Module />
+        <KM03Module />
 
         <section className="mt-4 grid gap-3 sm:grid-cols-3" aria-label="Workshop baseline values">
           <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]"><Gauge size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">CRD rail warning</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">2,000+ <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">bar</span></div></div></div>
