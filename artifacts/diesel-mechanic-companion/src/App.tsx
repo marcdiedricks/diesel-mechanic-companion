@@ -776,6 +776,45 @@ const pm11Activities = [
   },
 ] as const;
 
+const pm12Activities = [
+  {
+    id: 'PM12-A01',
+    title: 'Identify steering and suspension component groups',
+    summary: 'Recognise broad steering and suspension component categories, their purpose and how they relate to vehicle control, stability and load support using approved diagrams and classroom material.',
+    evidence: 'Learner identification sheet matching component groups to their general role.'
+  },
+  {
+    id: 'PM12-A02',
+    title: 'Interpret steering and suspension job information',
+    summary: 'Practise reading job cards, exploded views, alignment reports, inspection records and approved technical references without lifting, dismantling or adjusting a real vehicle.',
+    evidence: 'Completed document-reading exercise identifying the correct references and evidence fields.'
+  },
+  {
+    id: 'PM12-A03',
+    title: 'Recognise vehicle-support, spring and movement hazards',
+    summary: 'Identify risks linked to vehicle movement, unsupported vehicles, stored spring energy, heavy components and pinch points from classroom scenarios.',
+    evidence: 'Hazard-recognition worksheet showing stop, support-by-approved-process and escalation decisions.'
+  },
+  {
+    id: 'PM12-A04',
+    title: 'Plan condition assessment conceptually',
+    summary: 'Understand how observations, approved measurements, tyre-wear patterns, play or looseness reports and technical limits contribute to a supervised assessment.',
+    evidence: 'Condition-assessment worksheet using facilitator-provided evidence rather than live inspection procedures.'
+  },
+  {
+    id: 'PM12-A05',
+    title: 'Plan quality, geometry and verification evidence',
+    summary: 'Understand why component identity, alignment information, fastener accountability, condition, traceability and final verification matter in steering and suspension work.',
+    evidence: 'Quality and verification checklist completed for a classroom scenario.'
+  },
+  {
+    id: 'PM12-A06',
+    title: 'Record supervised steering and suspension evidence',
+    summary: 'Capture the job reference, system area, supervisor, approved source, observed condition and verification status after authorised practical work.',
+    evidence: 'Evidence record explicitly marked unverified until authorised review.'
+  },
+] as const;
+
 const queryClient = new QueryClient();
 
 
@@ -2059,6 +2098,73 @@ function PM11Module() {
   );
 }
 
+
+function PM12Module() {
+  const [completed, setCompleted] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('diesel-pm12-progress') || '[]'); } catch { return []; }
+  });
+
+  const toggle = (id: string) => {
+    setCompleted((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+      localStorage.setItem('diesel-pm12-progress', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  return (
+    <section id="pm12" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm12-heading">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <div className="eyebrow mb-2 flex items-center gap-2"><ClipboardCheck size={14} /> PM-12 • Dismantle, Assess and Reassemble Steering and Suspension Systems</div>
+          <h2 id="pm12-heading" className="section-heading">Practical Skill Support — PM-12</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            Preparation and evidence support mapped to 653306-000-01-PM-12, NQF Level 3, 5 credits. This section supports component recognition, document interpretation, hazard awareness, condition-assessment reasoning, geometry/quality thinking and supervised evidence capture without teaching steering or suspension procedures.
+          </p>
+        </div>
+        <div className="mono-font shrink-0 text-right text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">{completed.length}/6 prepared</div>
+      </div>
+
+      <div className="mb-5 border border-[rgba(234,96,83,.35)] bg-[rgba(234,96,83,.08)] p-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+        <strong>Supervision boundary:</strong> The app does not provide vehicle lifting, supporting, spring release/compression, steering or suspension dismantling, alignment, adjustment, torque-setting, reassembly or repair procedures. Practical work must follow approved technical information under competent adult supervision.
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        {pm12Activities.map((activity, index) => {
+          const done = completed.includes(activity.id);
+          return (
+            <article key={activity.id} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <div className="mono-font text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Preparation activity {index + 1} of 6</div>
+                  <h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-[hsl(var(--foreground))]">{activity.title}</h3>
+                </div>
+                {done && <CheckCircle2 size={18} className="shrink-0 text-[hsl(var(--chart-3))]" />}
+              </div>
+              <p className="text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">{activity.summary}</p>
+              <div className="mt-3 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+                <strong>Suggested evidence:</strong> {activity.evidence}
+              </div>
+              <button
+                type="button"
+                onClick={() => toggle(activity.id)}
+                className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
+                aria-pressed={done}
+              >
+                {done ? 'Mark not prepared' : 'Mark preparation complete'}
+              </button>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 border-t border-[hsl(var(--border))] pt-4 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
+        <strong>Evidence status:</strong> App records support preparation only and do not establish steering or suspension practical competence. Any dismantling, assessment, alignment or reassembly evidence must be generated and verified through the authorised provider/workplace process.
+      </div>
+    </section>
+  );
+}
+
 function TurboInjectorMark() {
   return (
     <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2321,6 +2427,7 @@ function Home() {
         <PM09Module />
         <PM10Module />
         <PM11Module />
+        <PM12Module />
 
         <section className="mt-4 grid gap-3 sm:grid-cols-3" aria-label="Workshop baseline values">
           <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]"><Gauge size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">CRD rail warning</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">2,000+ <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">bar</span></div></div></div>
