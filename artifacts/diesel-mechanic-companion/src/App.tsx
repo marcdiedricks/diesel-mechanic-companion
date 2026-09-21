@@ -245,6 +245,39 @@ const km04Lessons = [
   },
 ] as const;
 
+const km05Lessons = [
+  {
+    id: 'KM05-L01',
+    title: 'Power transmission and driveline concepts',
+    summary: 'Understand how engine output is transferred through clutch or torque-transfer elements, transmission, propeller shafts, differentials and final drive systems at a conceptual level.',
+    check: 'This lesson supports system understanding only; removal, alignment, adjustment and repair remain supervised practical work.'
+  },
+  {
+    id: 'KM05-L02',
+    title: 'Steering and suspension system principles',
+    summary: 'Recognise the purpose of steering geometry, suspension support, damping and load control in vehicle stability, comfort and tyre contact.',
+    check: 'Do not use the app to lift, support, dismantle, adjust or align a vehicle or suspension component.'
+  },
+  {
+    id: 'KM05-L03',
+    title: 'Brake system architecture and stored-energy awareness',
+    summary: 'Understand the high-level purpose of service braking, parking braking and common hydraulic or pneumatic brake-system components without operational release or adjustment guidance.',
+    check: 'Brake systems may contain stored energy and safety-critical components. Practical testing, release, adjustment and repair require approved procedures and competent supervision.'
+  },
+  {
+    id: 'KM05-L04',
+    title: 'Vehicle body, chassis and equipment interfaces',
+    summary: 'Learn how chassis, mounting points, cab structures, body equipment and auxiliary systems interact with the vehicle as a whole.',
+    check: 'Raised cabs, heavy components and mounted equipment introduce crush and movement hazards; the app does not teach support or removal procedures.'
+  },
+  {
+    id: 'KM05-L05',
+    title: 'Propulsion-system symptoms and evidence',
+    summary: 'Practise linking driver reports, warning indicators, service history and approved measurements to possible system areas without jumping directly to a repair conclusion.',
+    check: 'Evidence supports diagnosis; it does not replace controlled testing or authorise component replacement.'
+  },
+] as const;
+
 const queryClient = new QueryClient();
 
 
@@ -519,6 +552,74 @@ function KM04Module() {
   );
 }
 
+
+function KM05Module() {
+  const [completed, setCompleted] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('diesel-km05-progress') || '[]'); } catch { return []; }
+  });
+
+  const toggle = (id: string) => {
+    setCompleted((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+      localStorage.setItem('diesel-km05-progress', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  return (
+    <section id="km05" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="km05-heading">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <div className="eyebrow mb-2 flex items-center gap-2"><BookOpen size={14} /> KM-05 • Vehicle, Equipment and Propulsion Systems</div>
+          <h2 id="km05-heading" className="section-heading">Vehicle, Equipment and Propulsion Systems</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            Controlled learning support mapped to 653306-000-01-KM-05, NQF Level 3, 13 credits. This five-lesson sequence develops system-level understanding of driveline, chassis, braking, steering and propulsion relationships.
+          </p>
+        </div>
+        <div className="mono-font shrink-0 text-right text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">{completed.length}/5 complete</div>
+      </div>
+
+      <div className="mb-5 border border-[rgba(233,184,54,.25)] bg-[rgba(233,184,54,.06)] p-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+        <strong>Safety boundary:</strong> KM-05 teaches system architecture, component roles, stored-energy awareness and diagnostic reasoning only. It does not provide braking, driveline, suspension, lifting, alignment, cab-support or component-removal procedures.
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        {km05Lessons.map((lesson, index) => {
+          const done = completed.includes(lesson.id);
+          return (
+            <article key={lesson.id} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <div className="mono-font text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Lesson {index + 1} of 5</div>
+                  <h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-[hsl(var(--foreground))]">{lesson.title}</h3>
+                </div>
+                {done && <CheckCircle2 size={18} className="shrink-0 text-[hsl(var(--chart-3))]" />}
+              </div>
+              <p className="text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">{lesson.summary}</p>
+              <div className="mt-3 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+                <strong>Learning check:</strong> {lesson.check}
+              </div>
+              <button
+                type="button"
+                onClick={() => toggle(lesson.id)}
+                className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
+                aria-pressed={done}
+              >
+                {done ? 'Mark not complete' : 'Mark lesson complete'}
+              </button>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 flex flex-col gap-2 border-t border-[hsl(var(--border))] pt-4 text-xs text-[hsl(var(--muted-foreground))] sm:flex-row sm:items-center sm:justify-between">
+        <span>Official qualification source: SAQA 117237 • 653306-000-01-KM-05 • 13 credits</span>
+        <a className="text-[hsl(var(--primary))] underline-offset-4 hover:underline" href="https://pcqs.saqa.org.za/viewQualification.php?id=117237" target="_blank" rel="noopener noreferrer">Open SAQA qualification</a>
+      </div>
+    </section>
+  );
+}
+
 function TurboInjectorMark() {
   return (
     <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -766,6 +867,7 @@ function Home() {
         <KM02Module />
         <KM03Module />
         <KM04Module />
+        <KM05Module />
 
         <section className="mt-4 grid gap-3 sm:grid-cols-3" aria-label="Workshop baseline values">
           <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]"><Gauge size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">CRD rail warning</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">2,000+ <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">bar</span></div></div></div>
