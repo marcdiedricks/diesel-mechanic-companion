@@ -54,10 +54,10 @@ const copy: Record<Language, {
   openLabel: string;
 }> = {
   EN: {
-    welcome: 'Molo / Hallo! I am your Diesel Mechanic Companion™ (SAQA ID: 96449). Ask me about Common Rail Diesel (CRD) high-pressure injection, commercial vehicle air brake valves, turbocharger boost diagnostics, cylinder liner protrusion, or Red Seal trade test prep. ⚠️ Safety Gate: Never inspect Common Rail high-pressure leaks with bare hands or cardboard—fuel under 2,000+ bar causes fatal skin penetration and blood poisoning. Always bleed system pressure to zero before opening lines.',
+    welcome: 'Molo / Hallo! I am your Diesel Mechanic Companion™ (SAQA ID: 117237). Use this app for diesel-mechanic theory, terminology, system understanding, hazard recognition, diagnostic reasoning, curriculum revision and evidence preparation. Practical vehicle work must be completed through an approved provider or workplace process with competent adult supervision.',
     safetyTitle: 'SAFETY GATE',
     safetyLead: 'Common Rail systems can hold lethal pressure after shutdown.',
-    safetyAction: 'Treat every line as live until pressure is verified at zero.',
+    safetyAction: 'Do not open, test or work on high-risk systems through app instructions. Use the approved workshop process and competent supervision.',
     toolLabel: 'FIELD TOOLS',
     referenceLabel: 'TEST REFERENCES',
     termsLabel: 'TRADE TERMS',
@@ -65,10 +65,10 @@ const copy: Record<Language, {
     openLabel: 'OPEN RESOURCE',
   },
   AF: {
-    welcome: 'Molo / Hallo! Ek is jou Dieselwerktuigkundige Metgesel™ (SAQA ID: 96449). Vra my oor Common Rail Diesel (CRD) hoëdrukinspuiting, kommersiële voertuig-lugremkleppe, turbo-aanjaer-drukdiagnose, silindervoering-uitsteeksel of Red Seal-handelstoetsvoorbereiding. Veiligheidshek: Moet nooit Common Rail-hoëdruklekkasies met kaal hande of karton inspekteer nie—brandstof onder 2 000+ bar dring die vel binne en kan dodelike bloedvergiftiging veroorsaak. Ontlont altyd stelseldruk tot nul voordat lyne oopgemaak word.',
+    welcome: 'Molo / Hallo! Ek is jou Dieselwerktuigkundige Metgesel™ (SAQA ID: 117237). Gebruik die app vir teorie, terminologie, stelselbegrip, gevaarherkenning, diagnostiese redenasie, hersiening en bewysvoorbereiding. Praktiese voertuigwerk moet deur ’n goedgekeurde opleidings- of werkplekproses met bevoegde volwasse toesig plaasvind.',
     safetyTitle: 'VEILIGHEIDSHEK',
     safetyLead: 'Common Rail-stelsels kan dodelike druk behou nadat die enjin afgeskakel is.',
-    safetyAction: 'Behandel elke lyn as onder druk totdat nul bevestig is.',
+    safetyAction: 'Moenie hoërisikostelsels volgens app-instruksies oopmaak, toets of herstel nie. Gebruik die goedgekeurde werkswinkelproses en bevoegde toesig.',
     toolLabel: 'WERKSWINKELGEREEDSKAP',
     referenceLabel: 'TOETSVERWYSINGS',
     termsLabel: 'HANDELSTERME',
@@ -76,10 +76,10 @@ const copy: Record<Language, {
     openLabel: 'OPEN HULPBRON',
   },
   XH: {
-    welcome: 'Molo! NdinguMkhapheli wakho weMechanic yeDiesel™ (SAQA ID: 96449). Ndibuze ngeCommon Rail Diesel (CRD) high-pressure injection, commercial vehicle air brake valves, turbocharger boost diagnostics, cylinder liner protrusion, okanye Red Seal trade test prep. Isango lokhuseleko: Ungaze uhlole ukuvuza kweCommon Rail high-pressure ngezandla ezingenanto okanye ngekhadibhodi—ipetroli engaphezu kwe2 000+ bar ingena eluswini ize ibangele ityhefu yegazi ebulalayo. Soloko wehlisa uxinzelelo lwenkqubo lube ngu-zero ngaphambi kokuvula imigca.',
+    welcome: 'Molo! NdinguMkhapheli wakho weMechanic yeDiesel™ (SAQA ID: 117237). Sebenzisa le app kufundo lwethiyori, amagama omsebenzi, ukuqonda iinkqubo, ukuqaphela iingozi, ukucinga ngoxilongo, uphononongo lwekharityhulam kunye nokulungiselela ubungqina. Umsebenzi osebenzayo kwisithuthi kufuneka wenziwe phantsi kwenkqubo evunyiweyo kunye nolawulo lomntu omdala ofanelekileyo.',
     safetyTitle: 'ISANGO LOKHUSELEKO',
     safetyLead: 'Iinkqubo zeCommon Rail zinokugcina uxinzelelo olubulalayo emva kokucinywa.',
-    safetyAction: 'Yiphatha yonke imigca ngathi isaphila de kuqinisekiswe i-zero.',
+    safetyAction: 'Musa ukuvula, ukuvavanya okanye ukulungisa iinkqubo ezinobungozi usebenzisa imiyalelo ye-app. Landela inkqubo evunyiweyo kunye nolawulo olufanelekileyo.',
     toolLabel: 'IZIXHOBO ZOMSEBENZI',
     referenceLabel: 'IINGCACISO ZOVAVANYO',
     termsLabel: 'AMAGAMA OMSEBENZI',
@@ -87,10 +87,10 @@ const copy: Record<Language, {
     openLabel: 'VULA ISIXHOBO',
   },
   ZU: {
-    welcome: 'Molo! NginguMngani wakho kaMakhenikha weDiesel™ (SAQA ID: 96449). Buza ngeCommon Rail Diesel (CRD) high-pressure injection, commercial vehicle air brake valves, turbocharger boost diagnostics, cylinder liner protrusion, noma Red Seal trade test prep. Isango lokuphepha: Ungalokothi uhlole ukuvuza kweCommon Rail high-pressure ngezandla ezingenalutho noma ngekhadibhodi—uphethiloli ongaphezu kuka-2 000+ bar ungena esikhunjeni futhi ubangele ubuthi begazi obubulalayo. Njalo yehlisa umfutho wesistimu ube yi-zero ngaphambi kokuvula amapayipi.',
+    welcome: 'Molo! NginguMngani wakho kaMakhenikha weDiesel™ (SAQA ID: 117237). Sebenzisa lolu hlelo ukufunda ithiyori, amagama omsebenzi, ukuqonda amasistimu, ukuqaphela izingozi, ukucabanga ngokuxilonga, ukubuyekeza ikharikhulamu nokulungiselela ubufakazi. Umsebenzi osebenzayo emotweni kufanele wenziwe ngaphansi kwenqubo egunyaziwe kanye nokuqondiswa umuntu omdala onekhono.',
     safetyTitle: 'ISANGO LOKUPHEPHA',
     safetyLead: 'Amasistimu eCommon Rail angagcina umfutho obulalayo ngemva kokucima.',
-    safetyAction: 'Phatha wonke amapayipi sengathi asenomfutho kuze kuqinisekiswe i-zero.',
+    safetyAction: 'Ungavuli, uvivinye noma ulungise amasistimu ayingozi usebenzisa imiyalelo ye-app. Landela inqubo egunyaziwe kanye nokuqondiswa okufanele.',
     toolLabel: 'AMATHULUZI ENDLWENI',
     referenceLabel: 'IZINKOMBA ZOKUHLOLA',
     termsLabel: 'AMAGAMA OMSEBENZI',
@@ -109,16 +109,14 @@ const tradeTerms = {
 const SMART_SEARCH_FALLBACK = 'No direct match found in offline knowledge base. Try launching the 📐 Workshop Calculators (Hydraulics, Compression, Power, Boost) or selecting a topic chip below.';
 
 const videoUnits = [
-  ['01', 'Common Rail Injection & High Pressure Safety', 'https://www.youtube.com/results?search_query=common+rail+diesel+fuel+system+diagnostics+pressure+safety'],
-  ['02', 'Heavy Truck Air Brake System & Dual Circuit', 'https://www.youtube.com/results?search_query=commercial+truck+air+brake+system+operation+troubleshooting'],
-  ['03', 'Cylinder Liner Protrusion & Counterbore Shimming', 'https://www.youtube.com/results?search_query=cylinder+liner+protrusion+measurement+diesel+engine'],
-  ['04', 'VGT / Wastegate Turbocharger Inspection & Boost Leaks', 'https://www.youtube.com/results?search_query=diesel+turbocharger+troubleshooting+vgt+boost+leak'],
-  ['05', 'Diesel Engine Valve & Jake Brake Lash Adjustment', 'https://www.youtube.com/results?search_query=diesel+engine+valve+lash+and+jake+brake+adjustment'],
-  ['06', 'Spring Brake Chamber / Maxi-Brake Caging & Replacement', 'https://www.youtube.com/results?search_query=how+to+cage+a+spring+brake+chamber+safely+truck'],
-  ['07', 'Heavy Duty Dual Plate Clutch Alignment & Free Play', 'https://www.youtube.com/results?search_query=heavy+duty+truck+clutch+installation+adjustment'],
-  ['08', 'Diesel Particulate Filter DPF & SCR AdBlue Diagnostics', 'https://www.youtube.com/results?search_query=diesel+dpf+and+scr+adblue+system+diagnostics'],
-  ['09', 'Cooling System Cavitation & SCA Inhibitor Testing', 'https://www.youtube.com/results?search_query=diesel+wet+sleeve+cavitation+cooling+system'],
-  ['10', 'Red Seal Diesel Trade Test Practical Overhaul', 'https://www.youtube.com/results?search_query=diesel+mechanic+trade+test+practical+engine+overhaul'],
+  ['01', 'Workplace Fundamentals — controlled visual reference', '#visual-library'],
+  ['02', 'Foundational Concepts for Mechanics — controlled visual reference', '#visual-library'],
+  ['03', 'Vehicle and Equipment Fundamentals — controlled visual reference', '#visual-library'],
+  ['04', 'Basic Engine Systems — controlled visual reference', '#visual-library'],
+  ['05', 'Vehicle, Equipment and Propulsion Systems — controlled visual reference', '#visual-library'],
+  ['06', 'Electrical, Electronic, Hydraulic and Pneumatic Principles — controlled visual reference', '#visual-library'],
+  ['07', 'Advanced Vehicle and Equipment Systems — controlled visual reference', '#visual-library'],
+  ['08', 'Problem Solving and Engine Optimisation — controlled visual reference', '#visual-library'],
 ] as const;
 
 const queryClient = new QueryClient();
@@ -145,13 +143,10 @@ function Header({ language, onLanguageChange, onOpenMenu, onOpenCalculators }: {
           <div className="min-w-0">
             <div className="eyebrow mb-1 flex items-center gap-2"><span className="status-dot" /> workshop mode / offline-ready</div>
             <h1 className="display-font truncate text-[clamp(1.5rem,3.5vw,2.45rem)] font-bold uppercase leading-none tracking-tight text-[hsl(var(--foreground))]">Diesel Mechanic Companion™</h1>
-            <p className="mono-font mt-1 truncate text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--muted-foreground))]">SAQA ID: 96449 <span className="text-[hsl(var(--primary))]">|</span> NQF Level 4 <span className="text-[hsl(var(--primary))]">|</span> merSETA / TETA</p>
+            <p className="mono-font mt-1 truncate text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--muted-foreground))]">SAQA ID: 117237 <span className="text-[hsl(var(--primary))]">|</span> NQF Level 4 <span className="text-[hsl(var(--primary))]">|</span> MERSETA / NAMB</p>
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          <div className="flex items-center gap-2 border border-[rgba(233,184,54,.45)] bg-[rgba(233,184,54,.08)] px-2 py-1.5 sm:px-3 sm:py-2">
-            <span className="mono-font text-[.56rem] uppercase tracking-[.12em] text-[hsl(var(--primary))] sm:text-[.65rem] sm:tracking-widest">5 runs left</span>
-          </div>
           <button type="button" onClick={onOpenMenu} className="grid size-10 place-items-center border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))] md:hidden" aria-label="Open quick navigation" data-testid="button-open-navigation">
             <Menu size={18} />
           </button>
@@ -192,10 +187,10 @@ function Header({ language, onLanguageChange, onOpenMenu, onOpenCalculators }: {
 function SafetyPanel({ language }: { language: Language }) {
   const current = copy[language];
   const rules = [
-    { icon: Fuel, title: '1,600–2,500 bar injection hazard', detail: 'Diesel skin penetration risk is fatal. No hands, cardboard or loose cloth for leak-finding; use approved detection methods and eye protection.' },
-    { icon: ShieldAlert, title: 'Power isolate + depressurize', detail: 'General Safety Regulations & DMR: isolate power, follow the OEM wait time and verify pressure is zero before loosening any line.' },
-    { icon: LockKeyhole, title: 'Cab pin + secondary axle stands', detail: 'Mandatory mechanical cab locking pin before working under a tilted cab. Fit secondary mechanical axle stands on heavy chassis.' },
-    { icon: Droplets, title: 'Drain tanks + cage maxi-brakes', detail: 'Drain wet tanks daily. Mechanically cage spring brake chambers before disassembly and confirm the vehicle cannot roll.' },
+    { icon: Fuel, title: 'High-pressure fuel systems', detail: 'Recognise these as high-risk systems. Do not use the app as an operating or leak-testing guide; stop and route practical work to the approved workshop process.' },
+    { icon: ShieldAlert, title: 'Electrical, pneumatic and hydraulic systems', detail: 'Treat practical testing, isolation and disassembly as supervised work. The app supports theory and hazard recognition only.' },
+    { icon: LockKeyhole, title: 'Raised vehicles, tilted cabs and heavy components', detail: 'Recognise crush and stored-energy hazards. Do not perform lifting, supporting or removal tasks from app instructions.' },
+    { icon: Droplets, title: 'Brakes, cooling and other stored-energy systems', detail: 'Use the app to understand system purpose and warning signs. Practical release, opening, testing or repair requires approved procedures and competent supervision.' },
   ];
   return (
     <section className="panel bracket-corner border-l-2 border-l-[hsl(var(--destructive))] p-4 sm:p-5" aria-labelledby="safety-heading">
