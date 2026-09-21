@@ -737,6 +737,45 @@ const pm10Activities = [
   },
 ] as const;
 
+const pm11Activities = [
+  {
+    id: 'PM11-A01',
+    title: 'Identify drive train component groups',
+    summary: 'Recognise broad drive train groups such as clutch or torque-transfer elements, transmissions, propeller shafts, differentials, axles and final-drive components from approved diagrams and classroom material.',
+    evidence: 'Learner identification sheet matching component groups to their general role.'
+  },
+  {
+    id: 'PM11-A02',
+    title: 'Interpret drive train job and technical information',
+    summary: 'Practise reading job cards, exploded views, component references, service information and inspection records without removing or opening a real drive train component.',
+    evidence: 'Completed document-reading exercise identifying the correct references and evidence fields.'
+  },
+  {
+    id: 'PM11-A03',
+    title: 'Recognise heavy-component, movement and stored-energy hazards',
+    summary: 'Identify risks linked to heavy assemblies, rotating parts, pinch points, unsupported components, vehicle movement and stored energy from classroom scenarios.',
+    evidence: 'Hazard-recognition worksheet showing stop, support, isolate-by-approved-process and escalation decisions.'
+  },
+  {
+    id: 'PM11-A04',
+    title: 'Plan condition assessment conceptually',
+    summary: 'Understand how observations, approved measurements, wear evidence, noise or vibration reports and technical limits contribute to a supervised drive train assessment.',
+    evidence: 'Condition-assessment worksheet using facilitator-provided evidence rather than live testing.'
+  },
+  {
+    id: 'PM11-A05',
+    title: 'Plan quality, orientation and traceability evidence',
+    summary: 'Understand why component identity, orientation, cleanliness, fastener accountability, condition and final verification matter during supervised drive train work.',
+    evidence: 'Quality and traceability checklist completed for a classroom scenario.'
+  },
+  {
+    id: 'PM11-A06',
+    title: 'Record supervised drive train evidence',
+    summary: 'Capture the job reference, drive train area, supervisor, approved source, observed condition and verification status after authorised practical work.',
+    evidence: 'Evidence record explicitly marked unverified until authorised review.'
+  },
+] as const;
+
 const queryClient = new QueryClient();
 
 
@@ -1953,6 +1992,73 @@ function PM10Module() {
   );
 }
 
+
+function PM11Module() {
+  const [completed, setCompleted] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('diesel-pm11-progress') || '[]'); } catch { return []; }
+  });
+
+  const toggle = (id: string) => {
+    setCompleted((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+      localStorage.setItem('diesel-pm11-progress', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  return (
+    <section id="pm11" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm11-heading">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <div className="eyebrow mb-2 flex items-center gap-2"><ClipboardCheck size={14} /> PM-11 • Dismantle, Assess and Reassemble Drive Train System Components</div>
+          <h2 id="pm11-heading" className="section-heading">Practical Skill Support — PM-11</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            Preparation and evidence support mapped to 653306-000-01-PM-11, NQF Level 3, 5 credits. This section supports component recognition, document interpretation, hazard awareness, condition-assessment reasoning, traceability and supervised evidence capture without teaching drive train procedures.
+          </p>
+        </div>
+        <div className="mono-font shrink-0 text-right text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">{completed.length}/6 prepared</div>
+      </div>
+
+      <div className="mb-5 border border-[rgba(234,96,83,.35)] bg-[rgba(234,96,83,.08)] p-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+        <strong>Supervision boundary:</strong> The app does not provide clutch, transmission, propeller-shaft, differential or axle dismantling, lifting, support, alignment, adjustment, lubrication, torque-setting, reassembly or repair procedures. Practical work must follow approved technical information under competent adult supervision.
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        {pm11Activities.map((activity, index) => {
+          const done = completed.includes(activity.id);
+          return (
+            <article key={activity.id} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <div className="mono-font text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Preparation activity {index + 1} of 6</div>
+                  <h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-[hsl(var(--foreground))]">{activity.title}</h3>
+                </div>
+                {done && <CheckCircle2 size={18} className="shrink-0 text-[hsl(var(--chart-3))]" />}
+              </div>
+              <p className="text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">{activity.summary}</p>
+              <div className="mt-3 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+                <strong>Suggested evidence:</strong> {activity.evidence}
+              </div>
+              <button
+                type="button"
+                onClick={() => toggle(activity.id)}
+                className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
+                aria-pressed={done}
+              >
+                {done ? 'Mark not prepared' : 'Mark preparation complete'}
+              </button>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 border-t border-[hsl(var(--border))] pt-4 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
+        <strong>Evidence status:</strong> App records support preparation only and do not establish drive train practical competence. Any dismantling, assessment or reassembly evidence must be generated and verified through the authorised provider/workplace process.
+      </div>
+    </section>
+  );
+}
+
 function TurboInjectorMark() {
   return (
     <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2214,6 +2320,7 @@ function Home() {
         <PM08Module />
         <PM09Module />
         <PM10Module />
+        <PM11Module />
 
         <section className="mt-4 grid gap-3 sm:grid-cols-3" aria-label="Workshop baseline values">
           <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]"><Gauge size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">CRD rail warning</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">2,000+ <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">bar</span></div></div></div>
