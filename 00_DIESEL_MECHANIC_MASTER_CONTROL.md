@@ -155,6 +155,7 @@ Diesel Mechanic is not frozen until:
 - PM support layer is complete;
 - WM evidence layer is complete;
 - visual-learning library is controlled;
+- Diesel visual-learning register: `DIESEL_MECHANIC_VISUAL_LEARNING_LIBRARY.md`;
 - source/standards register is complete;
 - mobile/offline acceptance passes;
 - final readiness score is recorded.
@@ -186,3 +187,23 @@ Current freeze blockers:
 
 Freeze rule:
 - Do not mark Diesel Mechanic FROZEN until the remaining device acceptance checks pass.
+
+
+## 7. VISUAL LEARNING GATE — 2026-09-21
+
+Status: PASS — CONTROLLED ONLINE SUPPORT IMPLEMENTED
+
+Confirmed:
+- KM-01 to KM-08 each has one vetted concept-level online visual resource;
+- written KM lessons remain complete and usable offline;
+- visual links are optional and internet-only;
+- external resources are not cached as PWA dependencies;
+- learner progress does not depend on visual resources;
+- high-risk operational tutorials remain excluded;
+- online/offline status is shown in the visual-learning library;
+- links are disabled when the device is offline.
+
+Controlled register:
+- `DIESEL_MECHANIC_VISUAL_LEARNING_LIBRARY.md`
+
+Visual-learning completion does not override the device acceptance gate. Final product freeze still requires installed-phone offline relaunch and progress-persistence acceptance.
