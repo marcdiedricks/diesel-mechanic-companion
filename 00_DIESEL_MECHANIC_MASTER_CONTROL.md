@@ -1,6 +1,6 @@
 # 00_DIESEL_MECHANIC_MASTER_CONTROL.md
 
-Status: CONTROLLED MASTER SOURCE — BUILD IN PROGRESS
+Status: CONTROLLED MASTER SOURCE — BUILD IN PROGRESS — OFFICIAL SOURCE GATE PASSED 2026-09-21
 Date opened under Mzansi Build Intelligence: 2026-09-21
 
 ## 1. BUILD RULE
@@ -53,15 +53,15 @@ Legacy qualification reference:
 - PM-01 Work Safely and Respond to Emergencies — L2 — 6
 - PM-02 Use Tools and Equipment — L2 — 20
 - PM-03 Cut and Join Metals — L2 — 5
-- PM-04 Remove and Install Mechanical Components — L2 — 6
+- PM-04 Remove and Install Mechanical Components (Gaskets, Seals, Bearings and Locking Devices) — L2 — 6
 - PM-05 Work with Auto-electric and Auto-electronic Components — L2 — 2
 - PM-06 Work with Fluid Power Components — L2 — 2
 - PM-07 Maintain and Service Vehicles and Vehicle Components — L2 — 5
 - PM-08 Dismantle, Assess and Reassemble Engines and Engine Sub-assemblies — L3 — 16
 - PM-09 Dismantle, Assess and Reassemble Cooling Systems — L4 — 8
-- PM-10 Dismantle, Assess and Reassemble Brake Systems — L3 — 5
+- PM-10 Dismantle, Assess and Reassemble Brake Systems (including Hydraulic and Pneumatic Components) — L3 — 5
 - PM-11 Dismantle, Assess and Reassemble Drive Train System Components — L3 — 5
-- PM-12 Dismantle, Assess and Reassemble Steering and Suspension Systems — L3 — 5
+- PM-12 Dismantle, Assess and Reassemble Steering and Suspension Systems (including Hydraulic and Pneumatic Components) — L3 — 5
 - PM-13 Dismantle, Assess and Reassemble Basic Hydraulic Systems — L3 — 5
 - PM-14 Remove, Test, Repair and Refit Engines and Vehicle Components — L3 — 15
 - PM-15 Diagnose and Repair Vehicle Systems — L4 — 30
@@ -71,12 +71,12 @@ Legacy qualification reference:
 
 ### Work Experience Modules — 274 credits
 - WM-01 Routine Scheduled Services — L2 — 16
-- WM-02 Removal and Replacement of Engine Sub-system Components — L3 — 16
+- WM-02 Removal and Replacement of Engine Sub-system Components (including Batteries) — L3 — 16
 - WM-03 Removal and Replacement of Other Vehicle Sub-system Components — L3 — 20
 - WM-04 Engine Removal and Installation Processes — L3 — 18
 - WM-05 Repair Processes for Vehicle Sub-systems — L3 — 50
 - WM-06 Removal and Replacement of Cooling System — L3 — 20
-- WM-07 Diagnosis and Repair of Electrical Systems — L4 — 18
+- WM-07 Diagnosis and Repair of Electrical Systems (Charging, Starting, Lighting and Auxiliary) — L4 — 18
 - WM-08 Diagnose and Repair Air Conditioning System — L4 — 8
 - WM-09 Diagnosis and Repair of Electronic Control Systems — L4 — 18
 - WM-10 Diagnosis and Repair of Engines and Engine Sub-systems — L4 — 18
@@ -84,6 +84,40 @@ Legacy qualification reference:
 - WM-12 Diagnosis and Repair of Brake Systems — L4 — 18
 - WM-13 Diagnosis and Repair of Drive Train Systems — L4 — 18
 - WM-14 Diagnosis and Repair of Steering and Suspension Systems — L4 — 18
+
+
+## 3A. OFFICIAL SOURCE VERIFICATION GATE — 2026-09-21
+
+Verified directly against the current SAQA record for SAQA ID 117237.
+
+Confirmed:
+- Qualification title: Occupational Certificate: Diesel Mechanic.
+- SAQA ID: 117237.
+- Curriculum title/code: 653306-000-01-00: Diesel Mechanic.
+- NQF Level: 4.
+- Minimum credits: 544.
+- Development Quality Partner (DQP/originator): MERSETA.
+- Assessment Quality Partner (AQP): NAMB.
+- Registration start date: 2020-07-30.
+- Registration end date: 2025-07-30.
+- Last date for enrolment shown on the SAQA record: 2026-07-30.
+- Last date for achievement shown on the SAQA record: 2029-07-30.
+- Replacement relationship: 117237 replaces 97592.
+- Official module totals: Knowledge 108 + Practical Skills 162 + Work Experience 274 = 544.
+- Official module count/mapping: KM-01 to KM-08, PM-01 to PM-18, WM-01 to WM-14.
+- The module codes, levels and credits in this master control were reconciled to the official SAQA qualification rules.
+
+Transition note:
+- SAQA 97592 is separately recorded as replaced by 117237 and shows a later last-enrolment date of 2026-12-30 and last-achievement date of 2029-12-30.
+- This apparent transition-date overlap is preserved as an administrative source fact only. The build does not infer current enrolment eligibility from it and does not mix the 97592 module structure into the 117237 build.
+
+Source authority:
+- Primary: https://regqs.saqa.org.za/viewQualification.php?id=117237
+- Cross-check: https://pcqs.saqa.org.za/viewQualification.php?id=117237
+- Legacy transition cross-check: https://regqs.saqa.org.za/viewQualification.php?id=97592
+
+Detailed audit record:
+- DIESEL_MECHANIC_SOURCE_VERIFICATION_2026-09-21.md
 
 ## 4. SAFETY / AGE-APPROPRIATE BUILD BOUNDARY
 
