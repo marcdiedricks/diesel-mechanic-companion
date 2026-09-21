@@ -29,10 +29,6 @@ import { type ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { TradeCalculators } from '@/components/TradeCalculators';
-import {
-  getHpcrFuelInjectionTestWarning,
-  PNEUMATIC_AIR_BRAKE_GOVERNOR_PRESSURE_LIMITS,
-} from '@/engines/calculations/dieselMechanic';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
@@ -58,44 +54,44 @@ const copy: Record<Language, {
     safetyTitle: 'SAFETY GATE',
     safetyLead: 'Common Rail systems can hold lethal pressure after shutdown.',
     safetyAction: 'Do not open, test or work on high-risk systems through app instructions. Use the approved workshop process and competent supervision.',
-    toolLabel: 'FIELD TOOLS',
-    referenceLabel: 'TEST REFERENCES',
+    toolLabel: 'THEORY TOOLS',
+    referenceLabel: 'LEARNING REFERENCES',
     termsLabel: 'TRADE TERMS',
-    videoLabel: 'CURRICULUM VIDEO RESOURCE',
-    openLabel: 'OPEN RESOURCE',
+    videoLabel: 'VISUAL LEARNING LIBRARY',
+    openLabel: 'RESOURCE STATUS',
   },
   AF: {
     welcome: 'Molo / Hallo! Ek is jou Dieselwerktuigkundige Metgesel™ (SAQA ID: 117237). Gebruik die app vir teorie, terminologie, stelselbegrip, gevaarherkenning, diagnostiese redenasie, hersiening en bewysvoorbereiding. Praktiese voertuigwerk moet deur ’n goedgekeurde opleidings- of werkplekproses met bevoegde volwasse toesig plaasvind.',
     safetyTitle: 'VEILIGHEIDSHEK',
     safetyLead: 'Common Rail-stelsels kan dodelike druk behou nadat die enjin afgeskakel is.',
     safetyAction: 'Moenie hoërisikostelsels volgens app-instruksies oopmaak, toets of herstel nie. Gebruik die goedgekeurde werkswinkelproses en bevoegde toesig.',
-    toolLabel: 'WERKSWINKELGEREEDSKAP',
-    referenceLabel: 'TOETSVERWYSINGS',
+    toolLabel: 'TEORIEGEREEDSKAP',
+    referenceLabel: 'LEERVERWYSINGS',
     termsLabel: 'HANDELSTERME',
-    videoLabel: 'KURRIKULUM-VIDEOHULPBRON',
-    openLabel: 'OPEN HULPBRON',
+    videoLabel: 'VISUELE LEERBIBLIOTEEK',
+    openLabel: 'HULPBRONSTATUS',
   },
   XH: {
     welcome: 'Molo! NdinguMkhapheli wakho weMechanic yeDiesel™ (SAQA ID: 117237). Sebenzisa le app kufundo lwethiyori, amagama omsebenzi, ukuqonda iinkqubo, ukuqaphela iingozi, ukucinga ngoxilongo, uphononongo lwekharityhulam kunye nokulungiselela ubungqina. Umsebenzi osebenzayo kwisithuthi kufuneka wenziwe phantsi kwenkqubo evunyiweyo kunye nolawulo lomntu omdala ofanelekileyo.',
     safetyTitle: 'ISANGO LOKHUSELEKO',
     safetyLead: 'Iinkqubo zeCommon Rail zinokugcina uxinzelelo olubulalayo emva kokucinywa.',
     safetyAction: 'Musa ukuvula, ukuvavanya okanye ukulungisa iinkqubo ezinobungozi usebenzisa imiyalelo ye-app. Landela inkqubo evunyiweyo kunye nolawulo olufanelekileyo.',
-    toolLabel: 'IZIXHOBO ZOMSEBENZI',
-    referenceLabel: 'IINGCACISO ZOVAVANYO',
+    toolLabel: 'IZIXHOBO ZETHIYORI',
+    referenceLabel: 'IINGCACISO ZOKUFUNDA',
     termsLabel: 'AMAGAMA OMSEBENZI',
-    videoLabel: 'IZIFUNDO ZEVIDIYO ZEKHARITYHULAM',
-    openLabel: 'VULA ISIXHOBO',
+    videoLabel: 'ITHALA LEENCWADI LOKUFUNDA NGEMIFANEKISO',
+    openLabel: 'IMEKO YESIXHOBO',
   },
   ZU: {
     welcome: 'Molo! NginguMngani wakho kaMakhenikha weDiesel™ (SAQA ID: 117237). Sebenzisa lolu hlelo ukufunda ithiyori, amagama omsebenzi, ukuqonda amasistimu, ukuqaphela izingozi, ukucabanga ngokuxilonga, ukubuyekeza ikharikhulamu nokulungiselela ubufakazi. Umsebenzi osebenzayo emotweni kufanele wenziwe ngaphansi kwenqubo egunyaziwe kanye nokuqondiswa umuntu omdala onekhono.',
     safetyTitle: 'ISANGO LOKUPHEPHA',
     safetyLead: 'Amasistimu eCommon Rail angagcina umfutho obulalayo ngemva kokucima.',
     safetyAction: 'Ungavuli, uvivinye noma ulungise amasistimu ayingozi usebenzisa imiyalelo ye-app. Landela inqubo egunyaziwe kanye nokuqondiswa okufanele.',
-    toolLabel: 'AMATHULUZI ENDLWENI',
-    referenceLabel: 'IZINKOMBA ZOKUHLOLA',
+    toolLabel: 'AMATHULUZI ETHIYORI',
+    referenceLabel: 'IZINKOMBA ZOKUFUNDA',
     termsLabel: 'AMAGAMA OMSEBENZI',
-    videoLabel: 'IZINSIZA ZEVIDIYO ZEKHARIKHULAMU',
-    openLabel: 'VULA INSIZA',
+    videoLabel: 'UMTAPO WOKUFUNDA NGEZITHOMBE',
+    openLabel: 'ISIMO SENSIZA',
   },
 };
 
@@ -4289,82 +4285,6 @@ function SafetyPanel({ language }: { language: Language }) {
           </div>
         ))}
       </div>
-    </section>
-  );
-}
-
-function LinerCalculator() {
-  const [diameter, setDiameter] = useState('1.02');
-  const [flange, setFlange] = useState('0.91');
-  const [shim, setShim] = useState('0.04');
-  const net = Number(diameter) - Number(flange) + Number(shim);
-  const isPass = net >= 0.08 && net <= 0.15;
-  const guidance = net < 0.08 ? 'Add copper shim thickness; re-measure at four points.' : net > 0.15 ? 'Remove shim / inspect counterbore; protrusion is high.' : 'Within range. Record four-point readings and torque sequence.';
-  const input = (label: string, value: string, setValue: (value: string) => void, id: string) => (
-    <label className="block" htmlFor={id}>
-      <span className="mb-1.5 block text-[.68rem] font-bold uppercase tracking-[.12em] text-[hsl(var(--muted-foreground))]">{label} <span className="font-normal normal-case tracking-normal">(mm)</span></span>
-      <input id={id} className="input-field" type="number" step="0.01" min="0" value={value} onChange={(event) => setValue(event.target.value)} aria-label={`${label} in millimetres`} data-testid={`input-${id}`} />
-    </label>
-  );
-  return (
-    <section id="liner-calculator" className="panel data-grid bracket-corner p-4 sm:p-5" aria-labelledby="liner-heading">
-      <div className="mb-4 flex items-start justify-between gap-3">
-        <div><div className="eyebrow mb-2 flex items-center gap-2"><Calculator size={14} /> field calculator / 01</div><h2 id="liner-heading" className="section-heading">Cylinder liner protrusion</h2></div>
-        <Ruler className="text-[hsl(var(--primary))]" size={25} strokeWidth={1.6} />
-      </div>
-      <p className="mb-4 max-w-xl text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">Net protrusion = <span className="mono-font text-[hsl(var(--foreground))]">D − F + S</span>. Measure clean liner, counterbore and fitted shim on the same datum.</p>
-      <div className="grid grid-cols-3 gap-2">{input('Measured deck depth', diameter, setDiameter, 'liner-deck')}{input('Flange thickness', flange, setFlange, 'liner-flange')}{input('Copper shim', shim, setShim, 'liner-shim')}</div>
-      <div className="mt-4 flex flex-col gap-3 border-t border-[hsl(var(--border))] pt-4 sm:flex-row sm:items-end sm:justify-between">
-        <div><div className="mb-1 text-[.65rem] font-bold uppercase tracking-[.14em] text-[hsl(var(--muted-foreground))]">Net protrusion</div><div className="metric-value text-[hsl(var(--primary))]" data-testid="value-net-protrusion">{net.toFixed(2)} <span className="text-sm tracking-normal text-[hsl(var(--muted-foreground))]">mm</span></div></div>
-        <div className={`flex items-center gap-2 px-3 py-2 text-xs font-bold uppercase tracking-wide ${isPass ? 'bg-[rgba(94,178,119,.13)] text-[hsl(var(--chart-3))]' : 'bg-[rgba(234,96,83,.13)] text-[hsl(var(--destructive))]'}`} data-testid="status-liner-protrusion">
-          {isPass ? <CheckCircle2 size={16} /> : <XCircle size={16} />} {isPass ? 'PASS · 0.08–0.15 mm' : 'FAIL · outside 0.08–0.15 mm'}
-        </div>
-      </div>
-      <div className="mt-3 flex gap-2 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]"><Info className="mt-0.5 shrink-0 text-[hsl(var(--accent))]" size={15} /><span>{guidance}</span></div>
-    </section>
-  );
-}
-
-function AirBrakePanel() {
-  const { cutIn, cutOut } = PNEUMATIC_AIR_BRAKE_GOVERNOR_PRESSURE_LIMITS;
-  const rows = [
-    ['Cut-in', `${cutIn.minBar.toFixed(1)}–${cutIn.maxBar.toFixed(1)} bar`, `${cutIn.minKpa}–${cutIn.maxKpa} kPa`, 'Compressor loads'],
-    ['Cut-out', `${cutOut.minBar.toFixed(1)}–${cutOut.maxBar.toFixed(1)} bar`, `${cutOut.minKpa}–${cutOut.maxKpa} kPa`, 'Compressor unloads'],
-    ['Low air buzzer', '4.5 bar', '450 kPa', 'Stop and investigate'],
-  ];
-  return (
-    <section id="air-brake-reference" className="panel p-4 sm:p-5" aria-labelledby="air-heading">
-      <div className="mb-4 flex items-start justify-between gap-3"><div><div className="eyebrow mb-2 flex items-center gap-2"><CircleGauge size={14} /> reference matrix / 02</div><h2 id="air-heading" className="section-heading">Heavy vehicle air brake</h2></div><Wind className="text-[hsl(var(--accent))]" size={25} strokeWidth={1.6} /></div>
-      <p className="mb-4 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">Pneumatic testing baseline for a dual-circuit commercial vehicle system. Compare gauge readings with the vehicle OEM plate.</p>
-      <div className="overflow-x-auto scrollbar-thin">
-        <table className="w-full min-w-[480px] border-collapse text-left text-xs">
-          <thead><tr className="border-b border-[hsl(var(--border))] text-[.62rem] uppercase tracking-[.14em] text-[hsl(var(--muted-foreground))]"><th className="px-2 py-2 font-semibold">Test point</th><th className="px-2 py-2 font-semibold">bar</th><th className="px-2 py-2 font-semibold">kPa</th><th className="px-2 py-2 font-semibold">Expected action</th></tr></thead>
-          <tbody>{rows.map((row) => <tr key={row[0]} className="border-b border-[rgba(255,255,255,.05)] last:border-0"><td className="px-2 py-3 font-bold text-[hsl(var(--foreground))]">{row[0]}</td><td className="mono-font px-2 py-3 text-[hsl(var(--primary))]">{row[1]}</td><td className="mono-font px-2 py-3 text-[hsl(var(--muted-foreground))]">{row[2]}</td><td className="px-2 py-3 text-[hsl(var(--muted-foreground))]">{row[3]}</td></tr>)}</tbody>
-        </table>
-      </div>
-      <div className="mt-4 flex items-start gap-2 border-l-2 border-[hsl(var(--accent))] pl-3 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]"><ClipboardCheck className="mt-0.5 shrink-0 text-[hsl(var(--accent))]" size={14} />Check governor cycling, leaks, protection valves and both circuits. Never road-test a vehicle with a low-air warning.</div>
-    </section>
-  );
-}
-
-function InjectorPanel() {
-  const hpcrSafetyWarning = getHpcrFuelInjectionTestWarning(2000);
-  const rows = [
-    ['Bosch CRD', '≤ 30 ml / 30 s', '≤ 80 ml / min', 'Compare all injectors in the bank'],
-    ['Denso CRD', '≤ 25 ml / 30 s', '≤ 60 ml / min', 'Check return restriction first'],
-  ];
-  return (
-    <section id="injector-reference" className="panel p-4 sm:p-5" aria-labelledby="injector-heading">
-      <div className="mb-4 flex items-start justify-between gap-3"><div><div className="eyebrow mb-2 flex items-center gap-2"><Activity size={14} /> diagnostic matrix / 03</div><h2 id="injector-heading" className="section-heading">Injector return flow</h2></div><Fuel className="text-[hsl(var(--primary))]" size={25} strokeWidth={1.6} /></div>
-      <p className="mb-4 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">Maximum allowable return volume per bank. Warm engine, matched hoses and a clean graduated cylinder give useful comparisons.</p>
-      <div className="overflow-x-auto scrollbar-thin">
-        <table className="w-full min-w-[530px] border-collapse text-left text-xs">
-          <thead><tr className="border-b border-[hsl(var(--border))] text-[.62rem] uppercase tracking-[.14em] text-[hsl(var(--muted-foreground))]"><th className="px-2 py-2 font-semibold">System</th><th className="px-2 py-2 font-semibold">Cranking max</th><th className="px-2 py-2 font-semibold">Idle max</th><th className="px-2 py-2 font-semibold">Field note</th></tr></thead>
-          <tbody>{rows.map((row) => <tr key={row[0]} className="border-b border-[rgba(255,255,255,.05)] last:border-0"><td className="px-2 py-3 font-bold text-[hsl(var(--foreground))]">{row[0]}</td><td className="mono-font px-2 py-3 text-[hsl(var(--primary))]">{row[1]}</td><td className="mono-font px-2 py-3 text-[hsl(var(--primary))]">{row[2]}</td><td className="px-2 py-3 text-[hsl(var(--muted-foreground))]">{row[3]}</td></tr>)}</tbody>
-        </table>
-      </div>
-       <div className="mt-4 flex items-start gap-2 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]"><Gauge className="mt-0.5 shrink-0 text-[hsl(var(--primary))]" size={14} />A single high-return injector can pull rail pressure down. Confirm test kit limits and manufacturer data before condemning a component.</div>
-       {hpcrSafetyWarning && <div className="mt-3 flex items-start gap-2 border border-[rgba(234,96,83,.28)] bg-[rgba(234,96,83,.08)] p-3 text-xs font-semibold leading-relaxed text-[hsl(var(--foreground))]" role="alert" data-testid="warning-hpcr-fuel-injection-test"><ShieldAlert className="mt-0.5 shrink-0 text-[hsl(var(--destructive))]" size={15} />{hpcrSafetyWarning}</div>}
     </section>
   );
 }
