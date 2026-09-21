@@ -971,6 +971,45 @@ const pm16Activities = [
   },
 ] as const;
 
+const pm17Activities = [
+  {
+    id: 'PM17-A01',
+    title: 'Identify electronically controlled vehicle-system elements',
+    summary: 'Recognise broad categories such as control modules, sensors, actuators, networked systems, warning indicators and communication pathways from approved diagrams and classroom material.',
+    evidence: 'Learner identification sheet matching system elements to their general role.'
+  },
+  {
+    id: 'PM17-A02',
+    title: 'Interpret electronic diagnostic information conceptually',
+    summary: 'Practise reading classroom examples of fault records, data labels, module diagrams and approved technical references without connecting diagnostic equipment to a real vehicle.',
+    evidence: 'Facilitator-reviewed information map linking symptoms, module area and approved reference source.'
+  },
+  {
+    id: 'PM17-A03',
+    title: 'Recognise risks around electronic diagnosis and control',
+    summary: 'Identify hazards and quality risks linked to incorrect probing, bypassing, module substitution, programming, battery condition, live circuits and unsafe test environments.',
+    evidence: 'Hazard-recognition worksheet showing when work must stop and be escalated.'
+  },
+  {
+    id: 'PM17-A04',
+    title: 'Compare electronically controlled fault hypotheses',
+    summary: 'Practise comparing possible causes such as sensor, actuator, wiring, power-supply or communication issues against approved evidence without prescribing a live test sequence.',
+    evidence: 'Reasoning table with supporting and contradicting evidence for multiple hypotheses.'
+  },
+  {
+    id: 'PM17-A05',
+    title: 'Plan software, programming and verification evidence safely',
+    summary: 'Understand at a high level why software state, calibration records, approved procedures and post-repair verification matter in electronically controlled systems.',
+    evidence: 'Verification-planning worksheet containing no programming, coding or adaptation instructions.'
+  },
+  {
+    id: 'PM17-A06',
+    title: 'Record supervised electronic diagnostic and repair evidence',
+    summary: 'Capture the job reference, electronic system area, supervisor, approved source, evidence considered, authorised action and verification status after supervised practical work.',
+    evidence: 'Evidence record explicitly marked unverified until authorised review.'
+  },
+] as const;
+
 const queryClient = new QueryClient();
 
 
@@ -2589,6 +2628,73 @@ function PM16Module() {
   );
 }
 
+
+function PM17Module() {
+  const [completed, setCompleted] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('diesel-pm17-progress') || '[]'); } catch { return []; }
+  });
+
+  const toggle = (id: string) => {
+    setCompleted((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+      localStorage.setItem('diesel-pm17-progress', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  return (
+    <section id="pm17" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm17-heading">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <div className="eyebrow mb-2 flex items-center gap-2"><ClipboardCheck size={14} /> PM-17 • Diagnose and Repair Electronically Controlled Vehicle Systems</div>
+          <h2 id="pm17-heading" className="section-heading">Practical Skill Support — PM-17</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            Preparation and evidence support mapped to 653306-000-01-PM-17, NQF Level 4, 10 credits. This section develops electronic-system recognition, diagnostic reasoning, hazard awareness, evidence comparison and verification planning without teaching live electronic diagnostic or programming procedures.
+          </p>
+        </div>
+        <div className="mono-font shrink-0 text-right text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">{completed.length}/6 prepared</div>
+      </div>
+
+      <div className="mb-5 border border-[rgba(234,96,83,.35)] bg-[rgba(234,96,83,.08)] p-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+        <strong>Supervision boundary:</strong> The app does not provide scan-tool connection, live data testing, actuator activation, coding, programming, adaptation, immobiliser procedures, module replacement, network probing, circuit bypassing or return-to-service authorisation. Practical electronic diagnosis and repair must remain under approved provider/workplace control and competent adult supervision.
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        {pm17Activities.map((activity, index) => {
+          const done = completed.includes(activity.id);
+          return (
+            <article key={activity.id} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <div className="mono-font text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Preparation activity {index + 1} of 6</div>
+                  <h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-[hsl(var(--foreground))]">{activity.title}</h3>
+                </div>
+                {done && <CheckCircle2 size={18} className="shrink-0 text-[hsl(var(--chart-3))]" />}
+              </div>
+              <p className="text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">{activity.summary}</p>
+              <div className="mt-3 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+                <strong>Suggested evidence:</strong> {activity.evidence}
+              </div>
+              <button
+                type="button"
+                onClick={() => toggle(activity.id)}
+                className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
+                aria-pressed={done}
+              >
+                {done ? 'Mark not prepared' : 'Mark preparation complete'}
+              </button>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 border-t border-[hsl(var(--border))] pt-4 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
+        <strong>Evidence status:</strong> App records support preparation only and do not establish electronic diagnostic or repair competence. Any real electronic diagnosis, programming, repair or return-to-service decision must be completed and verified through the authorised provider/workplace process.
+      </div>
+    </section>
+  );
+}
+
 function TurboInjectorMark() {
   return (
     <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2856,6 +2962,7 @@ function Home() {
         <PM14Module />
         <PM15Module />
         <PM16Module />
+        <PM17Module />
 
         <section className="mt-4 grid gap-3 sm:grid-cols-3" aria-label="Workshop baseline values">
           <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]"><Gauge size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">CRD rail warning</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">2,000+ <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">bar</span></div></div></div>
