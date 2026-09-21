@@ -620,6 +620,45 @@ const pm07Activities = [
   },
 ] as const;
 
+const pm08Activities = [
+  {
+    id: 'PM08-A01',
+    title: 'Identify engine sub-assemblies and their relationships',
+    summary: 'Recognise major engine sub-assemblies, interfaces and broad functions from diagrams, exploded views and approved training material.',
+    evidence: 'Learner identification sheet showing component group, purpose and relationship to the complete engine.'
+  },
+  {
+    id: 'PM08-A02',
+    title: 'Interpret overhaul documentation and references',
+    summary: 'Practise reading job cards, exploded views, inspection records and approved overhaul information without carrying out dismantling or reassembly.',
+    evidence: 'Completed document-reading activity identifying the correct references and evidence fields.'
+  },
+  {
+    id: 'PM08-A03',
+    title: 'Recognise dismantling and reassembly hazards',
+    summary: 'Identify risks linked to heavy components, stored energy, hot parts, sharp edges, contamination, unsupported assemblies and incorrect handling from classroom scenarios.',
+    evidence: 'Hazard-recognition worksheet showing stop, escalate and supervision decisions.'
+  },
+  {
+    id: 'PM08-A04',
+    title: 'Plan condition assessment conceptually',
+    summary: 'Understand the difference between observation, measured evidence, approved limits and an assessment conclusion using facilitator-provided examples.',
+    evidence: 'Assessment worksheet comparing sample evidence with an approved reference without generating real repair instructions.'
+  },
+  {
+    id: 'PM08-A05',
+    title: 'Plan parts control and quality evidence',
+    summary: 'Learn why orientation, identification, cleanliness, traceability, part condition and documentation matter during a supervised engine overhaul.',
+    evidence: 'Parts-control and quality checklist completed for a classroom scenario.'
+  },
+  {
+    id: 'PM08-A06',
+    title: 'Record supervised overhaul evidence',
+    summary: 'Capture job reference, engine identification, supervisor, approved source, observed condition and verification status after authorised practical work.',
+    evidence: 'Evidence record explicitly marked unverified until authorised review.'
+  },
+] as const;
+
 const queryClient = new QueryClient();
 
 
@@ -1635,6 +1674,73 @@ function PM07Module() {
   );
 }
 
+
+function PM08Module() {
+  const [completed, setCompleted] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('diesel-pm08-progress') || '[]'); } catch { return []; }
+  });
+
+  const toggle = (id: string) => {
+    setCompleted((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+      localStorage.setItem('diesel-pm08-progress', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  return (
+    <section id="pm08" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm08-heading">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <div className="eyebrow mb-2 flex items-center gap-2"><ClipboardCheck size={14} /> PM-08 • Dismantle, Assess and Reassemble Engines and Engine Sub-assemblies</div>
+          <h2 id="pm08-heading" className="section-heading">Practical Skill Support — PM-08</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            Preparation and evidence support mapped to 653306-000-01-PM-08, NQF Level 3, 16 credits. This section supports component recognition, document interpretation, condition-assessment reasoning, parts control and evidence capture without teaching overhaul procedures.
+          </p>
+        </div>
+        <div className="mono-font shrink-0 text-right text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">{completed.length}/6 prepared</div>
+      </div>
+
+      <div className="mb-5 border border-[rgba(234,96,83,.35)] bg-[rgba(234,96,83,.08)] p-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+        <strong>Supervision boundary:</strong> The app does not provide engine dismantling, reassembly, lifting, timing, torque-setting, machining, bearing-fit, sealing, measurement or adjustment procedures. Practical overhaul work must follow approved technical information under competent adult supervision.
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        {pm08Activities.map((activity, index) => {
+          const done = completed.includes(activity.id);
+          return (
+            <article key={activity.id} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <div className="mono-font text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Preparation activity {index + 1} of 6</div>
+                  <h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-[hsl(var(--foreground))]">{activity.title}</h3>
+                </div>
+                {done && <CheckCircle2 size={18} className="shrink-0 text-[hsl(var(--chart-3))]" />}
+              </div>
+              <p className="text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">{activity.summary}</p>
+              <div className="mt-3 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+                <strong>Suggested evidence:</strong> {activity.evidence}
+              </div>
+              <button
+                type="button"
+                onClick={() => toggle(activity.id)}
+                className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
+                aria-pressed={done}
+              >
+                {done ? 'Mark not prepared' : 'Mark preparation complete'}
+              </button>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 border-t border-[hsl(var(--border))] pt-4 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
+        <strong>Evidence status:</strong> App records support preparation only and do not establish practical overhaul competence. Any dismantling, assessment or reassembly evidence must be generated and verified through the authorised provider/workplace process.
+      </div>
+    </section>
+  );
+}
+
 function TurboInjectorMark() {
   return (
     <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1893,6 +1999,7 @@ function Home() {
         <PM05Module />
         <PM06Module />
         <PM07Module />
+        <PM08Module />
 
         <section className="mt-4 grid gap-3 sm:grid-cols-3" aria-label="Workshop baseline values">
           <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]"><Gauge size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">CRD rail warning</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">2,000+ <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">bar</span></div></div></div>
