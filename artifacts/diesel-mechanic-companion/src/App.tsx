@@ -1226,6 +1226,45 @@ const wm05Activities = [
   },
 ] as const;
 
+const wm06Activities = [
+  {
+    id: 'WM06-A01',
+    title: 'Identify cooling-system workplace task context',
+    summary: 'Review vehicle identification, cooling-system area, job card information and approved workplace references to understand the supervised removal/replacement task without performing it through app instructions.',
+    evidence: 'Workplace learning record showing job reference, system area, component group, supervisor and approved source.'
+  },
+  {
+    id: 'WM06-A02',
+    title: 'Interpret cooling-system documentation',
+    summary: 'Review cooling-system diagrams, component references, inspection records and approved technical information to understand the workplace task and evidence requirements.',
+    evidence: 'Document-reading record identifying the relevant references and evidence fields.'
+  },
+  {
+    id: 'WM06-A03',
+    title: 'Recognise temperature, pressure and chemical hazards',
+    summary: 'Identify risks linked to hot coolant, pressurised systems, moving fans, chemical exposure, spills and contamination from the actual workplace context.',
+    evidence: 'Hazard and escalation note reviewed by the workplace supervisor.'
+  },
+  {
+    id: 'WM06-A04',
+    title: 'Capture condition and contamination observations',
+    summary: 'Record visible condition, leakage evidence, contamination, hose or component condition, mounting observations and other supervisor-approved findings without prescribing repair actions.',
+    evidence: 'Condition and contamination observation record linked to the workplace job.'
+  },
+  {
+    id: 'WM06-A05',
+    title: 'Record quality and environmental evidence',
+    summary: 'Capture housekeeping, spill control, fluid handling, contamination prevention, part traceability and quality verification observed during supervised work.',
+    evidence: 'Quality/environment record reviewed by the workplace supervisor.'
+  },
+  {
+    id: 'WM06-A06',
+    title: 'Prepare cooling-system workplace evidence for authorised verification',
+    summary: 'Organise the job reference, system area, supervisor, approved source, observed result and verification status into a clear evidence record.',
+    evidence: 'Completed workplace evidence record marked NOT VERIFIED until authorised review.'
+  },
+] as const;
+
 const queryClient = new QueryClient();
 
 
@@ -3313,6 +3352,73 @@ function WM05Module() {
   );
 }
 
+
+function WM06Module() {
+  const [completed, setCompleted] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('diesel-wm06-progress') || '[]'); } catch { return []; }
+  });
+
+  const toggle = (id: string) => {
+    setCompleted((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+      localStorage.setItem('diesel-wm06-progress', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  return (
+    <section id="wm06" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="wm06-heading">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <div className="eyebrow mb-2 flex items-center gap-2"><ClipboardCheck size={14} /> WM-06 • Removal and Replacement of Cooling System</div>
+          <h2 id="wm06-heading" className="section-heading">Work Experience Support — WM-06</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            Workplace evidence support mapped to 653306-000-01-WM-06, NQF Level 3, 20 credits. This section helps learners structure supervised workplace evidence for cooling-system removal and replacement without teaching or simulating the physical task.
+          </p>
+        </div>
+        <div className="mono-font shrink-0 text-right text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">{completed.length}/6 recorded</div>
+      </div>
+
+      <div className="mb-5 border border-[rgba(234,96,83,.35)] bg-[rgba(234,96,83,.08)] p-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+        <strong>Workplace boundary:</strong> The app does not provide hot-system opening, pressure release, coolant draining, fan access, hose removal, flushing, dismantling, reassembly, pressure testing or repair procedures. Practical work must remain under the approved workplace/provider process and competent adult supervision.
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        {wm06Activities.map((activity, index) => {
+          const done = completed.includes(activity.id);
+          return (
+            <article key={activity.id} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <div className="mono-font text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Workplace evidence item {index + 1} of 6</div>
+                  <h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-[hsl(var(--foreground))]">{activity.title}</h3>
+                </div>
+                {done && <CheckCircle2 size={18} className="shrink-0 text-[hsl(var(--chart-3))]" />}
+              </div>
+              <p className="text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">{activity.summary}</p>
+              <div className="mt-3 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+                <strong>Evidence scaffold:</strong> {activity.evidence}
+              </div>
+              <button
+                type="button"
+                onClick={() => toggle(activity.id)}
+                className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
+                aria-pressed={done}
+              >
+                {done ? 'Mark not recorded' : 'Mark evidence recorded'}
+              </button>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 border-t border-[hsl(var(--border))] pt-4 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
+        <strong>Verification status:</strong> Learner-entered workplace evidence remains NOT VERIFIED until reviewed through the authorised workplace/provider process.
+      </div>
+    </section>
+  );
+}
+
 function TurboInjectorMark() {
   return (
     <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -3587,6 +3693,7 @@ function Home() {
         <WM03Module />
         <WM04Module />
         <WM05Module />
+        <WM06Module />
 
         <section className="mt-4 grid gap-3 sm:grid-cols-3" aria-label="Workshop baseline values">
           <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]"><Gauge size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">CRD rail warning</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">2,000+ <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">bar</span></div></div></div>
