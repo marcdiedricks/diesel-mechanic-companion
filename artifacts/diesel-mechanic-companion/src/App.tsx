@@ -554,6 +554,39 @@ const pm05Activities = [
   },
 ] as const;
 
+const pm06Activities = [
+  {
+    id: 'PM06-A01',
+    title: 'Identify hydraulic and pneumatic component groups',
+    summary: 'Recognise broad categories such as pumps, compressors, reservoirs, valves, actuators, hoses, pipes, filters and gauges from approved diagrams and classroom material.',
+    evidence: 'Learner identification sheet matching component groups to their general function.'
+  },
+  {
+    id: 'PM06-A02',
+    title: 'Interpret fluid-power symbols and system information',
+    summary: 'Practise reading basic hydraulic and pneumatic symbols, flow paths and approved system diagrams without opening, pressurising or testing a real system.',
+    evidence: 'Completed schematic-reading activity reviewed by a facilitator.'
+  },
+  {
+    id: 'PM06-A03',
+    title: 'Recognise pressure and stored-energy hazards',
+    summary: 'Identify risks linked to pressurised fluid, compressed air, hose failure, moving actuators and unsupported loads from classroom scenarios.',
+    evidence: 'Hazard-recognition worksheet showing what must be stopped and escalated.'
+  },
+  {
+    id: 'PM06-A04',
+    title: 'Plan diagnostic evidence collection conceptually',
+    summary: 'Organise approved information such as symptoms, system diagrams, warning indicators, service history and supervisor-provided readings into an evidence trail.',
+    evidence: 'A diagnostic evidence plan containing no pressure-test or disconnection procedure.'
+  },
+  {
+    id: 'PM06-A05',
+    title: 'Document supervised fluid-power work evidence',
+    summary: 'Record the job reference, system, supervisor, approved source, observed condition and verification status after an authorised practical session.',
+    evidence: 'Evidence record explicitly marked unverified until authorised review.'
+  },
+] as const;
+
 const queryClient = new QueryClient();
 
 
@@ -1435,6 +1468,73 @@ function PM05Module() {
   );
 }
 
+
+function PM06Module() {
+  const [completed, setCompleted] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('diesel-pm06-progress') || '[]'); } catch { return []; }
+  });
+
+  const toggle = (id: string) => {
+    setCompleted((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+      localStorage.setItem('diesel-pm06-progress', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  return (
+    <section id="pm06" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm06-heading">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <div className="eyebrow mb-2 flex items-center gap-2"><ClipboardCheck size={14} /> PM-06 • Work with Fluid Power Components</div>
+          <h2 id="pm06-heading" className="section-heading">Practical Skill Support — PM-06</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            Preparation and evidence support mapped to 653306-000-01-PM-06, NQF Level 2, 2 credits. This section supports component recognition, schematic reading, stored-energy awareness, diagnostic-evidence planning and supervised evidence capture.
+          </p>
+        </div>
+        <div className="mono-font shrink-0 text-right text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">{completed.length}/5 prepared</div>
+      </div>
+
+      <div className="mb-5 border border-[rgba(234,96,83,.35)] bg-[rgba(234,96,83,.08)] p-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+        <strong>Supervision boundary:</strong> The app does not provide pressure-release, hose or pipe disconnection, hydraulic lifting, air-system release, actuator movement, pressure testing or component replacement procedures. Practical work must remain within approved provider/workplace controls and competent adult supervision.
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        {pm06Activities.map((activity, index) => {
+          const done = completed.includes(activity.id);
+          return (
+            <article key={activity.id} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <div className="mono-font text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Preparation activity {index + 1} of 5</div>
+                  <h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-[hsl(var(--foreground))]">{activity.title}</h3>
+                </div>
+                {done && <CheckCircle2 size={18} className="shrink-0 text-[hsl(var(--chart-3))]" />}
+              </div>
+              <p className="text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">{activity.summary}</p>
+              <div className="mt-3 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+                <strong>Suggested evidence:</strong> {activity.evidence}
+              </div>
+              <button
+                type="button"
+                onClick={() => toggle(activity.id)}
+                className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
+                aria-pressed={done}
+              >
+                {done ? 'Mark not prepared' : 'Mark preparation complete'}
+              </button>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 border-t border-[hsl(var(--border))] pt-4 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
+        <strong>Evidence status:</strong> Learner preparation and app records do not establish practical competence. Any fluid-power task must be completed and verified through the authorised training or workplace process.
+      </div>
+    </section>
+  );
+}
+
 function TurboInjectorMark() {
   return (
     <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1691,6 +1791,7 @@ function Home() {
         <PM03Module />
         <PM04Module />
         <PM05Module />
+        <PM06Module />
 
         <section className="mt-4 grid gap-3 sm:grid-cols-3" aria-label="Workshop baseline values">
           <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]"><Gauge size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">CRD rail warning</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">2,000+ <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">bar</span></div></div></div>
