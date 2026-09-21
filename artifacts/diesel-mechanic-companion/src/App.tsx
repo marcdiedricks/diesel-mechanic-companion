@@ -362,6 +362,39 @@ const km07Lessons = [
   },
 ] as const;
 
+const km08Lessons = [
+  {
+    id: 'KM08-L01',
+    title: 'Structured problem solving and fault isolation',
+    summary: 'Use a disciplined process to separate reported symptoms, observed evidence, possible causes and verified conclusions without jumping to a repair decision.',
+    check: 'A hypothesis is not a diagnosis. Real testing and corrective work require approved procedures and competent supervision.'
+  },
+  {
+    id: 'KM08-L02',
+    title: 'Interpreting diagnostic information',
+    summary: 'Learn how warning indicators, fault records, service history, approved measurements and technical information can be combined into an evidence trail.',
+    check: 'Diagnostic information must be interpreted in context; fault codes and readings do not automatically identify a component to replace.'
+  },
+  {
+    id: 'KM08-L03',
+    title: 'Engine performance and efficiency concepts',
+    summary: 'Understand the broad relationships between combustion, airflow, fuel delivery, temperature, load, friction and engine efficiency at a theory level.',
+    check: 'This lesson supports conceptual learning only and does not provide tuning, adjustment, calibration or performance-modification instructions.'
+  },
+  {
+    id: 'KM08-L04',
+    title: 'Emissions, reliability and operating condition',
+    summary: 'Recognise how poor combustion, excessive wear, restricted flow, incorrect operating conditions and maintenance history can affect emissions and reliability.',
+    check: 'Emissions-system service, regeneration, bypassing or modification must not be performed from app guidance.'
+  },
+  {
+    id: 'KM08-L05',
+    title: 'Quality decisions, escalation and evidence',
+    summary: 'Practise deciding when evidence is sufficient, when more approved information is needed and when a fault must be escalated to a competent supervisor or specialist.',
+    check: 'Safe professional practice includes knowing when to stop. The app never substitutes for authorised practical diagnosis or sign-off.'
+  },
+] as const;
+
 const queryClient = new QueryClient();
 
 
@@ -840,6 +873,74 @@ function KM07Module() {
   );
 }
 
+
+function KM08Module() {
+  const [completed, setCompleted] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('diesel-km08-progress') || '[]'); } catch { return []; }
+  });
+
+  const toggle = (id: string) => {
+    setCompleted((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+      localStorage.setItem('diesel-km08-progress', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  return (
+    <section id="km08" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="km08-heading">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <div className="eyebrow mb-2 flex items-center gap-2"><BookOpen size={14} /> KM-08 • Problem Solving and Engine Optimisation</div>
+          <h2 id="km08-heading" className="section-heading">Problem Solving and Engine Optimisation</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            Controlled learning support mapped to 653306-000-01-KM-08, NQF Level 4, 10 credits. This five-lesson sequence completes the Diesel Mechanic knowledge layer with structured diagnostic reasoning, efficiency concepts and safe escalation.
+          </p>
+        </div>
+        <div className="mono-font shrink-0 text-right text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">{completed.length}/5 complete</div>
+      </div>
+
+      <div className="mb-5 border border-[rgba(233,184,54,.25)] bg-[rgba(233,184,54,.06)] p-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+        <strong>Safety boundary:</strong> KM-08 teaches problem solving, evidence interpretation, performance concepts and escalation. It does not provide tuning, programming, calibration, emissions-system procedures, live testing or repair instructions.
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        {km08Lessons.map((lesson, index) => {
+          const done = completed.includes(lesson.id);
+          return (
+            <article key={lesson.id} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <div className="mono-font text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Lesson {index + 1} of 5</div>
+                  <h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-[hsl(var(--foreground))]">{lesson.title}</h3>
+                </div>
+                {done && <CheckCircle2 size={18} className="shrink-0 text-[hsl(var(--chart-3))]" />}
+              </div>
+              <p className="text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">{lesson.summary}</p>
+              <div className="mt-3 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+                <strong>Learning check:</strong> {lesson.check}
+              </div>
+              <button
+                type="button"
+                onClick={() => toggle(lesson.id)}
+                className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
+                aria-pressed={done}
+              >
+                {done ? 'Mark not complete' : 'Mark lesson complete'}
+              </button>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 flex flex-col gap-2 border-t border-[hsl(var(--border))] pt-4 text-xs text-[hsl(var(--muted-foreground))] sm:flex-row sm:items-center sm:justify-between">
+        <span>Official qualification source: SAQA 117237 • 653306-000-01-KM-08 • 10 credits</span>
+        <a className="text-[hsl(var(--primary))] underline-offset-4 hover:underline" href="https://pcqs.saqa.org.za/viewQualification.php?id=117237" target="_blank" rel="noopener noreferrer">Open SAQA qualification</a>
+      </div>
+    </section>
+  );
+}
+
 function TurboInjectorMark() {
   return (
     <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1090,6 +1191,7 @@ function Home() {
         <KM05Module />
         <KM06Module />
         <KM07Module />
+        <KM08Module />
 
         <section className="mt-4 grid gap-3 sm:grid-cols-3" aria-label="Workshop baseline values">
           <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]"><Gauge size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">CRD rail warning</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">2,000+ <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">bar</span></div></div></div>
