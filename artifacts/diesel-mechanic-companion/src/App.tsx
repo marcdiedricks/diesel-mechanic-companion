@@ -1049,6 +1049,39 @@ const pm18Activities = [
   },
 ] as const;
 
+const wm01Activities = [
+  {
+    id: 'WM01-A01',
+    title: 'Understand the purpose of routine scheduled services',
+    summary: 'Recognise why scheduled maintenance supports reliability, safety, service history and early fault detection in a real workplace context.',
+    evidence: 'Workplace reflection or supervisor discussion note describing the purpose of scheduled servicing.'
+  },
+  {
+    id: 'WM01-A02',
+    title: 'Read service records and workplace documentation',
+    summary: 'Practise interpreting service history, job cards, maintenance schedules and sign-off fields using workplace-approved documents.',
+    evidence: 'Completed workplace documentation exercise or supervised record review.'
+  },
+  {
+    id: 'WM01-A03',
+    title: 'Recognise maintenance findings that require escalation',
+    summary: 'Identify broad examples of abnormal wear, leaks, damage, warning indicators or overdue items that must be reported rather than ignored.',
+    evidence: 'Supervisor-reviewed note showing the observation and escalation route.'
+  },
+  {
+    id: 'WM01-A04',
+    title: 'Reflect on quality and environmental controls',
+    summary: 'Observe and document how the workplace manages cleanliness, waste, contamination, parts accountability and final quality checks during scheduled servicing.',
+    evidence: 'Workplace observation checklist completed with supervisor review.'
+  },
+  {
+    id: 'WM01-A05',
+    title: 'Maintain a verified workplace evidence record',
+    summary: 'Capture date, workplace, job reference, service category, supervising person and evidence status without self-certifying practical competence.',
+    evidence: 'Workplace evidence entry awaiting authorised human verification.'
+  },
+] as const;
+
 const queryClient = new QueryClient();
 
 
@@ -2801,6 +2834,73 @@ function PM18Module() {
   );
 }
 
+
+function WM01Module() {
+  const [completed, setCompleted] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('diesel-wm01-progress') || '[]'); } catch { return []; }
+  });
+
+  const toggle = (id: string) => {
+    setCompleted((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+      localStorage.setItem('diesel-wm01-progress', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  return (
+    <section id="wm01" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="wm01-heading">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <div className="eyebrow mb-2 flex items-center gap-2"><ClipboardCheck size={14} /> WM-01 • Routine Scheduled Services</div>
+          <h2 id="wm01-heading" className="section-heading">Work Experience Support — WM-01</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            Workplace evidence support mapped to 653306-000-01-WM-01, NQF Level 2, 16 credits. This section helps learners understand, document and reflect on supervised workplace experience without simulating service completion or assessor sign-off.
+          </p>
+        </div>
+        <div className="mono-font shrink-0 text-right text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">{completed.length}/5 logged</div>
+      </div>
+
+      <div className="mb-5 border border-[rgba(234,96,83,.35)] bg-[rgba(234,96,83,.08)] p-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+        <strong>Workplace boundary:</strong> The app does not teach or authorise servicing procedures and does not convert learner notes into verified workplace competence. All vehicle servicing must occur through the authorised workplace process under competent adult supervision.
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        {wm01Activities.map((activity, index) => {
+          const done = completed.includes(activity.id);
+          return (
+            <article key={activity.id} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <div className="mono-font text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Workplace evidence item {index + 1} of 5</div>
+                  <h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-[hsl(var(--foreground))]">{activity.title}</h3>
+                </div>
+                {done && <CheckCircle2 size={18} className="shrink-0 text-[hsl(var(--chart-3))]" />}
+              </div>
+              <p className="text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">{activity.summary}</p>
+              <div className="mt-3 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+                <strong>Evidence example:</strong> {activity.evidence}
+              </div>
+              <button
+                type="button"
+                onClick={() => toggle(activity.id)}
+                className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
+                aria-pressed={done}
+              >
+                {done ? 'Mark not logged' : 'Mark evidence logged'}
+              </button>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 border-t border-[hsl(var(--border))] pt-4 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
+        <strong>Verification status:</strong> App entries remain learner records only. Workplace competence and experience must be verified by an authorised human through the provider/workplace process.
+      </div>
+    </section>
+  );
+}
+
 function TurboInjectorMark() {
   return (
     <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -3070,6 +3170,7 @@ function Home() {
         <PM16Module />
         <PM17Module />
         <PM18Module />
+        <WM01Module />
 
         <section className="mt-4 grid gap-3 sm:grid-cols-3" aria-label="Workshop baseline values">
           <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]"><Gauge size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">CRD rail warning</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">2,000+ <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">bar</span></div></div></div>
