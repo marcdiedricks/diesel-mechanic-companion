@@ -1,29 +1,21 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
-  Activity,
-  ArrowUpRight,
   BookOpen,
   Calculator,
   CheckCircle2,
   ChevronDown,
-  CircleGauge,
   ClipboardCheck,
   Droplets,
-  ExternalLink,
   Fuel,
-  Gauge,
   HardHat,
-  Info,
   Languages,
   LockKeyhole,
   Menu,
-  Ruler,
   ShieldAlert,
   Siren,
   Wind,
   Wrench,
   X,
-  XCircle,
 } from 'lucide-react';
 import { type ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
