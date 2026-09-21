@@ -1343,6 +1343,45 @@ const wm08Activities = [
   },
 ] as const;
 
+const wm09Activities = [
+  {
+    id: 'WM09-A01',
+    title: 'Capture electronic-control fault context',
+    summary: 'Record reported symptoms, warning indicators, vehicle history, affected control-system area and approved workplace references before supervised diagnosis begins.',
+    evidence: 'Workplace learning record showing job reference, symptom context, system area, supervisor and approved source.'
+  },
+  {
+    id: 'WM09-A02',
+    title: 'Interpret network, module and diagnostic information',
+    summary: 'Review approved diagrams, module references, supervisor-provided fault records and communication information without connecting or operating diagnostic equipment through app instructions.',
+    evidence: 'Diagnostic information record identifying the evidence used and relevant control-system area.'
+  },
+  {
+    id: 'WM09-A03',
+    title: 'Recognise risks in electronic-control diagnosis',
+    summary: 'Identify workplace risks linked to live circuits, incorrect probing, module substitution, software state, network disruption, battery condition and unsafe test environments.',
+    evidence: 'Hazard and escalation note reviewed by the workplace supervisor.'
+  },
+  {
+    id: 'WM09-A04',
+    title: 'Capture diagnostic reasoning and authorised findings',
+    summary: 'Record possible fault areas, evidence considered, contradictions and supervisor decisions without prescribing scan-tool, programming or live-test procedures.',
+    evidence: 'Reasoning record linking workplace evidence to the authorised diagnostic decision.'
+  },
+  {
+    id: 'WM09-A05',
+    title: 'Record supervised repair, programming-status and verification observations',
+    summary: 'Capture the authorised work stage, software or calibration status where relevant, observed result, quality checks and unresolved issues after supervised work.',
+    evidence: 'Repair/verification observation record with final status left to the authorised reviewer.'
+  },
+  {
+    id: 'WM09-A06',
+    title: 'Prepare electronic-control workplace evidence for authorised verification',
+    summary: 'Organise the job reference, control-system area, supervisor, approved source, evidence trail and verification status into a clear workplace record.',
+    evidence: 'Completed workplace evidence record marked NOT VERIFIED until authorised review.'
+  },
+] as const;
+
 const queryClient = new QueryClient();
 
 
@@ -3631,6 +3670,73 @@ function WM08Module() {
   );
 }
 
+
+function WM09Module() {
+  const [completed, setCompleted] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('diesel-wm09-progress') || '[]'); } catch { return []; }
+  });
+
+  const toggle = (id: string) => {
+    setCompleted((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+      localStorage.setItem('diesel-wm09-progress', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  return (
+    <section id="wm09" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="wm09-heading">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <div className="eyebrow mb-2 flex items-center gap-2"><ClipboardCheck size={14} /> WM-09 • Diagnosis and Repair of Electronic Control Systems</div>
+          <h2 id="wm09-heading" className="section-heading">Work Experience Support — WM-09</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            Workplace evidence support mapped to 653306-000-01-WM-09, NQF Level 4, 18 credits. This section helps learners structure evidence from supervised electronic-control diagnosis and repair without teaching scan-tool, programming or live electronic procedures.
+          </p>
+        </div>
+        <div className="mono-font shrink-0 text-right text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">{completed.length}/6 recorded</div>
+      </div>
+
+      <div className="mb-5 border border-[rgba(234,96,83,.35)] bg-[rgba(234,96,83,.08)] p-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+        <strong>Workplace boundary:</strong> The app does not provide scan-tool connection, live-data testing, actuator activation, coding, programming, adaptation, immobiliser procedures, module replacement, network probing, circuit bypassing or return-to-service authorisation. Practical diagnosis and repair must remain under approved workplace/provider control and competent adult supervision.
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        {wm09Activities.map((activity, index) => {
+          const done = completed.includes(activity.id);
+          return (
+            <article key={activity.id} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <div className="mono-font text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Workplace evidence item {index + 1} of 6</div>
+                  <h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-[hsl(var(--foreground))]">{activity.title}</h3>
+                </div>
+                {done && <CheckCircle2 size={18} className="shrink-0 text-[hsl(var(--chart-3))]" />}
+              </div>
+              <p className="text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">{activity.summary}</p>
+              <div className="mt-3 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+                <strong>Evidence scaffold:</strong> {activity.evidence}
+              </div>
+              <button
+                type="button"
+                onClick={() => toggle(activity.id)}
+                className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
+                aria-pressed={done}
+              >
+                {done ? 'Mark not recorded' : 'Mark evidence recorded'}
+              </button>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 border-t border-[hsl(var(--border))] pt-4 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
+        <strong>Verification status:</strong> Learner-entered workplace evidence remains NOT VERIFIED until reviewed through the authorised workplace/provider process.
+      </div>
+    </section>
+  );
+}
+
 function TurboInjectorMark() {
   return (
     <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -3908,6 +4014,7 @@ function Home() {
         <WM06Module />
         <WM07Module />
         <WM08Module />
+        <WM09Module />
 
         <section className="mt-4 grid gap-3 sm:grid-cols-3" aria-label="Workshop baseline values">
           <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]"><Gauge size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">CRD rail warning</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">2,000+ <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">bar</span></div></div></div>
