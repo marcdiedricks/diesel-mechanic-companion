@@ -1,14 +1,16 @@
 {
   "name": "Diesel Mechanic Companion™",
   "short_name": "Diesel Companion",
-  "description": "A multilingual field companion for South African diesel mechanic learners and Red Seal trade test preparation.",
+  "description": "A multilingual offline-first learning companion for South African diesel mechanic learners mapped to SAQA 117237.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#020617",
   "theme_color": "#eab308",
-  "categories": ["education", "utilities"],
+  "categories": [
+    "education"
+  ],
   "lang": "en-ZA",
   "icons": [
     {
