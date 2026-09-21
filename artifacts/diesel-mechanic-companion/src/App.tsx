@@ -698,6 +698,45 @@ const pm09Activities = [
   },
 ] as const;
 
+const pm10Activities = [
+  {
+    id: 'PM10-A01',
+    title: 'Identify brake-system component groups',
+    summary: 'Recognise broad hydraulic and pneumatic brake-system component categories, their purpose and how they relate within the complete braking system using approved diagrams and classroom material.',
+    evidence: 'Learner identification sheet matching component groups to their general role.'
+  },
+  {
+    id: 'PM10-A02',
+    title: 'Interpret brake-system job and technical information',
+    summary: 'Practise reading job cards, schematics, inspection records and approved technical references without releasing, dismantling or testing a real brake system.',
+    evidence: 'Completed document-reading exercise identifying the correct references and evidence fields.'
+  },
+  {
+    id: 'PM10-A03',
+    title: 'Recognise stored-energy and vehicle-movement hazards',
+    summary: 'Identify risks linked to compressed air, springs, hydraulic pressure, vehicle movement, unsupported vehicles and heavy wheel-end components from classroom scenarios.',
+    evidence: 'Hazard-recognition worksheet showing stop, secure, escalate and supervision decisions.'
+  },
+  {
+    id: 'PM10-A04',
+    title: 'Plan condition assessment conceptually',
+    summary: 'Understand how observations, approved measurements, wear evidence, leakage evidence and technical limits contribute to a supervised brake-system assessment.',
+    evidence: 'Condition-assessment worksheet using facilitator-provided evidence rather than live system testing.'
+  },
+  {
+    id: 'PM10-A05',
+    title: 'Plan quality and verification evidence',
+    summary: 'Understand why component identity, cleanliness, condition, traceability and final verification are essential in safety-critical brake work.',
+    evidence: 'Quality and verification checklist completed for a classroom scenario.'
+  },
+  {
+    id: 'PM10-A06',
+    title: 'Record supervised brake-system evidence',
+    summary: 'Capture the job reference, brake-system area, supervisor, approved source, observed condition and verification status after authorised practical work.',
+    evidence: 'Evidence record explicitly marked unverified until authorised review.'
+  },
+] as const;
+
 const queryClient = new QueryClient();
 
 
@@ -1847,6 +1886,73 @@ function PM09Module() {
   );
 }
 
+
+function PM10Module() {
+  const [completed, setCompleted] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('diesel-pm10-progress') || '[]'); } catch { return []; }
+  });
+
+  const toggle = (id: string) => {
+    setCompleted((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+      localStorage.setItem('diesel-pm10-progress', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  return (
+    <section id="pm10" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm10-heading">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <div className="eyebrow mb-2 flex items-center gap-2"><ClipboardCheck size={14} /> PM-10 • Dismantle, Assess and Reassemble Brake Systems</div>
+          <h2 id="pm10-heading" className="section-heading">Practical Skill Support — PM-10</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            Preparation and evidence support mapped to 653306-000-01-PM-10, NQF Level 3, 5 credits. This section supports component recognition, technical-document reading, hazard awareness, condition-assessment reasoning, quality planning and supervised evidence capture without teaching brake procedures.
+          </p>
+        </div>
+        <div className="mono-font shrink-0 text-right text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">{completed.length}/6 prepared</div>
+      </div>
+
+      <div className="mb-5 border border-[rgba(234,96,83,.35)] bg-[rgba(234,96,83,.08)] p-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+        <strong>Supervision boundary:</strong> Brake systems are safety-critical. The app does not provide release, caging, bleeding, adjustment, dismantling, reassembly, air-pressure testing, hydraulic testing, wheel removal or brake repair procedures. Practical work must follow approved provider/workplace controls under competent adult supervision.
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        {pm10Activities.map((activity, index) => {
+          const done = completed.includes(activity.id);
+          return (
+            <article key={activity.id} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <div className="mono-font text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Preparation activity {index + 1} of 6</div>
+                  <h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-[hsl(var(--foreground))]">{activity.title}</h3>
+                </div>
+                {done && <CheckCircle2 size={18} className="shrink-0 text-[hsl(var(--chart-3))]" />}
+              </div>
+              <p className="text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">{activity.summary}</p>
+              <div className="mt-3 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+                <strong>Suggested evidence:</strong> {activity.evidence}
+              </div>
+              <button
+                type="button"
+                onClick={() => toggle(activity.id)}
+                className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
+                aria-pressed={done}
+              >
+                {done ? 'Mark not prepared' : 'Mark preparation complete'}
+              </button>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 border-t border-[hsl(var(--border))] pt-4 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
+        <strong>Evidence status:</strong> App records support preparation only and do not establish brake-system practical competence. Any brake-system evidence must be generated and verified through the authorised provider/workplace process.
+      </div>
+    </section>
+  );
+}
+
 function TurboInjectorMark() {
   return (
     <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2107,6 +2213,7 @@ function Home() {
         <PM07Module />
         <PM08Module />
         <PM09Module />
+        <PM10Module />
 
         <section className="mt-4 grid gap-3 sm:grid-cols-3" aria-label="Workshop baseline values">
           <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]"><Gauge size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">CRD rail warning</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">2,000+ <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">bar</span></div></div></div>
