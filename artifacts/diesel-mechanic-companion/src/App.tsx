@@ -1148,6 +1148,39 @@ const wm03Activities = [
   },
 ] as const;
 
+const wm04Activities = [
+  {
+    id: 'WM04-A01',
+    title: 'Identify engine-removal job context and interfaces',
+    summary: 'Review vehicle and engine identification, mounting interfaces, connected systems and the supervised workplace job context from approved information without performing any removal or installation through app instructions.',
+    evidence: 'Workplace learning record showing vehicle, engine, job reference, supervisor and approved source.'
+  },
+  {
+    id: 'WM04-A02',
+    title: 'Interpret engine-removal and installation documentation',
+    summary: 'Review job cards, lifting plans, exploded views, interface references and approved technical information to understand the supervised task and evidence requirements.',
+    evidence: 'Document-reading record identifying relevant references, connected systems and evidence fields.'
+  },
+  {
+    id: 'WM04-A03',
+    title: 'Recognise heavy-lift, crush and stored-energy hazards',
+    summary: 'Identify risks linked to engine mass, suspended loads, support points, vehicle movement, hot systems, fuel, electricity, pressure and pinch zones from the actual workplace context.',
+    evidence: 'Hazard and escalation note reviewed by the workplace supervisor.'
+  },
+  {
+    id: 'WM04-A04',
+    title: 'Capture interface, condition and quality observations',
+    summary: 'Record observed mounts, hoses, wiring, driveline interfaces, contamination issues, identification marks and quality observations after supervised work without prescribing operational steps.',
+    evidence: 'Condition and interface observation record linked to the workplace job.'
+  },
+  {
+    id: 'WM04-A05',
+    title: 'Prepare engine removal/installation evidence for verification',
+    summary: 'Organise the job reference, engine identification, supervisor, approved source, observed result and verification status into a clear workplace evidence record.',
+    evidence: 'Completed workplace evidence record marked NOT VERIFIED until authorised review.'
+  },
+] as const;
+
 const queryClient = new QueryClient();
 
 
@@ -3101,6 +3134,73 @@ function WM03Module() {
   );
 }
 
+
+function WM04Module() {
+  const [completed, setCompleted] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('diesel-wm04-progress') || '[]'); } catch { return []; }
+  });
+
+  const toggle = (id: string) => {
+    setCompleted((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+      localStorage.setItem('diesel-wm04-progress', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  return (
+    <section id="wm04" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="wm04-heading">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <div className="eyebrow mb-2 flex items-center gap-2"><ClipboardCheck size={14} /> WM-04 • Engine Removal and Installation Processes</div>
+          <h2 id="wm04-heading" className="section-heading">Work Experience Support — WM-04</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            Workplace evidence support mapped to 653306-000-01-WM-04, NQF Level 3, 18 credits. This section helps learners structure evidence from supervised engine removal and installation work without teaching or simulating the physical process.
+          </p>
+        </div>
+        <div className="mono-font shrink-0 text-right text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">{completed.length}/5 recorded</div>
+      </div>
+
+      <div className="mb-5 border border-[rgba(234,96,83,.35)] bg-[rgba(234,96,83,.08)] p-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+        <strong>Workplace boundary:</strong> The app does not provide lifting, slinging, support-point selection, engine removal, engine installation, disconnection, reconnection, alignment, pressure-release, live electrical work, torque-setting or return-to-service procedures. Practical work must remain under the approved workplace/provider process and competent adult supervision.
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        {wm04Activities.map((activity, index) => {
+          const done = completed.includes(activity.id);
+          return (
+            <article key={activity.id} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <div className="mono-font text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Workplace evidence item {index + 1} of 5</div>
+                  <h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-[hsl(var(--foreground))]">{activity.title}</h3>
+                </div>
+                {done && <CheckCircle2 size={18} className="shrink-0 text-[hsl(var(--chart-3))]" />}
+              </div>
+              <p className="text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">{activity.summary}</p>
+              <div className="mt-3 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+                <strong>Evidence scaffold:</strong> {activity.evidence}
+              </div>
+              <button
+                type="button"
+                onClick={() => toggle(activity.id)}
+                className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
+                aria-pressed={done}
+              >
+                {done ? 'Mark not recorded' : 'Mark evidence recorded'}
+              </button>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 border-t border-[hsl(var(--border))] pt-4 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
+        <strong>Verification status:</strong> Learner-entered workplace evidence remains NOT VERIFIED until reviewed through the authorised workplace/provider process.
+      </div>
+    </section>
+  );
+}
+
 function TurboInjectorMark() {
   return (
     <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -3373,6 +3473,7 @@ function Home() {
         <WM01Module />
         <WM02Module />
         <WM03Module />
+        <WM04Module />
 
         <section className="mt-4 grid gap-3 sm:grid-cols-3" aria-label="Workshop baseline values">
           <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]"><Gauge size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">CRD rail warning</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">2,000+ <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">bar</span></div></div></div>
