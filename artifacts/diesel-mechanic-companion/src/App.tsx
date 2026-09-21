@@ -854,6 +854,45 @@ const pm13Activities = [
   },
 ] as const;
 
+const pm14Activities = [
+  {
+    id: 'PM14-A01',
+    title: 'Identify engine and vehicle component groups',
+    summary: 'Recognise broad engine and vehicle component categories, interfaces and mounting relationships from approved diagrams, exploded views and classroom material.',
+    evidence: 'Learner identification sheet showing component group, purpose and interface points.'
+  },
+  {
+    id: 'PM14-A02',
+    title: 'Interpret removal, test and refit job information',
+    summary: 'Practise reading job cards, component references, inspection records and approved technical information without carrying out removal, testing, repair or refitting.',
+    evidence: 'Completed document-reading exercise identifying the relevant references and evidence fields.'
+  },
+  {
+    id: 'PM14-A03',
+    title: 'Recognise heavy-component, stored-energy and system hazards',
+    summary: 'Identify risks linked to heavy engines, rotating assemblies, hot systems, pressurised systems, electrical energy and unsupported components from classroom scenarios.',
+    evidence: 'Hazard-recognition worksheet showing stop, escalate and supervision decisions.'
+  },
+  {
+    id: 'PM14-A04',
+    title: 'Plan diagnostic and repair evidence conceptually',
+    summary: 'Organise symptom history, approved measurements, inspection findings, technical references and supervisor decisions into a clear evidence trail without prescribing the repair itself.',
+    evidence: 'Diagnostic-evidence plan that contains no live-test or repair procedure.'
+  },
+  {
+    id: 'PM14-A05',
+    title: 'Plan quality, traceability and final verification',
+    summary: 'Understand why component identity, part condition, cleanliness, orientation, approved specifications and final verification matter before a vehicle is returned to service.',
+    evidence: 'Quality and traceability checklist completed for a classroom scenario.'
+  },
+  {
+    id: 'PM14-A06',
+    title: 'Record supervised removal, repair and refit evidence',
+    summary: 'Capture the job reference, component, approved source, supervisor, observed condition, authorised work stage and verification status after supervised practical work.',
+    evidence: 'Evidence record explicitly marked unverified until authorised review.'
+  },
+] as const;
+
 const queryClient = new QueryClient();
 
 
@@ -2271,6 +2310,73 @@ function PM13Module() {
   );
 }
 
+
+function PM14Module() {
+  const [completed, setCompleted] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('diesel-pm14-progress') || '[]'); } catch { return []; }
+  });
+
+  const toggle = (id: string) => {
+    setCompleted((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+      localStorage.setItem('diesel-pm14-progress', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  return (
+    <section id="pm14" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm14-heading">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <div className="eyebrow mb-2 flex items-center gap-2"><ClipboardCheck size={14} /> PM-14 • Remove, Test, Repair and Refit Engines and Vehicle Components</div>
+          <h2 id="pm14-heading" className="section-heading">Practical Skill Support — PM-14</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            Preparation and evidence support mapped to 653306-000-01-PM-14, NQF Level 3, 15 credits. This section supports component recognition, technical-document reading, hazard awareness, diagnostic-evidence planning, quality thinking and supervised evidence capture without teaching engine or vehicle-component repair procedures.
+          </p>
+        </div>
+        <div className="mono-font shrink-0 text-right text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">{completed.length}/6 prepared</div>
+      </div>
+
+      <div className="mb-5 border border-[rgba(234,96,83,.35)] bg-[rgba(234,96,83,.08)] p-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+        <strong>Supervision boundary:</strong> The app does not provide engine removal, lifting, testing, repair, refitting, alignment, torque-setting, timing, pressure release, live electrical testing or return-to-service procedures. Practical work must follow approved technical information under competent adult supervision.
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        {pm14Activities.map((activity, index) => {
+          const done = completed.includes(activity.id);
+          return (
+            <article key={activity.id} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <div className="mono-font text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Preparation activity {index + 1} of 6</div>
+                  <h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-[hsl(var(--foreground))]">{activity.title}</h3>
+                </div>
+                {done && <CheckCircle2 size={18} className="shrink-0 text-[hsl(var(--chart-3))]" />}
+              </div>
+              <p className="text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">{activity.summary}</p>
+              <div className="mt-3 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+                <strong>Suggested evidence:</strong> {activity.evidence}
+              </div>
+              <button
+                type="button"
+                onClick={() => toggle(activity.id)}
+                className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
+                aria-pressed={done}
+              >
+                {done ? 'Mark not prepared' : 'Mark preparation complete'}
+              </button>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 border-t border-[hsl(var(--border))] pt-4 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
+        <strong>Evidence status:</strong> App records support preparation only and do not establish engine or vehicle-component practical competence. Any removal, testing, repair or refit evidence must be generated and verified through the authorised provider/workplace process.
+      </div>
+    </section>
+  );
+}
+
 function TurboInjectorMark() {
   return (
     <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2535,6 +2641,7 @@ function Home() {
         <PM11Module />
         <PM12Module />
         <PM13Module />
+        <PM14Module />
 
         <section className="mt-4 grid gap-3 sm:grid-cols-3" aria-label="Workshop baseline values">
           <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]"><Gauge size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">CRD rail warning</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">2,000+ <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">bar</span></div></div></div>
