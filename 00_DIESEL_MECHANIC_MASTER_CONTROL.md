@@ -1,6 +1,6 @@
 # 00_DIESEL_MECHANIC_MASTER_CONTROL.md
 
-Status: CONTROLLED MASTER SOURCE — BUILD IN PROGRESS — OFFICIAL SOURCE GATE PASSED 2026-09-21
+Status: CONTROLLED MASTER SOURCE — PRE-FREEZE TECHNICAL BUILD PASS — DEVICE ACCEPTANCE PENDING — 2026-09-21
 Date opened under Mzansi Build Intelligence: 2026-09-21
 
 ## 1. BUILD RULE
@@ -158,3 +158,31 @@ Diesel Mechanic is not frozen until:
 - source/standards register is complete;
 - mobile/offline acceptance passes;
 - final readiness score is recorded.
+
+
+## 6. PRE-FREEZE TECHNICAL READINESS — 2026-09-21
+
+Completed and verified in GitHub:
+- qualification mapping reconciled to SAQA 117237;
+- KM-01 to KM-08 retained and expanded into 42 full learner lessons;
+- full lesson reader added with objectives, teaching content, key concepts, safe worked scenarios, knowledge checks, recap, progress marking and previous/next flow;
+- PM-01 to PM-18 retained as supervised-practical preparation/evidence support;
+- PM guided preparation readers added without operational workshop instructions;
+- WM-01 to WM-14 retained as workplace evidence/reflection support;
+- WM guided evidence readers added without repair, isolation, lifting, pressure-release, live-testing or return-to-service instructions;
+- compact mobile product shell retained;
+- localStorage progress persistence retained for KM, PM and WM;
+- service-worker registration retained;
+- external Google Fonts dependency removed so core presentation no longer depends on an online font service;
+- pnpm frozen install passed;
+- TypeScript check passed;
+- production build passed.
+
+Current freeze blockers:
+- production deployment of this final technical baseline;
+- phone install to home screen;
+- offline relaunch from installed icon;
+- progress persistence after close/relaunch and offline relaunch.
+
+Freeze rule:
+- Do not mark Diesel Mechanic FROZEN until the remaining device acceptance checks pass.
