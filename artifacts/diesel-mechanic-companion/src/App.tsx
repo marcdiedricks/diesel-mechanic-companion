@@ -815,6 +815,45 @@ const pm12Activities = [
   },
 ] as const;
 
+const pm13Activities = [
+  {
+    id: 'PM13-A01',
+    title: 'Identify basic hydraulic-system component groups',
+    summary: 'Recognise broad hydraulic component categories such as pumps, reservoirs, control valves, actuators, hoses, pipes, filters and gauges from approved diagrams and classroom material.',
+    evidence: 'Learner identification sheet matching component groups to their general function.'
+  },
+  {
+    id: 'PM13-A02',
+    title: 'Interpret hydraulic job and technical information',
+    summary: 'Practise reading job cards, hydraulic schematics, inspection records and approved technical references without opening, pressurising or testing a real system.',
+    evidence: 'Completed schematic-reading exercise identifying the correct references and evidence fields.'
+  },
+  {
+    id: 'PM13-A03',
+    title: 'Recognise pressure, injection and load hazards',
+    summary: 'Identify risks linked to high-pressure fluid, hose failure, fluid injection, moving actuators, unsupported loads and stored energy from classroom scenarios.',
+    evidence: 'Hazard-recognition worksheet showing stop, isolate-by-approved-process and escalation decisions.'
+  },
+  {
+    id: 'PM13-A04',
+    title: 'Plan condition assessment conceptually',
+    summary: 'Understand how observations, approved measurements, leakage evidence, contamination signs and technical limits contribute to a supervised hydraulic assessment.',
+    evidence: 'Condition-assessment worksheet using facilitator-provided evidence rather than live pressure testing.'
+  },
+  {
+    id: 'PM13-A05',
+    title: 'Plan quality, cleanliness and contamination controls',
+    summary: 'Understand why cleanliness, sealing surfaces, hose condition, contamination control, fluid handling and final verification matter in hydraulic work.',
+    evidence: 'Quality and contamination-control checklist completed for a classroom scenario.'
+  },
+  {
+    id: 'PM13-A06',
+    title: 'Record supervised hydraulic-system evidence',
+    summary: 'Capture the job reference, hydraulic-system area, supervisor, approved source, observed condition and verification status after authorised practical work.',
+    evidence: 'Evidence record explicitly marked unverified until authorised review.'
+  },
+] as const;
+
 const queryClient = new QueryClient();
 
 
@@ -2165,6 +2204,73 @@ function PM12Module() {
   );
 }
 
+
+function PM13Module() {
+  const [completed, setCompleted] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('diesel-pm13-progress') || '[]'); } catch { return []; }
+  });
+
+  const toggle = (id: string) => {
+    setCompleted((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+      localStorage.setItem('diesel-pm13-progress', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  return (
+    <section id="pm13" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm13-heading">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <div className="eyebrow mb-2 flex items-center gap-2"><ClipboardCheck size={14} /> PM-13 • Dismantle, Assess and Reassemble Basic Hydraulic Systems</div>
+          <h2 id="pm13-heading" className="section-heading">Practical Skill Support — PM-13</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            Preparation and evidence support mapped to 653306-000-01-PM-13, NQF Level 3, 5 credits. This section supports component recognition, schematic interpretation, pressure-hazard awareness, condition-assessment reasoning, contamination control and supervised evidence capture without teaching hydraulic procedures.
+          </p>
+        </div>
+        <div className="mono-font shrink-0 text-right text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">{completed.length}/6 prepared</div>
+      </div>
+
+      <div className="mb-5 border border-[rgba(234,96,83,.35)] bg-[rgba(234,96,83,.08)] p-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+        <strong>Supervision boundary:</strong> The app does not provide pressure release, hose or pipe disconnection, hydraulic lifting, accumulator work, live pressure testing, component dismantling, reassembly, sealing or repair procedures. Practical work must follow approved technical information under competent adult supervision.
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        {pm13Activities.map((activity, index) => {
+          const done = completed.includes(activity.id);
+          return (
+            <article key={activity.id} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <div className="mono-font text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Preparation activity {index + 1} of 6</div>
+                  <h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-[hsl(var(--foreground))]">{activity.title}</h3>
+                </div>
+                {done && <CheckCircle2 size={18} className="shrink-0 text-[hsl(var(--chart-3))]" />}
+              </div>
+              <p className="text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">{activity.summary}</p>
+              <div className="mt-3 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+                <strong>Suggested evidence:</strong> {activity.evidence}
+              </div>
+              <button
+                type="button"
+                onClick={() => toggle(activity.id)}
+                className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
+                aria-pressed={done}
+              >
+                {done ? 'Mark not prepared' : 'Mark preparation complete'}
+              </button>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 border-t border-[hsl(var(--border))] pt-4 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
+        <strong>Evidence status:</strong> App records support preparation only and do not establish hydraulic-system practical competence. Any dismantling, assessment or reassembly evidence must be generated and verified through the authorised provider/workplace process.
+      </div>
+    </section>
+  );
+}
+
 function TurboInjectorMark() {
   return (
     <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2428,6 +2534,7 @@ function Home() {
         <PM10Module />
         <PM11Module />
         <PM12Module />
+        <PM13Module />
 
         <section className="mt-4 grid gap-3 sm:grid-cols-3" aria-label="Workshop baseline values">
           <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]"><Gauge size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">CRD rail warning</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">2,000+ <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">bar</span></div></div></div>
