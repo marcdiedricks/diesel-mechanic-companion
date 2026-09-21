@@ -278,6 +278,45 @@ const km05Lessons = [
   },
 ] as const;
 
+const km06Lessons = [
+  {
+    id: 'KM06-L01',
+    title: 'Basic electrical principles',
+    summary: 'Understand voltage, current, resistance, power, conductors, insulators and simple circuit relationships at a conceptual level.',
+    check: 'This lesson supports theory only; live testing, isolation, probing and repair remain supervised practical work.'
+  },
+  {
+    id: 'KM06-L02',
+    title: 'Starting, charging and battery system awareness',
+    summary: 'Recognise the purpose of batteries, starters, alternators, charging circuits and broad warning indicators without providing test or replacement procedures.',
+    check: 'Vehicle electrical systems can deliver high current. The app does not teach jump-starting, battery removal, live testing or charging procedures.'
+  },
+  {
+    id: 'KM06-L03',
+    title: 'Sensors, actuators and electronic control concepts',
+    summary: 'Learn how sensors provide information, actuators respond to commands and electronic control units coordinate vehicle functions at a high level.',
+    check: 'Electronic diagnosis requires controlled testing, approved information and competent supervision; the app supports conceptual reasoning only.'
+  },
+  {
+    id: 'KM06-L04',
+    title: 'Wiring diagrams, symbols and circuit interpretation',
+    summary: 'Practise reading basic wiring symbols, connectors, circuit paths and diagram conventions using approved technical information.',
+    check: 'Do not bridge, bypass or probe a real circuit from app instructions. Unclear schematics must be checked against the approved source.'
+  },
+  {
+    id: 'KM06-L05',
+    title: 'Hydraulic principles and stored-energy awareness',
+    summary: 'Understand pressure, flow, force, pumps, valves, actuators and broad hydraulic-system relationships without operational instructions.',
+    check: 'Hydraulic systems may contain dangerous stored energy. The app does not teach pressure release, hose disconnection, lifting or component testing.'
+  },
+  {
+    id: 'KM06-L06',
+    title: 'Pneumatic principles and stored-energy awareness',
+    summary: 'Understand compressed-air generation, storage, control valves, actuators and broad pneumatic-system relationships in vehicle applications.',
+    check: 'Compressed-air systems can release stored energy suddenly. The app does not teach draining, caging, releasing, disconnecting or testing procedures.'
+  },
+] as const;
+
 const queryClient = new QueryClient();
 
 
@@ -620,6 +659,74 @@ function KM05Module() {
   );
 }
 
+
+function KM06Module() {
+  const [completed, setCompleted] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('diesel-km06-progress') || '[]'); } catch { return []; }
+  });
+
+  const toggle = (id: string) => {
+    setCompleted((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+      localStorage.setItem('diesel-km06-progress', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  return (
+    <section id="km06" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="km06-heading">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <div className="eyebrow mb-2 flex items-center gap-2"><BookOpen size={14} /> KM-06 • Electrical, Electronic, Hydraulic and Pneumatic Principles</div>
+          <h2 id="km06-heading" className="section-heading">Electrical Systems and Basic Electronic, Hydraulic and Pneumatic Principles</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            Controlled learning support mapped to 653306-000-01-KM-06, NQF Level 3, 16 credits. This six-lesson sequence builds safe theory and schematic-reading skills across electrical, electronic, hydraulic and pneumatic systems.
+          </p>
+        </div>
+        <div className="mono-font shrink-0 text-right text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">{completed.length}/6 complete</div>
+      </div>
+
+      <div className="mb-5 border border-[rgba(233,184,54,.25)] bg-[rgba(233,184,54,.06)] p-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+        <strong>Safety boundary:</strong> KM-06 teaches principles, symbols, system purpose and hazard recognition. It does not provide live electrical testing, bypassing, pressure release, hose disconnection, brake-air release, hydraulic lifting or repair procedures.
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        {km06Lessons.map((lesson, index) => {
+          const done = completed.includes(lesson.id);
+          return (
+            <article key={lesson.id} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <div className="mono-font text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Lesson {index + 1} of 6</div>
+                  <h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-[hsl(var(--foreground))]">{lesson.title}</h3>
+                </div>
+                {done && <CheckCircle2 size={18} className="shrink-0 text-[hsl(var(--chart-3))]" />}
+              </div>
+              <p className="text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">{lesson.summary}</p>
+              <div className="mt-3 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+                <strong>Learning check:</strong> {lesson.check}
+              </div>
+              <button
+                type="button"
+                onClick={() => toggle(lesson.id)}
+                className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
+                aria-pressed={done}
+              >
+                {done ? 'Mark not complete' : 'Mark lesson complete'}
+              </button>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 flex flex-col gap-2 border-t border-[hsl(var(--border))] pt-4 text-xs text-[hsl(var(--muted-foreground))] sm:flex-row sm:items-center sm:justify-between">
+        <span>Official qualification source: SAQA 117237 • 653306-000-01-KM-06 • 16 credits</span>
+        <a className="text-[hsl(var(--primary))] underline-offset-4 hover:underline" href="https://pcqs.saqa.org.za/viewQualification.php?id=117237" target="_blank" rel="noopener noreferrer">Open SAQA qualification</a>
+      </div>
+    </section>
+  );
+}
+
 function TurboInjectorMark() {
   return (
     <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -868,6 +975,7 @@ function Home() {
         <KM03Module />
         <KM04Module />
         <KM05Module />
+        <KM06Module />
 
         <section className="mt-4 grid gap-3 sm:grid-cols-3" aria-label="Workshop baseline values">
           <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]"><Gauge size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">CRD rail warning</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">2,000+ <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">bar</span></div></div></div>
