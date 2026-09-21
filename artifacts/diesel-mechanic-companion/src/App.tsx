@@ -587,6 +587,39 @@ const pm06Activities = [
   },
 ] as const;
 
+const pm07Activities = [
+  {
+    id: 'PM07-A01',
+    title: 'Interpret service schedules and maintenance information',
+    summary: 'Practise reading service intervals, job cards, maintenance schedules and approved technical information to understand what maintenance is due.',
+    evidence: 'Completed service-planning worksheet identifying the required maintenance category and approved source.'
+  },
+  {
+    id: 'PM07-A02',
+    title: 'Recognise maintenance items and condition indicators',
+    summary: 'Identify broad maintenance items such as filters, fluids, belts, hoses, fasteners, warning indicators and visible condition cues from classroom examples.',
+    evidence: 'Learner identification sheet describing what should be checked or escalated without performing the service.'
+  },
+  {
+    id: 'PM07-A03',
+    title: 'Plan a supervised service logically',
+    summary: 'Organise the broad sequence of a service at planning level: confirm vehicle identity, review history, identify maintenance items, note hazards, and prepare evidence fields.',
+    evidence: 'Facilitator-reviewed service plan containing no operational maintenance steps.'
+  },
+  {
+    id: 'PM07-A04',
+    title: 'Apply quality and environmental checks conceptually',
+    summary: 'Understand why contamination control, spill prevention, parts accountability, waste handling, cleanliness and post-service verification matter.',
+    evidence: 'Quality and environmental checklist completed for a classroom scenario.'
+  },
+  {
+    id: 'PM07-A05',
+    title: 'Capture supervised maintenance evidence',
+    summary: 'Record the vehicle, job reference, approved source, supervisor, maintenance category, observed condition and verification status after authorised practical work.',
+    evidence: 'Maintenance evidence record explicitly marked unverified until authorised review.'
+  },
+] as const;
+
 const queryClient = new QueryClient();
 
 
@@ -1535,6 +1568,73 @@ function PM06Module() {
   );
 }
 
+
+function PM07Module() {
+  const [completed, setCompleted] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('diesel-pm07-progress') || '[]'); } catch { return []; }
+  });
+
+  const toggle = (id: string) => {
+    setCompleted((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+      localStorage.setItem('diesel-pm07-progress', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  return (
+    <section id="pm07" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm07-heading">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <div className="eyebrow mb-2 flex items-center gap-2"><ClipboardCheck size={14} /> PM-07 • Maintain and Service Vehicles and Vehicle Components</div>
+          <h2 id="pm07-heading" className="section-heading">Practical Skill Support — PM-07</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            Preparation and evidence support mapped to 653306-000-01-PM-07, NQF Level 2, 5 credits. This section supports service-planning, maintenance-item recognition, quality thinking and evidence capture without teaching physical servicing procedures.
+          </p>
+        </div>
+        <div className="mono-font shrink-0 text-right text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">{completed.length}/5 prepared</div>
+      </div>
+
+      <div className="mb-5 border border-[rgba(234,96,83,.35)] bg-[rgba(234,96,83,.08)] p-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+        <strong>Supervision boundary:</strong> The app does not provide fluid-draining, filter-changing, belt adjustment, jacking, lifting, wheel removal, torque-setting, bleeding, hot-system opening or other vehicle-service procedures. Practical servicing must follow approved provider/workplace procedures under competent adult supervision.
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        {pm07Activities.map((activity, index) => {
+          const done = completed.includes(activity.id);
+          return (
+            <article key={activity.id} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <div className="mono-font text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Preparation activity {index + 1} of 5</div>
+                  <h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-[hsl(var(--foreground))]">{activity.title}</h3>
+                </div>
+                {done && <CheckCircle2 size={18} className="shrink-0 text-[hsl(var(--chart-3))]" />}
+              </div>
+              <p className="text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">{activity.summary}</p>
+              <div className="mt-3 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+                <strong>Suggested evidence:</strong> {activity.evidence}
+              </div>
+              <button
+                type="button"
+                onClick={() => toggle(activity.id)}
+                className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
+                aria-pressed={done}
+              >
+                {done ? 'Mark not prepared' : 'Mark preparation complete'}
+              </button>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 border-t border-[hsl(var(--border))] pt-4 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
+        <strong>Evidence status:</strong> App preparation records do not prove that a vehicle was safely serviced. Practical competence must be generated and verified through the authorised training/workplace process.
+      </div>
+    </section>
+  );
+}
+
 function TurboInjectorMark() {
   return (
     <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1792,6 +1892,7 @@ function Home() {
         <PM04Module />
         <PM05Module />
         <PM06Module />
+        <PM07Module />
 
         <section className="mt-4 grid gap-3 sm:grid-cols-3" aria-label="Workshop baseline values">
           <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]"><Gauge size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">CRD rail warning</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">2,000+ <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">bar</span></div></div></div>
