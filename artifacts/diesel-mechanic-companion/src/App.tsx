@@ -106,7 +106,7 @@ const tradeTerms = {
   isiZulu: ['Isitshisi se-Common Rail', 'Umfutho we-Turbocharger', 'Ukuphakama kwe-Cylinder Liner', 'Isilungisi samabhuleki omoya'],
 } as const;
 
-const SMART_SEARCH_FALLBACK = 'No direct match found in offline knowledge base. Try launching the 📐 Workshop Calculators (Hydraulics, Compression, Power, Boost) or selecting a topic chip below.';
+const SMART_SEARCH_FALLBACK = 'No direct match found in the offline knowledge base. Try a theory calculation or select a curriculum topic. Practical vehicle work must use approved workplace information and supervision.';
 
 const videoUnits = [
   ['01', 'Workplace Fundamentals — controlled visual reference', '#visual-library'],
@@ -4390,15 +4390,15 @@ function VideoModal({ language, selected, onSelect, onClose }: { language: Langu
     return () => document.removeEventListener('keydown', onKeyDown);
   }, [onClose]);
   const unit = videoUnits[selected];
-  const openVideo = () => window.open(unit[2], '_blank', 'noopener,noreferrer');
+  const openVideo = () => undefined;
   return (
     <div className="modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
       <div className="modal-card panel bracket-corner bg-[hsl(var(--card))] p-4 sm:p-6" role="dialog" aria-modal="true" aria-labelledby="video-modal-heading">
-        <div className="mb-5 flex items-start justify-between gap-4"><div><div className="eyebrow mb-2 flex items-center gap-2"><BookOpen size={14} /> {copy[language].videoLabel}</div><h2 id="video-modal-heading" className="section-heading">Curriculum video resource</h2><p className="mt-2 text-xs text-[hsl(var(--muted-foreground))]">Select a unit, then open its exact YouTube search in a new tab.</p></div><button type="button" onClick={onClose} className="grid size-9 shrink-0 place-items-center border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]" aria-label="Close curriculum video resource" data-testid="button-close-video-modal"><X size={18} /></button></div>
+        <div className="mb-5 flex items-start justify-between gap-4"><div><div className="eyebrow mb-2 flex items-center gap-2"><BookOpen size={14} /> {copy[language].videoLabel}</div><h2 id="video-modal-heading" className="section-heading">Controlled visual-learning library</h2><p className="mt-2 text-xs text-[hsl(var(--muted-foreground))]">Visual resources are supplemental only. No external resource is opened until it has been individually vetted for curriculum fit, safety and source quality.</p></div><button type="button" onClick={onClose} className="grid size-9 shrink-0 place-items-center border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]" aria-label="Close curriculum video resource" data-testid="button-close-video-modal"><X size={18} /></button></div>
         <label className="mb-4 block md:hidden"><span className="mb-1.5 block text-[.68rem] font-bold uppercase tracking-[.12em] text-[hsl(var(--muted-foreground))]">Choose unit</span><select value={selected} onChange={(event) => onSelect(Number(event.target.value))} className="input-field" aria-label="Choose curriculum video unit" data-testid="select-video-unit">{videoUnits.map((item, index) => <option key={item[0]} value={index}>{item[0]} · {item[1]}</option>)}</select></label>
         <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_260px]">
           <div className="order-2 max-h-[360px] space-y-1 overflow-y-auto pr-1 scrollbar-thin md:order-1">{videoUnits.map((item, index) => <button type="button" key={item[0]} onClick={() => onSelect(index)} className={`unit-button ${selected === index ? 'selected' : ''}`} data-testid={`button-video-unit-${item[0]}`}><span className="mono-font w-7 shrink-0 text-[.68rem] text-[hsl(var(--primary))]">{item[0]}</span><span className="text-xs leading-snug">{item[1]}</span>{selected === index && <CheckCircle2 className="ml-auto shrink-0 text-[hsl(var(--primary))]" size={15} />}</button>)}</div>
-          <div className="order-1 flex flex-col justify-between border border-[hsl(var(--border))] bg-[rgba(0,0,0,.15)] p-4 md:order-2"><div><div className="mono-font text-4xl font-semibold tracking-[-.08em] text-[hsl(var(--primary))]">{unit[0]}</div><h3 className="mt-2 text-lg font-bold leading-tight text-[hsl(var(--foreground))]">{unit[1]}</h3></div><button type="button" onClick={openVideo} className="mt-8 flex items-center justify-center gap-2 bg-[hsl(var(--primary))] px-4 py-3 text-xs font-bold uppercase tracking-[.12em] text-[hsl(var(--primary-foreground))] transition hover:brightness-110" data-testid="button-open-selected-video">{copy[language].openLabel}<ArrowUpRight size={16} /></button></div>
+          <div className="order-1 flex flex-col justify-between border border-[hsl(var(--border))] bg-[rgba(0,0,0,.15)] p-4 md:order-2"><div><div className="mono-font text-4xl font-semibold tracking-[-.08em] text-[hsl(var(--primary))]">{unit[0]}</div><h3 className="mt-2 text-lg font-bold leading-tight text-[hsl(var(--foreground))]">{unit[1]}</h3></div><button type="button" onClick={openVideo} disabled className="mt-8 flex cursor-not-allowed items-center justify-center gap-2 border border-[hsl(var(--border))] px-4 py-3 text-xs font-bold uppercase tracking-[.12em] text-[hsl(var(--muted-foreground))]" data-testid="button-open-selected-video">NO VETTED EXTERNAL RESOURCE</button></div>
         </div>
       </div>
     </div>
@@ -4481,16 +4481,31 @@ function Home() {
         <WM13Module />
         <WM14Module />
 
-        <section className="mt-4 grid gap-3 sm:grid-cols-3" aria-label="Workshop baseline values">
-          <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]"><Gauge size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">CRD rail warning</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">2,000+ <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">bar</span></div></div></div>
-          <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(74,165,188,.1)] text-[hsl(var(--accent))]"><Wind size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">Air brake cut-in</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">6.5 <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">bar</span></div></div></div>
-          <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(93,173,119,.1)] text-[hsl(var(--chart-3))]"><ClipboardCheck size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">Liner target</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">0.08–0.15 <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">mm</span></div></div></div>
+        <section className="mt-6 panel bracket-corner p-4 sm:p-6" id="visual-library" aria-labelledby="visual-library-heading">
+          <div className="eyebrow mb-2 flex items-center gap-2"><BookOpen size={14} /> controlled learning references</div>
+          <h2 id="visual-library-heading" className="section-heading">Theory first. Practical work stays supervised.</h2>
+          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            The learner-facing app does not publish universal workshop pressure limits, adjustment targets, injector-flow limits, liner targets or repair thresholds. Those values can vary by vehicle and manufacturer and must come from the approved technical source used by the authorised workplace or provider.
+          </p>
+          <div className="mt-4 grid gap-3 md:grid-cols-2">
+            <div className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+              <div className="mono-font text-[.65rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Offline core</div>
+              <p className="mt-2 text-xs leading-relaxed text-[hsl(var(--foreground))]">KM, PM and WM learning support remains available without an external video or website. Progress never depends on an online resource.</p>
+            </div>
+            <div className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+              <div className="mono-font text-[.65rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Visual-resource gate</div>
+              <p className="mt-2 text-xs leading-relaxed text-[hsl(var(--foreground))]">Each external visual must be marked ACTIVE only after review. Until then it remains NO SUITABLE VETTED RESOURCE and cannot be opened from the learner app.</p>
+            </div>
+          </div>
+          <button type="button" onClick={() => setIsVideoOpen(true)} className="mt-4 flex items-center gap-2 border border-[hsl(var(--primary))] px-4 py-3 text-xs font-bold uppercase tracking-[.12em] text-[hsl(var(--primary))]" data-testid="button-open-video-resources"><BookOpen size={15}/> Review visual-library status</button>
         </section>
 
-        <section className="mt-10" aria-labelledby="tools-heading"><div className="mb-4 flex items-end justify-between gap-4"><div><div className="eyebrow mb-2">{current.toolLabel} <span className="mx-1 text-[hsl(var(--border))]">/</span> {current.referenceLabel}</div><h2 id="tools-heading" className="section-heading">Measure before you diagnose</h2></div><span className="mono-font hidden text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--muted-foreground))] sm:block">local calculations / no signal required</span></div><div className="grid gap-4 lg:grid-cols-2"><LinerCalculator /><AirBrakePanel /><InjectorPanel /><section className="panel data-grid flex flex-col justify-between border-[hsl(var(--primary))] p-5"><div><div className="eyebrow mb-3 flex items-center gap-2"><BookOpen size={14} /> {current.videoLabel}</div><h2 className="section-heading max-w-sm">Ten units. One practical route to Red Seal.</h2><p className="mt-4 max-w-md text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">Open a focused YouTube search from the curriculum. Use the lesson beside the truck, then verify the method against your workshop manual.</p></div><button type="button" onClick={() => setIsVideoOpen(true)} className="mt-8 flex w-full items-center justify-between border border-[hsl(var(--primary))] bg-[rgba(233,184,54,.1)] px-4 py-3 text-left text-xs font-bold uppercase tracking-[.13em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]" data-testid="button-open-video-resources"><span>Browse 10 curriculum units</span><ArrowUpRight size={17} /></button></section></div></section>
+        <section className="mt-8" aria-labelledby="tools-heading">
+          <div className="mb-4"><div className="eyebrow mb-2">{current.toolLabel}</div><h2 id="tools-heading" className="section-heading">Classroom theory calculations</h2><p className="mt-2 max-w-3xl text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">Calculators are limited to classroom formula practice. They are not workshop specifications, diagnostic limits or authorisation to test, adjust, repair or return a vehicle to service.</p></div>
+        </section>
 
          <section className="mt-10"><TradeTerms language={language} onOpenCalculators={() => setIsCalculatorsOpen(true)} /></section>
-        <footer className="mt-8 flex flex-col justify-between gap-3 border-t border-[hsl(var(--border))] pt-4 text-[.65rem] uppercase tracking-[.12em] text-[hsl(var(--muted-foreground))] sm:flex-row"><div className="flex items-center gap-2"><span className="status-dot" /> Built for the South African workshop floor</div><div>Educational reference · verify against OEM and statutory procedure</div></footer>
+        <footer className="mt-8 flex flex-col justify-between gap-3 border-t border-[hsl(var(--border))] pt-4 text-[.65rem] uppercase tracking-[.12em] text-[hsl(var(--muted-foreground))] sm:flex-row"><div className="flex items-center gap-2"><span className="status-dot" /> Built for South African diesel-mechanic learning support</div><div>Educational support · practical work requires approved workplace/provider control</div></footer>
       </main>
       {isVideoOpen && <VideoModal language={language} selected={selectedVideo} onSelect={setSelectedVideo} onClose={closeVideo} />}
       <TradeCalculators isOpen={isCalculatorsOpen} onClose={() => setIsCalculatorsOpen(false)} />
