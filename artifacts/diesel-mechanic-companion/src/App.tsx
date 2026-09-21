@@ -1010,6 +1010,45 @@ const pm17Activities = [
   },
 ] as const;
 
+const pm18Activities = [
+  {
+    id: 'PM18-A01',
+    title: 'Identify air-conditioning system component groups',
+    summary: 'Recognise broad component categories such as compressor, condenser, evaporator, expansion device, receiver/drier, hoses, controls and sensors from approved diagrams and classroom material.',
+    evidence: 'Learner identification sheet matching component groups to their general function.'
+  },
+  {
+    id: 'PM18-A02',
+    title: 'Interpret air-conditioning job and technical information',
+    summary: 'Practise reading job cards, system diagrams, inspection records and approved technical references without opening, charging or testing a real refrigerant system.',
+    evidence: 'Completed document-reading exercise identifying the correct references and evidence fields.'
+  },
+  {
+    id: 'PM18-A03',
+    title: 'Recognise pressure, refrigerant and environmental hazards',
+    summary: 'Identify risks linked to pressurised refrigerant, cold burns, hot components, moving belts or fans, electrical systems and environmental release from classroom scenarios.',
+    evidence: 'Hazard-recognition worksheet showing stop, escalate and supervision decisions.'
+  },
+  {
+    id: 'PM18-A04',
+    title: 'Plan diagnostic evidence collection conceptually',
+    summary: 'Organise symptoms, approved readings, warning indicators, service history and system information into a diagnostic evidence trail without prescribing refrigerant handling or live testing.',
+    evidence: 'Diagnostic-evidence plan containing no charging, recovery or pressure-test procedure.'
+  },
+  {
+    id: 'PM18-A05',
+    title: 'Plan quality and environmental compliance evidence',
+    summary: 'Understand why refrigerant identification, leak control, equipment certification, contamination prevention, record keeping and environmental compliance matter.',
+    evidence: 'Quality and environmental checklist completed for a classroom scenario.'
+  },
+  {
+    id: 'PM18-A06',
+    title: 'Record supervised air-conditioning evidence',
+    summary: 'Capture the job reference, system area, supervisor, approved source, observed condition, authorised action and verification status after supervised practical work.',
+    evidence: 'Evidence record explicitly marked unverified until authorised review.'
+  },
+] as const;
+
 const queryClient = new QueryClient();
 
 
@@ -2695,6 +2734,73 @@ function PM17Module() {
   );
 }
 
+
+function PM18Module() {
+  const [completed, setCompleted] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('diesel-pm18-progress') || '[]'); } catch { return []; }
+  });
+
+  const toggle = (id: string) => {
+    setCompleted((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+      localStorage.setItem('diesel-pm18-progress', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  return (
+    <section id="pm18" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm18-heading">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <div className="eyebrow mb-2 flex items-center gap-2"><ClipboardCheck size={14} /> PM-18 • Diagnose and Repair Air Conditioning System</div>
+          <h2 id="pm18-heading" className="section-heading">Practical Skill Support — PM-18</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            Preparation and evidence support mapped to 653306-000-01-PM-18, NQF Level 4, 5 credits. This section supports component recognition, document interpretation, hazard awareness, diagnostic-evidence planning, environmental compliance thinking and supervised evidence capture without teaching refrigerant handling or air-conditioning repair procedures.
+          </p>
+        </div>
+        <div className="mono-font shrink-0 text-right text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">{completed.length}/6 prepared</div>
+      </div>
+
+      <div className="mb-5 border border-[rgba(234,96,83,.35)] bg-[rgba(234,96,83,.08)] p-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+        <strong>Supervision boundary:</strong> The app does not provide refrigerant recovery, charging, venting, pressure testing, vacuum procedures, leak testing, compressor removal, electrical testing or repair instructions. Practical air-conditioning work must follow approved provider/workplace procedures, environmental requirements and competent adult supervision.
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        {pm18Activities.map((activity, index) => {
+          const done = completed.includes(activity.id);
+          return (
+            <article key={activity.id} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <div className="mono-font text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Preparation activity {index + 1} of 6</div>
+                  <h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-[hsl(var(--foreground))]">{activity.title}</h3>
+                </div>
+                {done && <CheckCircle2 size={18} className="shrink-0 text-[hsl(var(--chart-3))]" />}
+              </div>
+              <p className="text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">{activity.summary}</p>
+              <div className="mt-3 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+                <strong>Suggested evidence:</strong> {activity.evidence}
+              </div>
+              <button
+                type="button"
+                onClick={() => toggle(activity.id)}
+                className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
+                aria-pressed={done}
+              >
+                {done ? 'Mark not prepared' : 'Mark preparation complete'}
+              </button>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 border-t border-[hsl(var(--border))] pt-4 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
+        <strong>Evidence status:</strong> App records support preparation only and do not establish air-conditioning practical competence. Any real diagnosis, refrigerant handling, repair or return-to-service decision must be completed and verified through the authorised provider/workplace process.
+      </div>
+    </section>
+  );
+}
+
 function TurboInjectorMark() {
   return (
     <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2963,6 +3069,7 @@ function Home() {
         <PM15Module />
         <PM16Module />
         <PM17Module />
+        <PM18Module />
 
         <section className="mt-4 grid gap-3 sm:grid-cols-3" aria-label="Workshop baseline values">
           <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]"><Gauge size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">CRD rail warning</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">2,000+ <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">bar</span></div></div></div>
