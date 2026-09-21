@@ -1539,6 +1539,118 @@ const wm14Activities = [
 const queryClient = new QueryClient();
 
 
+
+function SupportActivityReader({
+  activities,
+  selectedId,
+  completed,
+  kind,
+  moduleCode,
+  onClose,
+  onSelect,
+  onToggle,
+}: {
+  activities: readonly { id: string; title: string; summary: string; evidence: string }[];
+  selectedId: string;
+  completed: string[];
+  kind: 'practical' | 'workplace';
+  moduleCode: string;
+  onClose: () => void;
+  onSelect: (id: string) => void;
+  onToggle: (id: string) => void;
+}) {
+  const index = activities.findIndex((activity) => activity.id === selectedId);
+  const activity = activities[index];
+  if (!activity) return null;
+  const done = completed.includes(activity.id);
+  const previous = index > 0 ? activities[index - 1] : null;
+  const next = index < activities.length - 1 ? activities[index + 1] : null;
+  const isPractical = kind === 'practical';
+
+  return (
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-[hsl(var(--background))]" role="dialog" aria-modal="true" aria-labelledby="support-reader-title">
+      <div className="sticky top-0 z-10 border-b border-[hsl(var(--border))] bg-[rgba(8,15,23,.97)] px-4 py-3 backdrop-blur">
+        <div className="mx-auto flex max-w-[900px] items-center justify-between gap-3">
+          <button type="button" onClick={onClose} className="text-xs font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))]">← Module</button>
+          <div className="mono-font text-[.65rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">{moduleCode} · {index + 1}/{activities.length}</div>
+          <button type="button" onClick={onClose} className="grid size-9 place-items-center border border-[hsl(var(--border))]" aria-label="Close activity"><X size={17} /></button>
+        </div>
+      </div>
+
+      <article className="mx-auto max-w-[900px] px-4 pb-24 pt-6 sm:px-6">
+        <div className="eyebrow mb-3">{activity.id} · {isPractical ? 'preparation activity' : 'workplace evidence item'}</div>
+        <h2 id="support-reader-title" className="display-font text-[2.15rem] font-bold uppercase leading-[.94] tracking-tight text-[hsl(var(--foreground))] sm:text-[2.8rem]">{activity.title}</h2>
+        <p className="mt-4 text-sm leading-7 text-[hsl(var(--muted-foreground))]">{activity.summary}</p>
+
+        <section className="mt-6 border-l-2 border-l-[hsl(var(--destructive))] bg-[rgba(234,96,83,.07)] p-5">
+          <div className="eyebrow mb-2 text-[hsl(var(--destructive))]">Safety / authority boundary</div>
+          <p className="text-sm leading-7 text-[hsl(var(--foreground))]">This screen supports recognition, planning, reflection and evidence preparation only. It does not provide operating, dismantling, isolation, pressure-release, lifting, live-testing, refrigerant, repair or return-to-service instructions. Any practical work must use the approved provider/workplace process under competent supervision.</p>
+        </section>
+
+        <section className="mt-4 panel p-5">
+          <div className="eyebrow mb-3">{isPractical ? 'Preparation focus' : 'Workplace reflection focus'}</div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {[
+              'Identify the task or learning purpose clearly before practical work begins.',
+              'Confirm which approved document, job card, drawing or workplace source controls the activity.',
+              'Recognise hazards, limits of learner authority and the point at which escalation is required.',
+              'Record observations as facts and keep assumptions or unverified conclusions separate.',
+            ].map((item, itemIndex) => (
+              <div key={item} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+                <div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">Focus {itemIndex + 1}</div>
+                <p className="mt-2 text-sm leading-6 text-[hsl(var(--foreground))]">{item}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-4 panel bracket-corner p-5">
+          <div className="eyebrow mb-3">Evidence to prepare</div>
+          <p className="text-sm leading-7 text-[hsl(var(--foreground))]">{activity.evidence}</p>
+          <div className="mt-4 grid gap-2 text-sm text-[hsl(var(--muted-foreground))]">
+            <div className="flex gap-3"><CheckCircle2 size={16} className="mt-1 shrink-0 text-[hsl(var(--chart-3))]" /><span>Job, module or workplace reference identified.</span></div>
+            <div className="flex gap-3"><CheckCircle2 size={16} className="mt-1 shrink-0 text-[hsl(var(--chart-3))]" /><span>Supervisor or authorised reviewer identified where applicable.</span></div>
+            <div className="flex gap-3"><CheckCircle2 size={16} className="mt-1 shrink-0 text-[hsl(var(--chart-3))]" /><span>Observed facts recorded separately from assumptions.</span></div>
+            <div className="flex gap-3"><CheckCircle2 size={16} className="mt-1 shrink-0 text-[hsl(var(--chart-3))]" /><span>Verification status remains unverified until authorised human review.</span></div>
+          </div>
+        </section>
+
+        <section className="mt-4 panel p-5">
+          <div className="eyebrow mb-3">Reflection check</div>
+          <div className="space-y-3 text-sm leading-6 text-[hsl(var(--foreground))]">
+            <p><strong>Before:</strong> What information and authority must be confirmed before the supervised activity?</p>
+            <p><strong>During:</strong> Which observations should be captured without turning them into unsupported conclusions?</p>
+            <p><strong>After:</strong> What evidence still needs supervisor, assessor or workplace verification?</p>
+          </div>
+        </section>
+
+        <button
+          type="button"
+          onClick={() => onToggle(activity.id)}
+          className={`mt-5 w-full border px-4 py-3 text-xs font-bold uppercase tracking-[.1em] ${
+            done
+              ? 'border-[hsl(var(--chart-3))] text-[hsl(var(--chart-3))]'
+              : 'border-[hsl(var(--primary))] bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]'
+          }`}
+        >
+          {done ? (isPractical ? '✓ Preparation complete — tap to undo' : '✓ Evidence logged — tap to undo') : (isPractical ? 'Mark preparation complete' : 'Mark evidence logged')}
+        </button>
+
+        <nav className="mt-5 grid grid-cols-2 gap-3" aria-label="Activity navigation">
+          <button type="button" disabled={!previous} onClick={() => previous && onSelect(previous.id)} className="border border-[hsl(var(--border))] p-4 text-left disabled:opacity-30">
+            <div className="mono-font text-[.6rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">Previous</div>
+            <div className="mt-1 text-sm font-bold">{previous?.title || 'Start of module'}</div>
+          </button>
+          <button type="button" disabled={!next} onClick={() => next && onSelect(next.id)} className="border border-[hsl(var(--primary))] p-4 text-right disabled:opacity-30">
+            <div className="mono-font text-[.6rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">Next</div>
+            <div className="mt-1 text-sm font-bold">{next?.title || 'Module complete'}</div>
+          </button>
+        </nav>
+      </article>
+    </div>
+  );
+}
+
 function LessonReader({
   lessons,
   selectedId,
@@ -2403,6 +2515,7 @@ function KM08Module() {
 
 
 function PM01Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-pm01-progress') || '[]'); } catch { return []; }
   });
@@ -2416,6 +2529,7 @@ function PM01Module() {
   };
 
   return (
+    <>
     <section id="pm01" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm01-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -2450,6 +2564,13 @@ function PM01Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open preparation
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -2465,11 +2586,26 @@ function PM01Module() {
         <strong>Evidence status:</strong> Learner-marked preparation is not verified practical competence. Any practical evidence remains unverified until reviewed and signed through the authorised provider/workplace process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={pm01Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="practical"
+          moduleCode="PM-01"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function PM02Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-pm02-progress') || '[]'); } catch { return []; }
   });
@@ -2483,6 +2619,7 @@ function PM02Module() {
   };
 
   return (
+    <>
     <section id="pm02" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm02-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -2517,6 +2654,13 @@ function PM02Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open preparation
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -2532,11 +2676,26 @@ function PM02Module() {
         <strong>Evidence status:</strong> Preparation records are learning evidence only and do not certify safe or competent tool use. Practical competence must be assessed by an authorised provider or workplace assessor.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={pm02Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="practical"
+          moduleCode="PM-02"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function PM03Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-pm03-progress') || '[]'); } catch { return []; }
   });
@@ -2550,6 +2709,7 @@ function PM03Module() {
   };
 
   return (
+    <>
     <section id="pm03" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm03-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -2584,6 +2744,13 @@ function PM03Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open preparation
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -2599,11 +2766,26 @@ function PM03Module() {
         <strong>Evidence status:</strong> Preparation records and learner reflections are not proof of practical competence. Any cutting or joining evidence must be generated and verified through the authorised training/workplace process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={pm03Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="practical"
+          moduleCode="PM-03"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function PM04Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-pm04-progress') || '[]'); } catch { return []; }
   });
@@ -2617,6 +2799,7 @@ function PM04Module() {
   };
 
   return (
+    <>
     <section id="pm04" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm04-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -2651,6 +2834,13 @@ function PM04Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open preparation
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -2666,11 +2856,26 @@ function PM04Module() {
         <strong>Evidence status:</strong> Preparation and learner records are not proof that a component was safely removed or installed. Practical competence must be verified by the authorised training/workplace process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={pm04Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="practical"
+          moduleCode="PM-04"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function PM05Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-pm05-progress') || '[]'); } catch { return []; }
   });
@@ -2684,6 +2889,7 @@ function PM05Module() {
   };
 
   return (
+    <>
     <section id="pm05" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm05-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -2718,6 +2924,13 @@ function PM05Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open preparation
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -2733,11 +2946,26 @@ function PM05Module() {
         <strong>Evidence status:</strong> Learner preparation and app records do not prove safe electrical competence. Any practical work must be verified through the authorised training or workplace process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={pm05Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="practical"
+          moduleCode="PM-05"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function PM06Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-pm06-progress') || '[]'); } catch { return []; }
   });
@@ -2751,6 +2979,7 @@ function PM06Module() {
   };
 
   return (
+    <>
     <section id="pm06" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm06-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -2785,6 +3014,13 @@ function PM06Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open preparation
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -2800,11 +3036,26 @@ function PM06Module() {
         <strong>Evidence status:</strong> Learner preparation and app records do not establish practical competence. Any fluid-power task must be completed and verified through the authorised training or workplace process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={pm06Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="practical"
+          moduleCode="PM-06"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function PM07Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-pm07-progress') || '[]'); } catch { return []; }
   });
@@ -2818,6 +3069,7 @@ function PM07Module() {
   };
 
   return (
+    <>
     <section id="pm07" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm07-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -2852,6 +3104,13 @@ function PM07Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open preparation
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -2867,11 +3126,26 @@ function PM07Module() {
         <strong>Evidence status:</strong> App preparation records do not prove that a vehicle was safely serviced. Practical competence must be generated and verified through the authorised training/workplace process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={pm07Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="practical"
+          moduleCode="PM-07"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function PM08Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-pm08-progress') || '[]'); } catch { return []; }
   });
@@ -2885,6 +3159,7 @@ function PM08Module() {
   };
 
   return (
+    <>
     <section id="pm08" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm08-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -2919,6 +3194,13 @@ function PM08Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open preparation
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -2934,11 +3216,26 @@ function PM08Module() {
         <strong>Evidence status:</strong> App records support preparation only and do not establish practical overhaul competence. Any dismantling, assessment or reassembly evidence must be generated and verified through the authorised provider/workplace process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={pm08Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="practical"
+          moduleCode="PM-08"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function PM09Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-pm09-progress') || '[]'); } catch { return []; }
   });
@@ -2952,6 +3249,7 @@ function PM09Module() {
   };
 
   return (
+    <>
     <section id="pm09" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm09-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -2986,6 +3284,13 @@ function PM09Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open preparation
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -3001,11 +3306,26 @@ function PM09Module() {
         <strong>Evidence status:</strong> App records support preparation only and do not establish practical cooling-system competence. Any dismantling, assessment or reassembly evidence must be generated and verified through the authorised training or workplace process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={pm09Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="practical"
+          moduleCode="PM-09"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function PM10Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-pm10-progress') || '[]'); } catch { return []; }
   });
@@ -3019,6 +3339,7 @@ function PM10Module() {
   };
 
   return (
+    <>
     <section id="pm10" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm10-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -3053,6 +3374,13 @@ function PM10Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open preparation
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -3068,11 +3396,26 @@ function PM10Module() {
         <strong>Evidence status:</strong> App records support preparation only and do not establish brake-system practical competence. Any brake-system evidence must be generated and verified through the authorised provider/workplace process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={pm10Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="practical"
+          moduleCode="PM-10"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function PM11Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-pm11-progress') || '[]'); } catch { return []; }
   });
@@ -3086,6 +3429,7 @@ function PM11Module() {
   };
 
   return (
+    <>
     <section id="pm11" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm11-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -3120,6 +3464,13 @@ function PM11Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open preparation
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -3135,11 +3486,26 @@ function PM11Module() {
         <strong>Evidence status:</strong> App records support preparation only and do not establish drive train practical competence. Any dismantling, assessment or reassembly evidence must be generated and verified through the authorised provider/workplace process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={pm11Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="practical"
+          moduleCode="PM-11"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function PM12Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-pm12-progress') || '[]'); } catch { return []; }
   });
@@ -3153,6 +3519,7 @@ function PM12Module() {
   };
 
   return (
+    <>
     <section id="pm12" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm12-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -3187,6 +3554,13 @@ function PM12Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open preparation
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -3202,11 +3576,26 @@ function PM12Module() {
         <strong>Evidence status:</strong> App records support preparation only and do not establish steering or suspension practical competence. Any dismantling, assessment, alignment or reassembly evidence must be generated and verified through the authorised provider/workplace process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={pm12Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="practical"
+          moduleCode="PM-12"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function PM13Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-pm13-progress') || '[]'); } catch { return []; }
   });
@@ -3220,6 +3609,7 @@ function PM13Module() {
   };
 
   return (
+    <>
     <section id="pm13" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm13-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -3254,6 +3644,13 @@ function PM13Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open preparation
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -3269,11 +3666,26 @@ function PM13Module() {
         <strong>Evidence status:</strong> App records support preparation only and do not establish hydraulic-system practical competence. Any dismantling, assessment or reassembly evidence must be generated and verified through the authorised provider/workplace process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={pm13Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="practical"
+          moduleCode="PM-13"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function PM14Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-pm14-progress') || '[]'); } catch { return []; }
   });
@@ -3287,6 +3699,7 @@ function PM14Module() {
   };
 
   return (
+    <>
     <section id="pm14" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm14-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -3321,6 +3734,13 @@ function PM14Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open preparation
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -3336,11 +3756,26 @@ function PM14Module() {
         <strong>Evidence status:</strong> App records support preparation only and do not establish engine or vehicle-component practical competence. Any removal, testing, repair or refit evidence must be generated and verified through the authorised provider/workplace process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={pm14Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="practical"
+          moduleCode="PM-14"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function PM15Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-pm15-progress') || '[]'); } catch { return []; }
   });
@@ -3354,6 +3789,7 @@ function PM15Module() {
   };
 
   return (
+    <>
     <section id="pm15" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm15-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -3388,6 +3824,13 @@ function PM15Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open preparation
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -3403,11 +3846,26 @@ function PM15Module() {
         <strong>Evidence status:</strong> App records support diagnostic preparation only and do not establish practical diagnostic or repair competence. Any real diagnosis, repair or return-to-service decision must be completed and verified through the authorised provider/workplace process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={pm15Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="practical"
+          moduleCode="PM-15"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function PM16Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-pm16-progress') || '[]'); } catch { return []; }
   });
@@ -3421,6 +3879,7 @@ function PM16Module() {
   };
 
   return (
+    <>
     <section id="pm16" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm16-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -3455,6 +3914,13 @@ function PM16Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open preparation
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -3470,11 +3936,26 @@ function PM16Module() {
         <strong>Evidence status:</strong> App records support diagnostic preparation only and do not establish electrical practical competence. Any real diagnosis, repair or return-to-service decision must be completed and verified through the authorised provider/workplace process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={pm16Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="practical"
+          moduleCode="PM-16"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function PM17Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-pm17-progress') || '[]'); } catch { return []; }
   });
@@ -3488,6 +3969,7 @@ function PM17Module() {
   };
 
   return (
+    <>
     <section id="pm17" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm17-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -3522,6 +4004,13 @@ function PM17Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open preparation
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -3537,11 +4026,26 @@ function PM17Module() {
         <strong>Evidence status:</strong> App records support preparation only and do not establish electronic diagnostic or repair competence. Any real electronic diagnosis, programming, repair or return-to-service decision must be completed and verified through the authorised provider/workplace process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={pm17Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="practical"
+          moduleCode="PM-17"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function PM18Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-pm18-progress') || '[]'); } catch { return []; }
   });
@@ -3555,6 +4059,7 @@ function PM18Module() {
   };
 
   return (
+    <>
     <section id="pm18" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="pm18-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -3589,6 +4094,13 @@ function PM18Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open preparation
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -3604,11 +4116,26 @@ function PM18Module() {
         <strong>Evidence status:</strong> App records support preparation only and do not establish air-conditioning practical competence. Any real diagnosis, refrigerant handling, repair or return-to-service decision must be completed and verified through the authorised provider/workplace process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={pm18Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="practical"
+          moduleCode="PM-18"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function WM01Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-wm01-progress') || '[]'); } catch { return []; }
   });
@@ -3622,6 +4149,7 @@ function WM01Module() {
   };
 
   return (
+    <>
     <section id="wm01" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="wm01-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -3656,6 +4184,13 @@ function WM01Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open evidence item
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -3671,11 +4206,26 @@ function WM01Module() {
         <strong>Verification status:</strong> App entries remain learner records only. Workplace competence and experience must be verified by an authorised human through the provider/workplace process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={wm01Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="workplace"
+          moduleCode="WM-01"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function WM02Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-wm02-progress') || '[]'); } catch { return []; }
   });
@@ -3689,6 +4239,7 @@ function WM02Module() {
   };
 
   return (
+    <>
     <section id="wm02" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="wm02-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -3723,6 +4274,13 @@ function WM02Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open evidence item
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -3738,11 +4296,26 @@ function WM02Module() {
         <strong>Verification status:</strong> Learner-entered workplace evidence remains NOT VERIFIED until reviewed through the authorised workplace/provider process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={wm02Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="workplace"
+          moduleCode="WM-02"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function WM03Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-wm03-progress') || '[]'); } catch { return []; }
   });
@@ -3756,6 +4329,7 @@ function WM03Module() {
   };
 
   return (
+    <>
     <section id="wm03" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="wm03-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -3790,6 +4364,13 @@ function WM03Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open evidence item
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -3805,11 +4386,26 @@ function WM03Module() {
         <strong>Verification status:</strong> Learner-entered workplace evidence remains NOT VERIFIED until reviewed through the authorised workplace/provider process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={wm03Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="workplace"
+          moduleCode="WM-03"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function WM04Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-wm04-progress') || '[]'); } catch { return []; }
   });
@@ -3823,6 +4419,7 @@ function WM04Module() {
   };
 
   return (
+    <>
     <section id="wm04" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="wm04-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -3857,6 +4454,13 @@ function WM04Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open evidence item
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -3872,11 +4476,26 @@ function WM04Module() {
         <strong>Verification status:</strong> Learner-entered workplace evidence remains NOT VERIFIED until reviewed through the authorised workplace/provider process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={wm04Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="workplace"
+          moduleCode="WM-04"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function WM05Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-wm05-progress') || '[]'); } catch { return []; }
   });
@@ -3890,6 +4509,7 @@ function WM05Module() {
   };
 
   return (
+    <>
     <section id="wm05" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="wm05-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -3924,6 +4544,13 @@ function WM05Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open evidence item
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -3939,11 +4566,26 @@ function WM05Module() {
         <strong>Verification status:</strong> Learner-entered workplace evidence remains NOT VERIFIED until reviewed through the authorised workplace/provider process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={wm05Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="workplace"
+          moduleCode="WM-05"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function WM06Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-wm06-progress') || '[]'); } catch { return []; }
   });
@@ -3957,6 +4599,7 @@ function WM06Module() {
   };
 
   return (
+    <>
     <section id="wm06" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="wm06-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -3991,6 +4634,13 @@ function WM06Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open evidence item
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -4006,11 +4656,26 @@ function WM06Module() {
         <strong>Verification status:</strong> Learner-entered workplace evidence remains NOT VERIFIED until reviewed through the authorised workplace/provider process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={wm06Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="workplace"
+          moduleCode="WM-06"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function WM07Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-wm07-progress') || '[]'); } catch { return []; }
   });
@@ -4024,6 +4689,7 @@ function WM07Module() {
   };
 
   return (
+    <>
     <section id="wm07" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="wm07-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -4058,6 +4724,13 @@ function WM07Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open evidence item
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -4073,11 +4746,26 @@ function WM07Module() {
         <strong>Verification status:</strong> Learner-entered workplace evidence remains NOT VERIFIED until reviewed through the authorised workplace/provider process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={wm07Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="workplace"
+          moduleCode="WM-07"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function WM08Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-wm08-progress') || '[]'); } catch { return []; }
   });
@@ -4091,6 +4779,7 @@ function WM08Module() {
   };
 
   return (
+    <>
     <section id="wm08" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="wm08-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -4125,6 +4814,13 @@ function WM08Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open evidence item
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -4140,11 +4836,26 @@ function WM08Module() {
         <strong>Verification status:</strong> Learner-entered workplace evidence remains NOT VERIFIED until reviewed through the authorised workplace/provider process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={wm08Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="workplace"
+          moduleCode="WM-08"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function WM09Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-wm09-progress') || '[]'); } catch { return []; }
   });
@@ -4158,6 +4869,7 @@ function WM09Module() {
   };
 
   return (
+    <>
     <section id="wm09" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="wm09-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -4192,6 +4904,13 @@ function WM09Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open evidence item
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -4207,11 +4926,26 @@ function WM09Module() {
         <strong>Verification status:</strong> Learner-entered workplace evidence remains NOT VERIFIED until reviewed through the authorised workplace/provider process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={wm09Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="workplace"
+          moduleCode="WM-09"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function WM10Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-wm10-progress') || '[]'); } catch { return []; }
   });
@@ -4225,6 +4959,7 @@ function WM10Module() {
   };
 
   return (
+    <>
     <section id="wm10" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="wm10-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -4259,6 +4994,13 @@ function WM10Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open evidence item
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -4274,11 +5016,26 @@ function WM10Module() {
         <strong>Verification status:</strong> Learner-entered workplace evidence remains NOT VERIFIED until reviewed through the authorised workplace/provider process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={wm10Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="workplace"
+          moduleCode="WM-10"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function WM11Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-wm11-progress') || '[]'); } catch { return []; }
   });
@@ -4292,6 +5049,7 @@ function WM11Module() {
   };
 
   return (
+    <>
     <section id="wm11" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="wm11-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -4326,6 +5084,13 @@ function WM11Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open evidence item
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -4341,11 +5106,26 @@ function WM11Module() {
         <strong>Verification status:</strong> Learner-entered workplace evidence remains NOT VERIFIED until reviewed through the authorised workplace/provider process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={wm11Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="workplace"
+          moduleCode="WM-11"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function WM12Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-wm12-progress') || '[]'); } catch { return []; }
   });
@@ -4359,6 +5139,7 @@ function WM12Module() {
   };
 
   return (
+    <>
     <section id="wm12" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="wm12-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -4393,6 +5174,13 @@ function WM12Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open evidence item
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -4408,11 +5196,26 @@ function WM12Module() {
         <strong>Verification status:</strong> Learner-entered workplace evidence remains NOT VERIFIED until reviewed through the authorised workplace/provider process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={wm12Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="workplace"
+          moduleCode="WM-12"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function WM13Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-wm13-progress') || '[]'); } catch { return []; }
   });
@@ -4426,6 +5229,7 @@ function WM13Module() {
   };
 
   return (
+    <>
     <section id="wm13" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="wm13-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -4460,6 +5264,13 @@ function WM13Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedActivity(activity.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open evidence item
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(activity.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -4475,13 +5286,29 @@ function WM13Module() {
         <strong>Verification status:</strong> Learner-entered workplace evidence remains NOT VERIFIED until reviewed through the authorised workplace/provider process.
       </div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={wm13Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="workplace"
+          moduleCode="WM-13"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 function WM14Module() {
+  const [selectedActivity, setSelectedActivity] = useState<string | null>(null);
   const [completed,setCompleted]=useState<string[]>(()=>{try{return JSON.parse(localStorage.getItem('diesel-wm14-progress')||'[]')}catch{return []}});
   const toggle=(id:string)=>setCompleted(current=>{const next=current.includes(id)?current.filter(x=>x!==id):[...current,id];localStorage.setItem('diesel-wm14-progress',JSON.stringify(next));return next;});
   return (
+    <>
     <section id="wm14" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="wm14-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -4497,11 +5324,26 @@ function WM14Module() {
           <div className="mb-2 flex items-start justify-between gap-3"><div><div className="mono-font text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Workplace evidence item {index+1} of 6</div><h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-[hsl(var(--foreground))]">{activity.title}</h3></div>{done&&<CheckCircle2 size={18} className="shrink-0 text-[hsl(var(--chart-3))]"/>}</div>
           <p className="text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">{activity.summary}</p>
           <div className="mt-3 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--foreground))]"><strong>Evidence scaffold:</strong> {activity.evidence}</div>
+          <button type="button" onClick={()=>setSelectedActivity(activity.id)} className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))]">Open evidence item</button>
           <button type="button" onClick={()=>toggle(activity.id)} className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))]" aria-pressed={done}>{done?'Mark not recorded':'Mark evidence recorded'}</button>
         </article>})}
       </div>
       <div className="mt-5 border-t border-[hsl(var(--border))] pt-4 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]"><strong>Verification status:</strong> Learner-entered workplace evidence remains NOT VERIFIED until reviewed through the authorised workplace/provider process.</div>
     </section>
+      {selectedActivity && (
+        <SupportActivityReader
+          activities={wm14Activities}
+          selectedId={selectedActivity}
+          completed={completed}
+          kind="workplace"
+          moduleCode="WM-14"
+          onClose={() => setSelectedActivity(null)}
+          onSelect={setSelectedActivity}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
