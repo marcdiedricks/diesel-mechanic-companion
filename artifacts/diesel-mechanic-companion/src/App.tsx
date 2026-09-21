@@ -21,6 +21,7 @@ import { type ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { TradeCalculators } from '@/components/TradeCalculators';
+import { lessonDetails } from '@/lessonDetails';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
@@ -1538,7 +1539,159 @@ const wm14Activities = [
 const queryClient = new QueryClient();
 
 
+function LessonReader({
+  lessons,
+  selectedId,
+  completed,
+  onClose,
+  onSelect,
+  onToggle,
+}: {
+  lessons: readonly { id: string; title: string; summary: string; check: string }[];
+  selectedId: string;
+  completed: string[];
+  onClose: () => void;
+  onSelect: (id: string) => void;
+  onToggle: (id: string) => void;
+}) {
+  const index = lessons.findIndex((lesson) => lesson.id === selectedId);
+  const lesson = lessons[index];
+  const detail = lesson ? lessonDetails[lesson.id] : undefined;
+  const [answer, setAnswer] = useState<number | null>(null);
+
+  useEffect(() => {
+    setAnswer(null);
+  }, [selectedId]);
+
+  if (!lesson || !detail) return null;
+
+  const done = completed.includes(lesson.id);
+  const previous = index > 0 ? lessons[index - 1] : null;
+  const next = index < lessons.length - 1 ? lessons[index + 1] : null;
+
+  return (
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-[hsl(var(--background))]" role="dialog" aria-modal="true" aria-labelledby="lesson-reader-title">
+      <div className="sticky top-0 z-10 border-b border-[hsl(var(--border))] bg-[rgba(8,15,23,.97)] px-4 py-3 backdrop-blur">
+        <div className="mx-auto flex max-w-[900px] items-center justify-between gap-3">
+          <button type="button" onClick={onClose} className="text-xs font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))]">← Module</button>
+          <div className="mono-font text-[.65rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">Lesson {index + 1} of {lessons.length}</div>
+          <button type="button" onClick={onClose} className="grid size-9 place-items-center border border-[hsl(var(--border))]" aria-label="Close lesson"><X size={17} /></button>
+        </div>
+      </div>
+
+      <article className="mx-auto max-w-[900px] px-4 pb-24 pt-6 sm:px-6">
+        <div className="eyebrow mb-3">{lesson.id} · full lesson</div>
+        <h2 id="lesson-reader-title" className="display-font text-[2.3rem] font-bold uppercase leading-[.92] tracking-tight text-[hsl(var(--foreground))] sm:text-[3rem]">{lesson.title}</h2>
+        <p className="mt-4 text-sm leading-7 text-[hsl(var(--muted-foreground))]">{lesson.summary}</p>
+
+        <section className="mt-6 panel bracket-corner p-5">
+          <div className="eyebrow mb-3">Learning objectives</div>
+          <ul className="space-y-2 text-sm leading-6 text-[hsl(var(--foreground))]">
+            {detail.objectives.map((item) => <li key={item} className="flex gap-3"><span className="text-[hsl(var(--primary))]">◆</span><span>{item}</span></li>)}
+          </ul>
+        </section>
+
+        <section className="mt-4 panel p-5">
+          <div className="eyebrow mb-3">Core teaching</div>
+          <div className="space-y-4 text-sm leading-7 text-[hsl(var(--foreground))]">
+            {detail.explanation.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+          </div>
+        </section>
+
+        <section className="mt-4 panel p-5">
+          <div className="eyebrow mb-3">Key concepts</div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {detail.concepts.map((concept, conceptIndex) => (
+              <div key={concept} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+                <div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">Concept {conceptIndex + 1}</div>
+                <p className="mt-2 text-sm leading-6 text-[hsl(var(--foreground))]">{concept}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-4 border-l-2 border-l-[hsl(var(--primary))] bg-[rgba(233,184,54,.06)] p-5">
+          <div className="eyebrow mb-2">Worked learning scenario</div>
+          <p className="text-sm leading-7 text-[hsl(var(--foreground))]">{detail.scenario}</p>
+        </section>
+
+        <section className="mt-4 panel p-5">
+          <div className="eyebrow mb-3">Knowledge check</div>
+          <h3 className="text-base font-bold leading-6 text-[hsl(var(--foreground))]">{detail.question}</h3>
+          <div className="mt-4 grid gap-2">
+            {detail.options.map((option, optionIndex) => {
+              const chosen = answer === optionIndex;
+              const correct = answer !== null && optionIndex === detail.answer;
+              return (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => setAnswer(optionIndex)}
+                  className={`border px-4 py-3 text-left text-sm leading-5 ${
+                    correct ? 'border-[hsl(var(--chart-3))] bg-[rgba(93,173,119,.12)]' :
+                    chosen ? 'border-[hsl(var(--primary))] bg-[rgba(233,184,54,.08)]' :
+                    'border-[hsl(var(--border))]'
+                  }`}
+                >
+                  {option}
+                </button>
+              );
+            })}
+          </div>
+          {answer !== null && (
+            <div className={`mt-4 border-l-2 p-3 text-sm ${
+              answer === detail.answer
+                ? 'border-l-[hsl(var(--chart-3))] bg-[rgba(93,173,119,.08)]'
+                : 'border-l-[hsl(var(--primary))] bg-[rgba(233,184,54,.06)]'
+            }`}>
+              {answer === detail.answer ? 'Correct. ' : 'Not quite. '}
+              {lesson.check}
+            </div>
+          )}
+        </section>
+
+        <section className="mt-4 panel p-5">
+          <div className="eyebrow mb-3">Lesson recap</div>
+          <ul className="space-y-2 text-sm leading-6">
+            {detail.recap.map((item) => <li key={item} className="flex gap-3"><CheckCircle2 size={16} className="mt-1 shrink-0 text-[hsl(var(--chart-3))]" /><span>{item}</span></li>)}
+          </ul>
+          <button
+            type="button"
+            onClick={() => onToggle(lesson.id)}
+            className={`mt-5 w-full border px-4 py-3 text-xs font-bold uppercase tracking-[.1em] ${
+              done
+                ? 'border-[hsl(var(--chart-3))] text-[hsl(var(--chart-3))]'
+                : 'border-[hsl(var(--primary))] bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]'
+            }`}
+          >
+            {done ? '✓ Lesson complete — tap to undo' : 'Mark lesson complete'}
+          </button>
+        </section>
+
+        <nav className="mt-5 grid grid-cols-2 gap-3" aria-label="Lesson navigation">
+          <button type="button" disabled={!previous} onClick={() => previous && onSelect(previous.id)} className="border border-[hsl(var(--border))] p-4 text-left disabled:opacity-30">
+            <div className="mono-font text-[.6rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">Previous</div>
+            <div className="mt-1 text-sm font-bold">{previous?.title || 'Start of module'}</div>
+          </button>
+          <button type="button" disabled={!next} onClick={() => next && onSelect(next.id)} className="border border-[hsl(var(--primary))] p-4 text-right disabled:opacity-30">
+            <div className="mono-font text-[.6rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">Next</div>
+            <div className="mt-1 text-sm font-bold">{next?.title || 'Module complete'}</div>
+          </button>
+        </nav>
+
+        <div className="mt-6 border-t border-[hsl(var(--border))] pt-4 text-xs leading-6 text-[hsl(var(--muted-foreground))]">
+          Learning companion only. Practical vehicle work must follow the approved provider/workplace process with competent supervision.
+        </div>
+      </article>
+    </div>
+  );
+}
+
+
+
+
 function KM01Module() {
+  const [selectedLesson, setSelectedLesson] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-km01-progress') || '[]'); } catch { return []; }
   });
@@ -1552,6 +1705,7 @@ function KM01Module() {
   };
 
   return (
+    <>
     <section id="km01" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="km01-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -1586,6 +1740,13 @@ function KM01Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedLesson(lesson.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open full lesson
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(lesson.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -1602,11 +1763,24 @@ function KM01Module() {
         <a className="text-[hsl(var(--primary))] underline-offset-4 hover:underline" href="https://pcqs.saqa.org.za/viewQualification.php?id=117237" target="_blank" rel="noopener noreferrer">Open SAQA qualification</a>
       </div>
     </section>
+      {selectedLesson && (
+        <LessonReader
+          lessons={km01Lessons}
+          selectedId={selectedLesson}
+          completed={completed}
+          onClose={() => setSelectedLesson(null)}
+          onSelect={setSelectedLesson}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function KM02Module() {
+  const [selectedLesson, setSelectedLesson] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-km02-progress') || '[]'); } catch { return []; }
   });
@@ -1620,6 +1794,7 @@ function KM02Module() {
   };
 
   return (
+    <>
     <section id="km02" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="km02-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -1654,6 +1829,13 @@ function KM02Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedLesson(lesson.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open full lesson
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(lesson.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -1670,11 +1852,24 @@ function KM02Module() {
         <a className="text-[hsl(var(--primary))] underline-offset-4 hover:underline" href="https://pcqs.saqa.org.za/viewQualification.php?id=117237" target="_blank" rel="noopener noreferrer">Open SAQA qualification</a>
       </div>
     </section>
+      {selectedLesson && (
+        <LessonReader
+          lessons={km02Lessons}
+          selectedId={selectedLesson}
+          completed={completed}
+          onClose={() => setSelectedLesson(null)}
+          onSelect={setSelectedLesson}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function KM03Module() {
+  const [selectedLesson, setSelectedLesson] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-km03-progress') || '[]'); } catch { return []; }
   });
@@ -1688,6 +1883,7 @@ function KM03Module() {
   };
 
   return (
+    <>
     <section id="km03" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="km03-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -1722,6 +1918,13 @@ function KM03Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedLesson(lesson.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open full lesson
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(lesson.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -1738,11 +1941,24 @@ function KM03Module() {
         <a className="text-[hsl(var(--primary))] underline-offset-4 hover:underline" href="https://pcqs.saqa.org.za/viewQualification.php?id=117237" target="_blank" rel="noopener noreferrer">Open SAQA qualification</a>
       </div>
     </section>
+      {selectedLesson && (
+        <LessonReader
+          lessons={km03Lessons}
+          selectedId={selectedLesson}
+          completed={completed}
+          onClose={() => setSelectedLesson(null)}
+          onSelect={setSelectedLesson}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function KM04Module() {
+  const [selectedLesson, setSelectedLesson] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-km04-progress') || '[]'); } catch { return []; }
   });
@@ -1756,6 +1972,7 @@ function KM04Module() {
   };
 
   return (
+    <>
     <section id="km04" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="km04-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -1790,6 +2007,13 @@ function KM04Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedLesson(lesson.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open full lesson
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(lesson.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -1806,11 +2030,24 @@ function KM04Module() {
         <a className="text-[hsl(var(--primary))] underline-offset-4 hover:underline" href="https://pcqs.saqa.org.za/viewQualification.php?id=117237" target="_blank" rel="noopener noreferrer">Open SAQA qualification</a>
       </div>
     </section>
+      {selectedLesson && (
+        <LessonReader
+          lessons={km04Lessons}
+          selectedId={selectedLesson}
+          completed={completed}
+          onClose={() => setSelectedLesson(null)}
+          onSelect={setSelectedLesson}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function KM05Module() {
+  const [selectedLesson, setSelectedLesson] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-km05-progress') || '[]'); } catch { return []; }
   });
@@ -1824,6 +2061,7 @@ function KM05Module() {
   };
 
   return (
+    <>
     <section id="km05" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="km05-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -1858,6 +2096,13 @@ function KM05Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedLesson(lesson.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open full lesson
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(lesson.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -1874,11 +2119,24 @@ function KM05Module() {
         <a className="text-[hsl(var(--primary))] underline-offset-4 hover:underline" href="https://pcqs.saqa.org.za/viewQualification.php?id=117237" target="_blank" rel="noopener noreferrer">Open SAQA qualification</a>
       </div>
     </section>
+      {selectedLesson && (
+        <LessonReader
+          lessons={km05Lessons}
+          selectedId={selectedLesson}
+          completed={completed}
+          onClose={() => setSelectedLesson(null)}
+          onSelect={setSelectedLesson}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function KM06Module() {
+  const [selectedLesson, setSelectedLesson] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-km06-progress') || '[]'); } catch { return []; }
   });
@@ -1892,6 +2150,7 @@ function KM06Module() {
   };
 
   return (
+    <>
     <section id="km06" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="km06-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -1926,6 +2185,13 @@ function KM06Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedLesson(lesson.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open full lesson
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(lesson.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -1942,11 +2208,24 @@ function KM06Module() {
         <a className="text-[hsl(var(--primary))] underline-offset-4 hover:underline" href="https://pcqs.saqa.org.za/viewQualification.php?id=117237" target="_blank" rel="noopener noreferrer">Open SAQA qualification</a>
       </div>
     </section>
+      {selectedLesson && (
+        <LessonReader
+          lessons={km06Lessons}
+          selectedId={selectedLesson}
+          completed={completed}
+          onClose={() => setSelectedLesson(null)}
+          onSelect={setSelectedLesson}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function KM07Module() {
+  const [selectedLesson, setSelectedLesson] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-km07-progress') || '[]'); } catch { return []; }
   });
@@ -1960,6 +2239,7 @@ function KM07Module() {
   };
 
   return (
+    <>
     <section id="km07" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="km07-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -1994,6 +2274,13 @@ function KM07Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedLesson(lesson.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open full lesson
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(lesson.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -2010,11 +2297,24 @@ function KM07Module() {
         <a className="text-[hsl(var(--primary))] underline-offset-4 hover:underline" href="https://pcqs.saqa.org.za/viewQualification.php?id=117237" target="_blank" rel="noopener noreferrer">Open SAQA qualification</a>
       </div>
     </section>
+      {selectedLesson && (
+        <LessonReader
+          lessons={km07Lessons}
+          selectedId={selectedLesson}
+          completed={completed}
+          onClose={() => setSelectedLesson(null)}
+          onSelect={setSelectedLesson}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
 
 function KM08Module() {
+  const [selectedLesson, setSelectedLesson] = useState<string | null>(null);
   const [completed, setCompleted] = useState<string[]>(() => {
     try { return JSON.parse(localStorage.getItem('diesel-km08-progress') || '[]'); } catch { return []; }
   });
@@ -2028,6 +2328,7 @@ function KM08Module() {
   };
 
   return (
+    <>
     <section id="km08" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="km08-heading">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
@@ -2062,6 +2363,13 @@ function KM08Module() {
               </div>
               <button
                 type="button"
+                onClick={() => setSelectedLesson(lesson.id)}
+                className="mt-4 mr-2 border border-[hsl(var(--foreground))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
+              >
+                Open full lesson
+              </button>
+              <button
+                type="button"
                 onClick={() => toggle(lesson.id)}
                 className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
                 aria-pressed={done}
@@ -2078,6 +2386,18 @@ function KM08Module() {
         <a className="text-[hsl(var(--primary))] underline-offset-4 hover:underline" href="https://pcqs.saqa.org.za/viewQualification.php?id=117237" target="_blank" rel="noopener noreferrer">Open SAQA qualification</a>
       </div>
     </section>
+      {selectedLesson && (
+        <LessonReader
+          lessons={km08Lessons}
+          selectedId={selectedLesson}
+          completed={completed}
+          onClose={() => setSelectedLesson(null)}
+          onSelect={setSelectedLesson}
+          onToggle={toggle}
+        />
+      )}
+
+    </>
   );
 }
 
