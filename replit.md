@@ -1,5 +1,7 @@
 # Diesel Mechanic Companion™
 
+Controlled qualification baseline: SAQA 117237 • Curriculum 653306-000-01-00 • NQF 4 • 544 credits.
+
 An installable multilingual field companion for South African diesel mechanic learners, with safety gates, workshop calculators, diagnostic reference matrices, and Red Seal curriculum resources.
 
 ## Run & Operate
@@ -32,14 +34,15 @@ An installable multilingual field companion for South African diesel mechanic le
 
 - Keep the first release local-first: all calculations and reference content are deterministic and available without a network connection.
 - Preserve the English safety gate verbatim and expose localized guidance through a persistent language selector.
-- Use exact YouTube search URLs rather than embedding third-party content, keeping the companion lightweight and respectful of resource owners.
+- Use the controlled visual-learning library only. Do not use generic video-search links for hazardous trade topics.
 
 ## Product
 
-- Safety-first welcome and statutory controls for Common Rail injection, tilted cabs, heavy lifting, air discharge, wet tanks, and maxi-brakes.
-- Liner protrusion/shimming calculator with live D − F + S evaluation against the 0.08–0.15 mm target.
-- Air-brake threshold and Bosch/Denso CRD return-flow reference matrices.
-- Searchable English, Afrikaans, isiXhosa, and isiZulu trade-term reference plus 10-unit curriculum resource modal.
+- Safety-first learner companion focused on theory, hazard recognition, curriculum revision, diagnostic reasoning and evidence preparation.
+- High-risk practical work is routed to approved training/workplace processes and competent adult supervision.
+- Existing workshop calculators and diagnostic references are under review; any content that could enable hazardous unsupervised work will be retired or rewritten.
+- Searchable English, Afrikaans, isiXhosa and isiZulu trade-term support is retained.
+- The informal 10-unit resource model is being replaced with the controlled SAQA 117237 KM/PM/WM curriculum map.
 
 ## User preferences
 
