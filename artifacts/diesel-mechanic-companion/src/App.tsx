@@ -212,6 +212,39 @@ const km03Lessons = [
   },
 ] as const;
 
+const km04Lessons = [
+  {
+    id: 'KM04-L01',
+    title: 'Four-stroke diesel engine cycle and component roles',
+    summary: 'Understand the intake, compression, power and exhaust events at a conceptual level and identify the broad purpose of major engine components.',
+    check: 'This lesson explains engine operation only; it does not provide dismantling, timing, adjustment or repair procedures.'
+  },
+  {
+    id: 'KM04-L02',
+    title: 'Air intake, turbocharging and exhaust fundamentals',
+    summary: 'Recognise the purpose of air filters, intake paths, turbochargers, charge-air cooling and exhaust flow in supporting combustion and engine performance.',
+    check: 'Boost, turbocharger and exhaust-system practical testing remains supervised work using approved OEM or provider procedures.'
+  },
+  {
+    id: 'KM04-L03',
+    title: 'Fuel supply and combustion fundamentals',
+    summary: 'Learn the broad function of fuel storage, filtration, low-pressure supply, injection, atomisation and combustion without operational high-pressure fuel instructions.',
+    check: 'High-pressure diesel fuel systems are hazardous. The app must not be used to open, test, depressurise or repair them.'
+  },
+  {
+    id: 'KM04-L04',
+    title: 'Lubrication and cooling system fundamentals',
+    summary: 'Understand why lubrication and cooling protect engine components, manage heat and support reliable operation.',
+    check: 'Opening hot, pressurised or contaminated systems requires approved workplace procedures and competent supervision.'
+  },
+  {
+    id: 'KM04-L05',
+    title: 'Engine condition, symptoms and quality evidence',
+    summary: 'Distinguish symptoms from causes and organise safe evidence such as service history, warning indicators, approved measurements and observations for human diagnostic review.',
+    check: 'A symptom alone does not justify a repair decision; real diagnosis requires controlled testing and competent review.'
+  },
+] as const;
+
 const queryClient = new QueryClient();
 
 
@@ -412,6 +445,74 @@ function KM03Module() {
 
       <div className="mt-5 flex flex-col gap-2 border-t border-[hsl(var(--border))] pt-4 text-xs text-[hsl(var(--muted-foreground))] sm:flex-row sm:items-center sm:justify-between">
         <span>Official qualification source: SAQA 117237 • 653306-000-01-KM-03 • 8 credits</span>
+        <a className="text-[hsl(var(--primary))] underline-offset-4 hover:underline" href="https://pcqs.saqa.org.za/viewQualification.php?id=117237" target="_blank" rel="noopener noreferrer">Open SAQA qualification</a>
+      </div>
+    </section>
+  );
+}
+
+
+function KM04Module() {
+  const [completed, setCompleted] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('diesel-km04-progress') || '[]'); } catch { return []; }
+  });
+
+  const toggle = (id: string) => {
+    setCompleted((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+      localStorage.setItem('diesel-km04-progress', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  return (
+    <section id="km04" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="km04-heading">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <div className="eyebrow mb-2 flex items-center gap-2"><BookOpen size={14} /> KM-04 • Basic Engine Systems</div>
+          <h2 id="km04-heading" className="section-heading">Basic Engine Systems</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            Controlled learning support mapped to 653306-000-01-KM-04, NQF Level 2, 8 credits. This five-lesson sequence builds engine-system understanding without giving workshop operating instructions.
+          </p>
+        </div>
+        <div className="mono-font shrink-0 text-right text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">{completed.length}/5 complete</div>
+      </div>
+
+      <div className="mb-5 border border-[rgba(233,184,54,.25)] bg-[rgba(233,184,54,.06)] p-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+        <strong>Safety boundary:</strong> KM-04 teaches engine theory, system purpose, symptoms and evidence reasoning. It does not teach engine dismantling, timing, adjustment, hot-system opening, high-pressure fuel testing or repair procedures.
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        {km04Lessons.map((lesson, index) => {
+          const done = completed.includes(lesson.id);
+          return (
+            <article key={lesson.id} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <div className="mono-font text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Lesson {index + 1} of 5</div>
+                  <h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-[hsl(var(--foreground))]">{lesson.title}</h3>
+                </div>
+                {done && <CheckCircle2 size={18} className="shrink-0 text-[hsl(var(--chart-3))]" />}
+              </div>
+              <p className="text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">{lesson.summary}</p>
+              <div className="mt-3 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+                <strong>Learning check:</strong> {lesson.check}
+              </div>
+              <button
+                type="button"
+                onClick={() => toggle(lesson.id)}
+                className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
+                aria-pressed={done}
+              >
+                {done ? 'Mark not complete' : 'Mark lesson complete'}
+              </button>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 flex flex-col gap-2 border-t border-[hsl(var(--border))] pt-4 text-xs text-[hsl(var(--muted-foreground))] sm:flex-row sm:items-center sm:justify-between">
+        <span>Official qualification source: SAQA 117237 • 653306-000-01-KM-04 • 8 credits</span>
         <a className="text-[hsl(var(--primary))] underline-offset-4 hover:underline" href="https://pcqs.saqa.org.za/viewQualification.php?id=117237" target="_blank" rel="noopener noreferrer">Open SAQA qualification</a>
       </div>
     </section>
@@ -664,6 +765,7 @@ function Home() {
         <KM01Module />
         <KM02Module />
         <KM03Module />
+        <KM04Module />
 
         <section className="mt-4 grid gap-3 sm:grid-cols-3" aria-label="Workshop baseline values">
           <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]"><Gauge size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">CRD rail warning</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">2,000+ <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">bar</span></div></div></div>
