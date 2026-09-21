@@ -98,14 +98,78 @@ const tradeTerms = {
 const SMART_SEARCH_FALLBACK = 'No direct match found in the offline knowledge base. Try a theory calculation or select a curriculum topic. Practical vehicle work must use approved workplace information and supervision.';
 
 const videoUnits = [
-  ['01', 'Workplace Fundamentals — controlled visual reference', '#visual-library'],
-  ['02', 'Foundational Concepts for Mechanics — controlled visual reference', '#visual-library'],
-  ['03', 'Vehicle and Equipment Fundamentals — controlled visual reference', '#visual-library'],
-  ['04', 'Basic Engine Systems — controlled visual reference', '#visual-library'],
-  ['05', 'Vehicle, Equipment and Propulsion Systems — controlled visual reference', '#visual-library'],
-  ['06', 'Electrical, Electronic, Hydraulic and Pneumatic Principles — controlled visual reference', '#visual-library'],
-  ['07', 'Advanced Vehicle and Equipment Systems — controlled visual reference', '#visual-library'],
-  ['08', 'Problem Solving and Engine Optimisation — controlled visual reference', '#visual-library'],
+  {
+    code: '01',
+    module: 'Workplace Fundamentals',
+    title: 'Understanding Hazards and Risks',
+    provider: 'WorkSafeBC',
+    url: 'https://www.worksafebc.com/en/resources/health-safety/videos/understanding-hazards-and-risks',
+    scope: 'Hazard-versus-risk recognition and safe escalation awareness.',
+    safety: 'CONTROLLED',
+  },
+  {
+    code: '02',
+    module: 'Foundational Concepts for Mechanics',
+    title: 'Introduction to Torque',
+    provider: 'Khan Academy',
+    url: 'https://www.khanacademy.org/video/introduction-to-torque?playlist=Physics',
+    scope: 'Classroom mechanics: force, distance and rotational effect.',
+    safety: 'LOW',
+  },
+  {
+    code: '03',
+    module: 'Vehicle and Equipment Fundamentals',
+    title: 'How a Car Engine Works',
+    provider: 'Animagraffs',
+    url: 'https://www.youtube.com/watch?v=ZQvfHyfgBtA',
+    scope: 'Animated system overview for component recognition and relationships.',
+    safety: 'CONTROLLED',
+  },
+  {
+    code: '04',
+    module: 'Basic Engine Systems',
+    title: 'How a Turbocharger Works — Animation',
+    provider: 'Educational Mechanics',
+    url: 'https://www.youtube.com/watch?v=K8aCL56jZX4',
+    scope: 'Conceptual turbocharger airflow and exhaust-energy relationship.',
+    safety: 'CONTROLLED',
+  },
+  {
+    code: '05',
+    module: 'Vehicle, Equipment and Propulsion Systems',
+    title: 'How a Manual Transmission and Clutch Works',
+    provider: 'Animagraffs',
+    url: 'https://www.youtube.com/watch?v=o1ED4FQjDGk',
+    scope: 'Animated driveline and transmission relationship overview.',
+    safety: 'CONTROLLED',
+  },
+  {
+    code: '06',
+    module: 'Electrical, Electronic, Hydraulic and Pneumatic Principles',
+    title: 'Intro to Electric Circuits',
+    provider: 'Khan Academy',
+    url: 'https://www.khanacademy.org/science/ap-physics-2/x0e2f5a2c%3Aelectric-circuits/x0e2f5a2c%3Acircuits-oms-kirchhoffs-laws/v/electric-circuits-part-1',
+    scope: 'Classroom circuit concepts: current paths, components and basic relationships.',
+    safety: 'LOW',
+  },
+  {
+    code: '07',
+    module: 'Advanced Vehicle and Equipment Systems',
+    title: 'CAN Bus System Explained',
+    provider: 'Automotive Explained',
+    url: 'https://www.youtube.com/watch?v=jnQoR67lIug',
+    scope: 'Conceptual vehicle-network communication between control units.',
+    safety: 'CONTROLLED',
+  },
+  {
+    code: '08',
+    module: 'Problem Solving and Engine Optimisation',
+    title: 'Problem Solving Process',
+    provider: 'MIT OpenCourseWare',
+    url: 'https://ocw.mit.edu/courses/res-tll-004-stem-concept-videos-fall-2013/resources/problem-solving-process/',
+    scope: 'Structured problem definition, evidence and iterative reasoning.',
+    safety: 'LOW',
+  },
 ] as const;
 
 const km01Lessons = [
@@ -5458,21 +5522,90 @@ function TradeTerms({ language, onOpenCalculators }: { language: Language; onOpe
 }
 
 function VideoModal({ language, selected, onSelect, onClose }: { language: Language; selected: number; onSelect: (index: number) => void; onClose: () => void }) {
+  const [online, setOnline] = useState(() => navigator.onLine);
+
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => { if (event.key === 'Escape') onClose(); };
+    const updateOnline = () => setOnline(navigator.onLine);
     document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
+    window.addEventListener('online', updateOnline);
+    window.addEventListener('offline', updateOnline);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('online', updateOnline);
+      window.removeEventListener('offline', updateOnline);
+    };
   }, [onClose]);
+
   const unit = videoUnits[selected];
-  const openVideo = () => undefined;
+  const openVideo = () => {
+    if (!online) return;
+    window.open(unit.url, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <div className="modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
       <div className="modal-card panel bracket-corner bg-[hsl(var(--card))] p-4 sm:p-6" role="dialog" aria-modal="true" aria-labelledby="video-modal-heading">
-        <div className="mb-5 flex items-start justify-between gap-4"><div><div className="eyebrow mb-2 flex items-center gap-2"><BookOpen size={14} /> {copy[language].videoLabel}</div><h2 id="video-modal-heading" className="section-heading">Controlled visual-learning library</h2><p className="mt-2 text-xs text-[hsl(var(--muted-foreground))]">Visual resources are supplemental only. No external resource is opened until it has been individually vetted for curriculum fit, safety and source quality.</p></div><button type="button" onClick={onClose} className="grid size-9 shrink-0 place-items-center border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]" aria-label="Close curriculum video resource" data-testid="button-close-video-modal"><X size={18} /></button></div>
-        <label className="mb-4 block md:hidden"><span className="mb-1.5 block text-[.68rem] font-bold uppercase tracking-[.12em] text-[hsl(var(--muted-foreground))]">Choose unit</span><select value={selected} onChange={(event) => onSelect(Number(event.target.value))} className="input-field" aria-label="Choose curriculum video unit" data-testid="select-video-unit">{videoUnits.map((item, index) => <option key={item[0]} value={index}>{item[0]} · {item[1]}</option>)}</select></label>
-        <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_260px]">
-          <div className="order-2 max-h-[360px] space-y-1 overflow-y-auto pr-1 scrollbar-thin md:order-1">{videoUnits.map((item, index) => <button type="button" key={item[0]} onClick={() => onSelect(index)} className={`unit-button ${selected === index ? 'selected' : ''}`} data-testid={`button-video-unit-${item[0]}`}><span className="mono-font w-7 shrink-0 text-[.68rem] text-[hsl(var(--primary))]">{item[0]}</span><span className="text-xs leading-snug">{item[1]}</span>{selected === index && <CheckCircle2 className="ml-auto shrink-0 text-[hsl(var(--primary))]" size={15} />}</button>)}</div>
-          <div className="order-1 flex flex-col justify-between border border-[hsl(var(--border))] bg-[rgba(0,0,0,.15)] p-4 md:order-2"><div><div className="mono-font text-4xl font-semibold tracking-[-.08em] text-[hsl(var(--primary))]">{unit[0]}</div><h3 className="mt-2 text-lg font-bold leading-tight text-[hsl(var(--foreground))]">{unit[1]}</h3></div><button type="button" onClick={openVideo} disabled className="mt-8 flex cursor-not-allowed items-center justify-center gap-2 border border-[hsl(var(--border))] px-4 py-3 text-xs font-bold uppercase tracking-[.12em] text-[hsl(var(--muted-foreground))]" data-testid="button-open-selected-video">NO VETTED EXTERNAL RESOURCE</button></div>
+        <div className="mb-5 flex items-start justify-between gap-4">
+          <div>
+            <div className="eyebrow mb-2 flex items-center gap-2"><BookOpen size={14} /> {copy[language].videoLabel}</div>
+            <h2 id="video-modal-heading" className="section-heading">Controlled visual-learning library</h2>
+            <p className="mt-2 text-xs text-[hsl(var(--muted-foreground))]">
+              Optional online concept support only. The written lesson remains complete offline. External resources do not authorise practical work or count as competence evidence.
+            </p>
+          </div>
+          <button type="button" onClick={onClose} className="grid size-9 shrink-0 place-items-center border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]" aria-label="Close visual learning library" data-testid="button-close-video-modal"><X size={18} /></button>
+        </div>
+
+        <div className="mb-4 flex items-center justify-between border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] px-3 py-2 text-[.68rem] uppercase tracking-[.1em]">
+          <span>Internet status</span>
+          <span className={online ? 'text-[hsl(var(--chart-3))]' : 'text-[hsl(var(--destructive))]'}>{online ? 'ONLINE · LINKS AVAILABLE' : 'OFFLINE · LESSONS STILL AVAILABLE'}</span>
+        </div>
+
+        <label className="mb-4 block md:hidden">
+          <span className="mb-1.5 block text-[.68rem] font-bold uppercase tracking-[.12em] text-[hsl(var(--muted-foreground))]">Choose unit</span>
+          <select value={selected} onChange={(event) => onSelect(Number(event.target.value))} className="input-field" aria-label="Choose curriculum video unit" data-testid="select-video-unit">
+            {videoUnits.map((item, index) => <option key={item.code} value={index}>{item.code} · {item.module}</option>)}
+          </select>
+        </label>
+
+        <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_300px]">
+          <div className="order-2 max-h-[420px] space-y-1 overflow-y-auto pr-1 scrollbar-thin md:order-1">
+            {videoUnits.map((item, index) => (
+              <button type="button" key={item.code} onClick={() => onSelect(index)} className={`unit-button ${selected === index ? 'selected' : ''}`} data-testid={`button-video-unit-${item.code}`}>
+                <span className="mono-font w-7 shrink-0 text-[.68rem] text-[hsl(var(--primary))]">{item.code}</span>
+                <span className="text-left text-xs leading-snug">
+                  <strong>{item.module}</strong><br />
+                  <span className="text-[hsl(var(--muted-foreground))]">{item.title}</span>
+                </span>
+                {selected === index && <CheckCircle2 className="ml-auto shrink-0 text-[hsl(var(--primary))]" size={15} />}
+              </button>
+            ))}
+          </div>
+
+          <div className="order-1 flex flex-col justify-between border border-[hsl(var(--border))] bg-[rgba(0,0,0,.15)] p-4 md:order-2">
+            <div>
+              <div className="mono-font text-4xl font-semibold tracking-[-.08em] text-[hsl(var(--primary))]">{unit.code}</div>
+              <div className="mt-1 text-[.62rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">{unit.module}</div>
+              <h3 className="mt-3 text-lg font-bold leading-tight text-[hsl(var(--foreground))]">{unit.title}</h3>
+              <p className="mt-2 text-xs text-[hsl(var(--muted-foreground))]">{unit.provider}</p>
+              <p className="mt-4 text-xs leading-6 text-[hsl(var(--foreground))]">{unit.scope}</p>
+              <div className="mt-4 inline-flex border border-[hsl(var(--border))] px-2 py-1 text-[.6rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">Vetted 2026-09-21 · {unit.safety}</div>
+            </div>
+            <button
+              type="button"
+              onClick={openVideo}
+              disabled={!online}
+              className={`mt-8 flex items-center justify-center gap-2 border px-4 py-3 text-xs font-bold uppercase tracking-[.12em] ${
+                online
+                  ? 'border-[hsl(var(--primary))] text-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]'
+                  : 'cursor-not-allowed border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))]'
+              }`}
+              data-testid="button-open-selected-video"
+            >
+              {online ? 'OPEN VETTED ONLINE RESOURCE' : 'INTERNET REQUIRED'}
+            </button>
+          </div>
         </div>
       </div>
     </div>
