@@ -146,6 +146,39 @@ const km01Lessons = [
   },
 ] as const;
 
+const km02Lessons = [
+  {
+    id: 'KM02-L01',
+    title: 'Mechanical principles and basic forces',
+    summary: 'Build conceptual understanding of force, motion, torque, friction, mechanical advantage and energy as they apply to vehicle systems.',
+    check: 'Use calculations and diagrams for learning only; do not use them to set up or perform hazardous workshop tasks.'
+  },
+  {
+    id: 'KM02-L02',
+    title: 'Measurement, units and workshop mathematics',
+    summary: 'Revise SI units, ratios, tolerances, conversions, reading scales and recording measurements accurately.',
+    check: 'A measured value is meaningful only when the correct unit, tool and approved specification are identified.'
+  },
+  {
+    id: 'KM02-L03',
+    title: 'Materials, fasteners and component behaviour',
+    summary: 'Recognise broad material properties, common fastener types, wear concepts and why material choice affects reliability.',
+    check: 'Component identification and material theory do not authorise removal, tightening, heating, cutting or replacement.'
+  },
+  {
+    id: 'KM02-L04',
+    title: 'Technical information, symbols and schematics',
+    summary: 'Practise reading basic symbols, labels, diagrams, parts information and controlled technical documents.',
+    check: 'When a drawing, symbol or specification is unclear, use the approved source and ask a competent person rather than guessing.'
+  },
+  {
+    id: 'KM02-L05',
+    title: 'Fault reasoning and evidence-based thinking',
+    summary: 'Learn the difference between symptom, possible cause, evidence and conclusion. Use structured reasoning instead of replacing parts by guesswork.',
+    check: 'The app can help organise reasoning, but real testing and repair remain supervised practical work.'
+  },
+] as const;
+
 const queryClient = new QueryClient();
 
 
@@ -210,6 +243,74 @@ function KM01Module() {
 
       <div className="mt-5 flex flex-col gap-2 border-t border-[hsl(var(--border))] pt-4 text-xs text-[hsl(var(--muted-foreground))] sm:flex-row sm:items-center sm:justify-between">
         <span>Official qualification source: SAQA 117237 • Curriculum 653306-000-01-00</span>
+        <a className="text-[hsl(var(--primary))] underline-offset-4 hover:underline" href="https://pcqs.saqa.org.za/viewQualification.php?id=117237" target="_blank" rel="noopener noreferrer">Open SAQA qualification</a>
+      </div>
+    </section>
+  );
+}
+
+
+function KM02Module() {
+  const [completed, setCompleted] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('diesel-km02-progress') || '[]'); } catch { return []; }
+  });
+
+  const toggle = (id: string) => {
+    setCompleted((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+      localStorage.setItem('diesel-km02-progress', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  return (
+    <section id="km02" className="mt-6 panel bracket-corner p-4 sm:p-6" aria-labelledby="km02-heading">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <div className="eyebrow mb-2 flex items-center gap-2"><BookOpen size={14} /> KM-02 • Foundational Concepts for Mechanics</div>
+          <h2 id="km02-heading" className="section-heading">Foundational Concepts for Mechanics</h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            Controlled learning support mapped to 653306-000-01-KM-02, NQF Level 2, 14 credits. This internal five-lesson sequence supports theory and reasoning without turning the app into a workshop operating manual.
+          </p>
+        </div>
+        <div className="mono-font shrink-0 text-right text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--primary))]">{completed.length}/5 complete</div>
+      </div>
+
+      <div className="mb-5 border border-[rgba(233,184,54,.25)] bg-[rgba(233,184,54,.06)] p-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+        <strong>Safety boundary:</strong> KM-02 supports mechanics theory, measurement concepts, technical-document reading and diagnostic reasoning. It does not provide repair sequences, tool-use procedures, tightening instructions, live testing, lifting or disassembly guidance.
+      </div>
+
+      <div className="grid gap-3 md:grid-cols-2">
+        {km02Lessons.map((lesson, index) => {
+          const done = completed.includes(lesson.id);
+          return (
+            <article key={lesson.id} className="border border-[hsl(var(--border))] bg-[rgba(0,0,0,.12)] p-4">
+              <div className="mb-2 flex items-start justify-between gap-3">
+                <div>
+                  <div className="mono-font text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--primary))]">Lesson {index + 1} of 5</div>
+                  <h3 className="mt-1 text-sm font-bold uppercase tracking-wide text-[hsl(var(--foreground))]">{lesson.title}</h3>
+                </div>
+                {done && <CheckCircle2 size={18} className="shrink-0 text-[hsl(var(--chart-3))]" />}
+              </div>
+              <p className="text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">{lesson.summary}</p>
+              <div className="mt-3 border-l-2 border-[hsl(var(--primary))] pl-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+                <strong>Learning check:</strong> {lesson.check}
+              </div>
+              <button
+                type="button"
+                onClick={() => toggle(lesson.id)}
+                className="mt-4 border border-[hsl(var(--primary))] px-3 py-2 text-[.68rem] font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))]"
+                aria-pressed={done}
+              >
+                {done ? 'Mark not complete' : 'Mark lesson complete'}
+              </button>
+            </article>
+          );
+        })}
+      </div>
+
+      <div className="mt-5 flex flex-col gap-2 border-t border-[hsl(var(--border))] pt-4 text-xs text-[hsl(var(--muted-foreground))] sm:flex-row sm:items-center sm:justify-between">
+        <span>Official qualification source: SAQA 117237 • 653306-000-01-KM-02 • 14 credits</span>
         <a className="text-[hsl(var(--primary))] underline-offset-4 hover:underline" href="https://pcqs.saqa.org.za/viewQualification.php?id=117237" target="_blank" rel="noopener noreferrer">Open SAQA qualification</a>
       </div>
     </section>
@@ -460,6 +561,7 @@ function Home() {
         </section>
 
         <KM01Module />
+        <KM02Module />
 
         <section className="mt-4 grid gap-3 sm:grid-cols-3" aria-label="Workshop baseline values">
           <div className="panel flex items-center gap-3 p-4"><div className="grid size-10 shrink-0 place-items-center bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]"><Gauge size={19} /></div><div><div className="mono-font text-[.62rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">CRD rail warning</div><div className="metric-value mt-1 text-[hsl(var(--foreground))]">2,000+ <span className="text-xs tracking-normal text-[hsl(var(--muted-foreground))]">bar</span></div></div></div>
