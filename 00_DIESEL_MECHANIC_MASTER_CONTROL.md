@@ -1,6 +1,6 @@
 # 00_DIESEL_MECHANIC_MASTER_CONTROL.md
 
-Status: FROZEN — DEVICE ACCEPTANCE PASSED — 2026-09-23
+Status: FROZEN — COMPACT STUDENT WORKSPACE v1 VERIFIED — 2026-09-24
 Date opened under Mzansi Build Intelligence: 2026-09-21
 
 ## 1. BUILD RULE
@@ -209,28 +209,55 @@ Controlled register:
 Visual-learning completion does not override the device acceptance gate. Final product freeze still requires installed-phone offline relaunch and progress-persistence acceptance.
 
 
-## 8. FINAL DEVICE ACCEPTANCE & FREEZE — 2026-09-23
+## 8. FINAL DEVICE ACCEPTANCE & COMPACT WORKSPACE FREEZE — 2026-09-24
 
 Status: PASS — FROZEN
 
-Final acceptance confirmed by user on phone:
-- existing Diesel Mechanic PWA opens and works;
-- installed-phone acceptance completed;
-- offline/relaunch behaviour accepted;
-- saved learner progress behaviour accepted;
-- no defect requiring rebuild was reported.
+Final acceptance confirmed on the actual Android phone.
+
+Verified:
+- installed Diesel Mechanic PWA opens correctly;
+- compact six-area workspace is present: HOME / LEARN / ASK / TOOLS / REFERENCE / CHECK;
+- Home is visibly shorter than the original long-page design;
+- no duplicate navigation system remains;
+- KM / PM / WM structure is readable and traceable;
+- long titles wrap without horizontal overflow;
+- EN / AF / XH / ZU workspace switching works;
+- multilingual Home and Learn screens were visually verified;
+- offline relaunch passes;
+- KM-01 local progress persists after close/relaunch;
+- existing calculator/tools engine passes;
+- CHECK workspace reads persisted progress correctly;
+- Learning Readiness is displayed as a bounded learning-progress percentage;
+- learning-readiness wording explicitly excludes practical competence, workplace competence and trade-test readiness;
+- service-worker cache/update path was refreshed to avoid stale installed-PWA bundles;
+- production Netlify deploy passed.
+
+Final production commit:
+06d5636404a0e40d6d0025d79b98dc7567280d80
+
+Tracked in-app learning items for readiness:
+223
+
+Presentation pattern:
+MZANSI ARTISAN COMPACT STUDENT WORKSPACE PATTERN — v1
 
 Closeout result:
 - qualification/source gate: PASS;
 - KM layer: PASS;
 - PM support layer: PASS;
 - WM evidence layer: PASS;
-- visual-learning gate: PASS;
+- multilingual gate: PASS;
+- offline gate: PASS;
+- progress-persistence gate: PASS;
+- tools gate: PASS;
+- readiness gate: PASS;
 - repository/build integrity: PASS;
 - production deployment: PASS;
-- device acceptance: PASS.
+- actual-phone acceptance: PASS.
 
 Final state:
+
 **DIESEL MECHANIC COMPANION — FROZEN**
 
 Controlled repository:
@@ -241,8 +268,11 @@ https://mzansi-diesel-mechanic.netlify.app
 
 Freeze discipline:
 - do not rebuild;
+- do not continue polishing;
 - do not add features without a new approved scope;
 - do not repeat verified tests unless a defect or change is introduced;
-- future changes require explicit reopen decision and new control entry.
+- reopen only for a verified defect, official curriculum change, or specifically approved new requirement.
 
-No Netlify deployment was required for this closeout.
+No Replit was used.
+
+STOP.
