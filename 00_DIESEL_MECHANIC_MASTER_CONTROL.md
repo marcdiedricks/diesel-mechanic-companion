@@ -1,6 +1,6 @@
 # 00_DIESEL_MECHANIC_MASTER_CONTROL.md
 
-Status: CONTROLLED MASTER SOURCE — PRE-FREEZE TECHNICAL BUILD PASS — DEVICE ACCEPTANCE PENDING — 2026-09-21
+Status: FROZEN — DEVICE ACCEPTANCE PASSED — 2026-09-23
 Date opened under Mzansi Build Intelligence: 2026-09-21
 
 ## 1. BUILD RULE
@@ -207,3 +207,42 @@ Controlled register:
 - `DIESEL_MECHANIC_VISUAL_LEARNING_LIBRARY.md`
 
 Visual-learning completion does not override the device acceptance gate. Final product freeze still requires installed-phone offline relaunch and progress-persistence acceptance.
+
+
+## 8. FINAL DEVICE ACCEPTANCE & FREEZE — 2026-09-23
+
+Status: PASS — FROZEN
+
+Final acceptance confirmed by user on phone:
+- existing Diesel Mechanic PWA opens and works;
+- installed-phone acceptance completed;
+- offline/relaunch behaviour accepted;
+- saved learner progress behaviour accepted;
+- no defect requiring rebuild was reported.
+
+Closeout result:
+- qualification/source gate: PASS;
+- KM layer: PASS;
+- PM support layer: PASS;
+- WM evidence layer: PASS;
+- visual-learning gate: PASS;
+- repository/build integrity: PASS;
+- production deployment: PASS;
+- device acceptance: PASS.
+
+Final state:
+**DIESEL MECHANIC COMPANION — FROZEN**
+
+Controlled repository:
+marcdiedricks/diesel-mechanic-companion
+
+Live site:
+https://mzansi-diesel-mechanic.netlify.app
+
+Freeze discipline:
+- do not rebuild;
+- do not add features without a new approved scope;
+- do not repeat verified tests unless a defect or change is introduced;
+- future changes require explicit reopen decision and new control entry.
+
+No Netlify deployment was required for this closeout.
