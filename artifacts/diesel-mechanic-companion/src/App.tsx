@@ -88,7 +88,7 @@ const copy: Record<Language, {
 };
 
 const workspaceCopy: Record<Language, {
-  language: string; home: string; learn: string; ask: string; tools: string; reference: string; check: string; practicalSupervision: string; footer: string;
+  language: string; home: string; learn: string; ask: string; tools: string; reference: string; check: string; practicalSupervision: string; footer: string; currentModule: string; backToLearn: string; modulesStarted: string; kmStarted: string; pmStarted: string; wmStarted: string; continueLabel: string; noProgress: string;
   slogan: string; chooseArea: string; safety: string; qualification: string; chooseKmPmWm: string; learningBoundary: string;
   knowledge: string; practical: string; workplace: string; askFind: string; askTitle: string; askLead: string;
   toolsTitle: string; toolsLead: string; openCalculators: string; referenceTitle: string; visualLibrary: string; visualLead: string;
@@ -96,21 +96,23 @@ const workspaceCopy: Record<Language, {
 }> = {
   EN: {
     language:'Language', home:'HOME', learn:'LEARN', ask:'ASK', tools:'TOOLS', reference:'REFERENCE', check:'CHECK', practicalSupervision:'Practical work remains supervised and must follow the approved provider or workplace process.', footer:'Educational support only · supervised practical work required',
+    currentModule:'Current module', backToLearn:'Back to Learn', modulesStarted:'Modules started on this device', kmStarted:'KM started', pmStarted:'PM started', wmStarted:'WM started', continueLabel:'Continue', noProgress:'No local progress marked yet',
     slogan:'LEARN. PRACTISE. PREPARE.', chooseArea:'Choose one workspace area above.', safety:'Safety',
     qualification:'Official qualification structure', chooseKmPmWm:'Choose KM, PM or WM.',
-    learningBoundary:'{ui.learningBoundary}',
+    learningBoundary:'PWA learning support does not replace supervised practical competence, workplace experience or external assessment requirements.',
     knowledge:'Knowledge Modules', practical:'Practical Skill Modules', workplace:'Work Experience Modules',
     askFind:'Ask / find', askTitle:'Use the existing offline learner help.',
     askLead:'Use the existing local trade-term search below. When a direct match is unavailable, the safe fallback guides you to verified learning support.',
-    toolsTitle:'Existing diesel theory calculators.', toolsLead:'{ui.toolsLead}',
+    toolsTitle:'Existing diesel theory calculators.', toolsLead:'Classroom calculation support only. No calculator authorises hazardous workshop work or replaces approved specifications.',
     openCalculators:'Open calculators', referenceTitle:'Safety and controlled visual resources.',
-    visualLibrary:'Visual learning library', visualLead:'{ui.visualLead}',
-    terminology:'Trade terminology', terminologyLead:'{ui.terminologyLead}',
-    checkTitle:'Progress and learning checks.', checkLead:'{ui.checkLead}',
-    currentCheck:'{ui.currentCheck}', notStarted:'Not started'
+    visualLibrary:'Visual learning library', visualLead:'Controlled online concept resources; written learning stays offline.',
+    terminology:'Trade terminology', terminologyLead:'Open the existing local terminology search under Ask.',
+    checkTitle:'Progress and learning checks.', checkLead:'Existing learning checks remain inside their verified modules. Progress is stored locally on this browser/device; no learner account is required.',
+    currentCheck:'Open current learning check', notStarted:'Not started'
   },
   AF: {
     language:'Taal', home:'TUIS', learn:'LEER', ask:'VRA', tools:'GEREEDSKAP', reference:'VERWYSING', check:'KONTROLE', practicalSupervision:'Praktiese werk bly onder toesig en moet die goedgekeurde verskaffer- of werkplekproses volg.', footer:'Slegs opvoedkundige ondersteuning · praktiese werk onder toesig vereis',
+    currentModule:'Huidige module', backToLearn:'Terug na Leer', modulesStarted:'Modules op hierdie toestel begin', kmStarted:'KM begin', pmStarted:'PM begin', wmStarted:'WM begin', continueLabel:'Gaan voort', noProgress:'Geen plaaslike vordering is nog gemerk nie',
     slogan:'LEER. OEFEN. BEREI VOOR.', chooseArea:'Kies een werkruimte hier bo.', safety:'Veiligheid',
     qualification:'Amptelike kwalifikasiestruktuur', chooseKmPmWm:'Kies KM, PM of WM.',
     learningBoundary:'PWA-leerondersteuning vervang nie praktiese bevoegdheid onder toesig, werkplekervaring of eksterne assesseringsvereistes nie.',
@@ -126,6 +128,7 @@ const workspaceCopy: Record<Language, {
   },
   XH: {
     language:'Ulwimi', home:'IKHAYA', learn:'FUNDA', ask:'BUZA', tools:'IZIXHOBO', reference:'IZALATHISO', check:'HLOLA', practicalSupervision:'Umsebenzi osebenzayo uhlala uphantsi kolawulo kwaye kufuneka ulandele inkqubo evunyiweyo yomboneleli okanye yendawo yokusebenza.', footer:'Inkxaso yemfundo kuphela · umsebenzi osebenzayo phantsi kolawulo uyafuneka',
+    currentModule:'Imodyuli yangoku', backToLearn:'Buyela ku-Funda', modulesStarted:'Iimodyuli eziqalwe kwesi sixhobo', kmStarted:'KM iqaliwe', pmStarted:'PM iqaliwe', wmStarted:'WM iqaliwe', continueLabel:'Qhubeka', noProgress:'Akukho nkqubela yasekuhlaleni iphawuliweyo okwangoku',
     slogan:'FUNDA. ZIQHELISE. LUNGISELELA.', chooseArea:'Khetha indawo enye yokusebenza apha ngasentla.', safety:'Ukhuseleko',
     qualification:'Ulwakhiwo olusemthethweni lwesiqinisekiso', chooseKmPmWm:'Khetha i-KM, PM okanye WM.',
     learningBoundary:'Inkxaso yokufunda ye-PWA ayithathi indawo yobuchule bokusebenza phantsi kolawulo, amava omsebenzi okanye iimfuno zovavanyo lwangaphandle.',
@@ -141,6 +144,7 @@ const workspaceCopy: Record<Language, {
   },
   ZU: {
     language:'Ulimi', home:'IKHAYA', learn:'FUNDA', ask:'BUZA', tools:'AMATHULUZI', reference:'IZINKOMBA', check:'HLOLA', practicalSupervision:'Umsebenzi osebenzayo uhlala uqondisiwe futhi kufanele ulandele inqubo egunyaziwe yomhlinzeki noma yasemsebenzini.', footer:'Ukusekelwa kwemfundo kuphela · umsebenzi osebenzayo oqondisiwe uyadingeka',
+    currentModule:'Imojula yamanje', backToLearn:'Buyela ku-Funda', modulesStarted:'Amamojula aqalwe kule divayisi', kmStarted:'KM iqalile', pmStarted:'PM iqalile', wmStarted:'WM iqalile', continueLabel:'Qhubeka', noProgress:'Ayikho inqubekela yendawo emakiwe okwamanje',
     slogan:'FUNDA. ZIJWAYEZE. LUNGISELELA.', chooseArea:'Khetha indawo eyodwa yokusebenza ngenhla.', safety:'Ukuphepha',
     qualification:'Isakhiwo esisemthethweni seziqu', chooseKmPmWm:'Khetha i-KM, PM noma WM.',
     learningBoundary:'Ukusekelwa kokufunda kwe-PWA akuthathi indawo yobuchwepheshe obuqondisiwe, isipiliyoni sasemsebenzini noma izidingo zokuhlolwa zangaphandle.',
@@ -5815,10 +5819,10 @@ function Home() {
         {activeEntry && ActiveComponent ? (
           <>
             <button type="button" onClick={() => setActiveModule(null)} className="mb-3 text-xs font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))]">
-              ← Back to Learn
+              ← {ui.backToLearn}
             </button>
             <div className="mb-3 panel p-3">
-              <div className="eyebrow">Current module</div>
+              <div className="eyebrow">{ui.currentModule}</div>
               <div className="mt-1 break-words text-sm font-semibold text-[hsl(var(--foreground))]">{activeEntry.code} · {activeEntry.title} · {activeEntry.credits} credits</div>
             </div>
             <ActiveComponent />
@@ -5844,7 +5848,7 @@ function Home() {
               <div className="eyebrow mb-2">{ui.qualification}</div>
               <h2 className="section-heading">{ui.chooseKmPmWm}</h2>
               <p className="mt-2 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
-                PWA learning support does not replace supervised practical competence, workplace experience or external assessment requirements.
+                {ui.learningBoundary}
               </p>
               <div className="mt-4 grid gap-2 sm:grid-cols-3">
                 {[
@@ -5902,7 +5906,7 @@ function Home() {
             <div className="eyebrow mb-2">Tools</div>
             <h2 className="section-heading">{ui.toolsTitle}</h2>
             <p className="mt-2 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
-              Classroom calculation support only. No calculator authorises hazardous workshop work or replaces approved specifications.
+              {ui.toolsLead}
             </p>
             <button type="button" onClick={() => setIsCalculatorsOpen(true)} className="mt-4 flex w-full items-center justify-center gap-2 border border-[hsl(var(--primary))] bg-[rgba(233,184,54,.08)] px-4 py-3 text-sm font-bold uppercase tracking-[.08em] text-[hsl(var(--primary))]">
               <Calculator size={18} /> {ui.openCalculators}
@@ -5917,12 +5921,12 @@ function Home() {
                 <button type="button" onClick={() => setIsVideoOpen(true)} className="border border-[hsl(var(--border))] p-3 text-left">
                   <BookOpen size={18} className="text-[hsl(var(--primary))]" />
                   <div className="mt-2 font-bold">{ui.visualLibrary}</div>
-                  <div className="mt-1 text-xs text-[hsl(var(--muted-foreground))]">Controlled online concept resources; written learning stays offline.</div>
+                  <div className="mt-1 text-xs text-[hsl(var(--muted-foreground))]">{ui.visualLead}</div>
                 </button>
                 <button type="button" onClick={() => openSection('ask')} className="border border-[hsl(var(--border))] p-3 text-left">
                   <Languages size={18} className="text-[hsl(var(--primary))]" />
                   <div className="mt-2 font-bold">{ui.terminology}</div>
-                  <div className="mt-1 text-xs text-[hsl(var(--muted-foreground))]">Open the existing local terminology search under Ask.</div>
+                  <div className="mt-1 text-xs text-[hsl(var(--muted-foreground))]">{ui.terminologyLead}</div>
                 </button>
               </div>
             </section>
@@ -5934,29 +5938,29 @@ function Home() {
               <div className="eyebrow mb-2">Check</div>
               <h2 className="section-heading">{ui.checkTitle}</h2>
               <p className="mt-2 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
-                Existing learning checks remain inside their verified modules. Progress is stored locally on this browser/device; no learner account is required.
+                {ui.checkLead}
               </p>
               <div className="mt-4 grid grid-cols-3 gap-2">
                 <div className="border border-[hsl(var(--border))] p-3 text-center">
                   <div className="text-xl font-bold text-[hsl(var(--primary))]">{startedCount(knowledgeModules)}/8</div>
-                  <div className="mt-1 text-[.62rem] uppercase tracking-[.08em] text-[hsl(var(--muted-foreground))]">KM started</div>
+                  <div className="mt-1 text-[.62rem] uppercase tracking-[.08em] text-[hsl(var(--muted-foreground))]">{ui.kmStarted}</div>
                 </div>
                 <div className="border border-[hsl(var(--border))] p-3 text-center">
                   <div className="text-xl font-bold text-[hsl(var(--primary))]">{startedCount(practicalModules as typeof knowledgeModules)}/18</div>
-                  <div className="mt-1 text-[.62rem] uppercase tracking-[.08em] text-[hsl(var(--muted-foreground))]">PM started</div>
+                  <div className="mt-1 text-[.62rem] uppercase tracking-[.08em] text-[hsl(var(--muted-foreground))]">{ui.pmStarted}</div>
                 </div>
                 <div className="border border-[hsl(var(--border))] p-3 text-center">
                   <div className="text-xl font-bold text-[hsl(var(--primary))]">{startedCount(workplaceModules as typeof knowledgeModules)}/14</div>
-                  <div className="mt-1 text-[.62rem] uppercase tracking-[.08em] text-[hsl(var(--muted-foreground))]">WM started</div>
+                  <div className="mt-1 text-[.62rem] uppercase tracking-[.08em] text-[hsl(var(--muted-foreground))]">{ui.wmStarted}</div>
                 </div>
               </div>
               <div className="mt-4 border border-[hsl(var(--border))] p-3 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
-                <strong className="text-[hsl(var(--foreground))]">Continue:</strong> {lastStarted.code} · {lastStarted.title}. {progressFor(lastStarted.code) > 0 ? `${progressFor(lastStarted.code)} item(s) already marked.` : 'No local progress marked yet.'}
+                <strong className="text-[hsl(var(--foreground))]">{ui.continueLabel}:</strong> {lastStarted.code} · {lastStarted.title}. {progressFor(lastStarted.code) > 0 ? `${progressFor(lastStarted.code)} item(s) already marked.` : ui.noProgress}
               </div>
               <button type="button" onClick={() => { setSection('learn'); setLearnGroup(lastStarted.code.startsWith('KM') ? 'knowledge' : lastStarted.code.startsWith('PM') ? 'practical' : 'workplace'); setActiveModule(lastStarted.code); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="mt-3 w-full border border-[hsl(var(--primary))] px-4 py-3 text-sm font-bold uppercase tracking-[.08em] text-[hsl(var(--primary))]">
-                Open current learning check
+                {ui.currentCheck}
               </button>
-              <div className="mt-3 text-[.65rem] uppercase tracking-[.08em] text-[hsl(var(--muted-foreground))]">Modules started on this device: {completedModules}/40</div>
+              <div className="mt-3 text-[.65rem] uppercase tracking-[.08em] text-[hsl(var(--muted-foreground))]">{ui.modulesStarted}: {completedModules}/40</div>
             </section>
           </>
         )}
