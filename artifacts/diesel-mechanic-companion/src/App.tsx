@@ -87,6 +87,75 @@ const copy: Record<Language, {
   },
 };
 
+const workspaceCopy: Record<Language, {
+  language: string; home: string; learn: string; ask: string; tools: string; reference: string; check: string;
+  slogan: string; chooseArea: string; safety: string; qualification: string; chooseKmPmWm: string; learningBoundary: string;
+  knowledge: string; practical: string; workplace: string; askFind: string; askTitle: string; askLead: string;
+  toolsTitle: string; toolsLead: string; openCalculators: string; referenceTitle: string; visualLibrary: string; visualLead: string;
+  terminology: string; terminologyLead: string; checkTitle: string; checkLead: string; currentCheck: string; notStarted: string;
+}> = {
+  EN: {
+    language:'Language', home:'HOME', learn:'LEARN', ask:'ASK', tools:'TOOLS', reference:'REFERENCE', check:'CHECK',
+    slogan:'LEARN. PRACTISE. PREPARE.', chooseArea:'Choose one workspace area above.', safety:'Safety',
+    qualification:'Official qualification structure', chooseKmPmWm:'Choose KM, PM or WM.',
+    learningBoundary:'{ui.learningBoundary}',
+    knowledge:'Knowledge Modules', practical:'Practical Skill Modules', workplace:'Work Experience Modules',
+    askFind:'Ask / find', askTitle:'Use the existing offline learner help.',
+    askLead:'Use the existing local trade-term search below. When a direct match is unavailable, the safe fallback guides you to verified learning support.',
+    toolsTitle:'Existing diesel theory calculators.', toolsLead:'{ui.toolsLead}',
+    openCalculators:'Open calculators', referenceTitle:'Safety and controlled visual resources.',
+    visualLibrary:'Visual learning library', visualLead:'{ui.visualLead}',
+    terminology:'Trade terminology', terminologyLead:'{ui.terminologyLead}',
+    checkTitle:'Progress and learning checks.', checkLead:'{ui.checkLead}',
+    currentCheck:'{ui.currentCheck}', notStarted:'Not started'
+  },
+  AF: {
+    language:'Taal', home:'TUIS', learn:'LEER', ask:'VRA', tools:'GEREEDSKAP', reference:'VERWYSING', check:'KONTROLE',
+    slogan:'LEER. OEFEN. BEREI VOOR.', chooseArea:'Kies een werkruimte hier bo.', safety:'Veiligheid',
+    qualification:'Amptelike kwalifikasiestruktuur', chooseKmPmWm:'Kies KM, PM of WM.',
+    learningBoundary:'PWA-leerondersteuning vervang nie praktiese bevoegdheid onder toesig, werkplekervaring of eksterne assesseringsvereistes nie.',
+    knowledge:'Kennismodules', practical:'Praktiese vaardigheidsmodules', workplace:'Werkservaringsmodules',
+    askFind:'Vra / soek', askTitle:'Gebruik die bestaande aflyn leerderhulp.',
+    askLead:'Gebruik die bestaande plaaslike soektog vir vakterme hieronder. As daar nie ’n direkte pasmaat is nie, lei die veilige terugval jou na geverifieerde leerondersteuning.',
+    toolsTitle:'Bestaande diesel-teorie sakrekenaars.', toolsLead:'Slegs vir klaskamerberekeninge. Geen sakrekenaar mag gevaarlike werkswinkelwerk magtig of goedgekeurde spesifikasies vervang nie.',
+    openCalculators:'Maak sakrekenaars oop', referenceTitle:'Veiligheid en beheerde visuele hulpbronne.',
+    visualLibrary:'Visuele leerbiblioteek', visualLead:'Beheerde aanlyn konsepbronne; geskrewe leer bly aflyn.',
+    terminology:'Vakterminologie', terminologyLead:'Maak die bestaande plaaslike terminologiesoektog onder Vra oop.',
+    checkTitle:'Vordering en leerkontroles.', checkLead:'Bestaande leerkontroles bly binne hul geverifieerde modules. Vordering word plaaslik op hierdie toestel gestoor; geen leerderrekening is nodig nie.',
+    currentCheck:'Maak huidige leerkontrole oop', notStarted:'Nog nie begin nie'
+  },
+  XH: {
+    language:'Ulwimi', home:'IKHAYA', learn:'FUNDA', ask:'BUZA', tools:'IZIXHOBO', reference:'IZALATHISO', check:'HLOLA',
+    slogan:'FUNDA. ZIQHELISE. LUNGISELELA.', chooseArea:'Khetha indawo enye yokusebenza apha ngasentla.', safety:'Ukhuseleko',
+    qualification:'Ulwakhiwo olusemthethweni lwesiqinisekiso', chooseKmPmWm:'Khetha i-KM, PM okanye WM.',
+    learningBoundary:'Inkxaso yokufunda ye-PWA ayithathi indawo yobuchule bokusebenza phantsi kolawulo, amava omsebenzi okanye iimfuno zovavanyo lwangaphandle.',
+    knowledge:'Iimodyuli zoLwazi', practical:'Iimodyuli zeZakhono eziSebenzayo', workplace:'Iimodyuli zamaVa eMsebenzini',
+    askFind:'Buza / khangela', askTitle:'Sebenzisa uncedo olukhoyo lomfundi olusebenza ngaphandle kwe-intanethi.',
+    askLead:'Sebenzisa uphendlo lwamagama omsebenzi olukhoyo apha ngezantsi. Ukuba akukho mpendulo ngqo, inkqubo ekhuselekileyo ikukhokelela kwinkxaso yokufunda eqinisekisiweyo.',
+    toolsTitle:'Iikhaltyhuleyitha zethiyori yedizili ezikhoyo.', toolsLead:'Inkxaso yokubala yeklasi kuphela. Akukho khaltyhuleyitha egunyazisa umsebenzi oyingozi okanye ithathe indawo yeenkcukacha ezivunyiweyo.',
+    openCalculators:'Vula iikhaltyhuleyitha', referenceTitle:'Ukhuseleko kunye nezixhobo ezibonwayo ezilawulwayo.',
+    visualLibrary:'Ithala lokufunda ngemifanekiso', visualLead:'Izixhobo zekhonsepthi ezilawulwayo kwi-intanethi; ukufunda okubhaliweyo kuhlala kusebenza ngaphandle kwe-intanethi.',
+    terminology:'Amagama omsebenzi', terminologyLead:'Vula uphendlo lwamagama olukhoyo phantsi ko-Buza.',
+    checkTitle:'Inkqubela kunye nokuhlolwa kokufunda.', checkLead:'Ukuhlolwa kokufunda okukhoyo kuhlala kwiimodyuli eziqinisekisiweyo. Inkqubela igcinwa kule bhrawuza/isixhobo; akukho akhawunti yomfundi ifunekayo.',
+    currentCheck:'Vula ukuhlolwa kokufunda kwangoku', notStarted:'Akukaqalwa'
+  },
+  ZU: {
+    language:'Ulimi', home:'IKHAYA', learn:'FUNDA', ask:'BUZA', tools:'AMATHULUZI', reference:'IZINKOMBA', check:'HLOLA',
+    slogan:'FUNDA. ZIJWAYEZE. LUNGISELELA.', chooseArea:'Khetha indawo eyodwa yokusebenza ngenhla.', safety:'Ukuphepha',
+    qualification:'Isakhiwo esisemthethweni seziqu', chooseKmPmWm:'Khetha i-KM, PM noma WM.',
+    learningBoundary:'Ukusekelwa kokufunda kwe-PWA akuthathi indawo yobuchwepheshe obuqondisiwe, isipiliyoni sasemsebenzini noma izidingo zokuhlolwa zangaphandle.',
+    knowledge:'Amamojula Olwazi', practical:'Amamojula Amakhono Okusebenza', workplace:'Amamojula Okuhlangenwe Nakho Emsebenzini',
+    askFind:'Buza / sesha', askTitle:'Sebenzisa usizo olukhona lomfundi olusebenza ngaphandle kwe-inthanethi.',
+    askLead:'Sebenzisa usesho lwamagama omsebenzi olukhona ngezansi. Uma kungatholakali okufanayo ngqo, indlela ephephile ikuqondisa ekusekelweni kokufunda okuqinisekisiwe.',
+    toolsTitle:'Izibali zethiyori kadizili ezikhona.', toolsLead:'Ukusekelwa kokubala kwasekilasini kuphela. Asikho isibali esigunyaza umsebenzi oyingozi noma esithatha indawo yezincazelo ezigunyaziwe.',
+    openCalculators:'Vula izibali', referenceTitle:'Ukuphepha nezinsiza ezibonwayo ezilawulwayo.',
+    visualLibrary:'Umtapo wokufunda ngezithombe', visualLead:'Izinsiza zekhonsepthi ezilawulwayo ku-inthanethi; ukufunda okubhaliwe kuhlala kutholakala ngaphandle kwe-inthanethi.',
+    terminology:'Amagama omsebenzi', terminologyLead:'Vula usesho lwamagama olukhona ngaphansi kuka-Buza.',
+    checkTitle:'Inqubekela phambili nokuhlolwa kokufunda.', checkLead:'Ukuhlolwa kokufunda okukhona kuhlala kumamojula aqinisekisiwe. Inqubekela igcinwa kule bhrawuza/idivayisi; akukho akhawunti yomfundi edingekayo.',
+    currentCheck:'Vula ukuhlolwa kokufunda kwamanje', notStarted:'Akukaqalwa'
+  }
+};
+
 const tradeTerms = {
   English: ['Common Rail Injector', 'Turbocharger Boost', 'Cylinder Liner Protrusion', 'Air Brake Slack Adjuster', 'Slack Adjuster', 'Air Dryer Cartridge', 'Governor Valve', 'Injector Return Flow', 'Jake/Retarder Brake', 'Flash Point'],
   Afrikaans: ['Gemeenskaplike Spuitbuis', 'Turbo-aanjaer Druk', 'Silindervoering Uitsteeksel', 'Lugrem Slakversteller', 'Vlampunt'],
@@ -5422,6 +5491,7 @@ function TurboInjectorMark() {
 }
 
 function Header({ language, onLanguageChange }: { language: Language; onLanguageChange: (language: Language) => void }) {
+  const ui = workspaceCopy[language];
   return (
     <header className="border-b border-[hsl(var(--border))] bg-[rgba(8,15,23,.92)]">
       <div className="mx-auto flex max-w-[1100px] items-center gap-3 px-4 py-3 sm:px-6">
@@ -5438,7 +5508,7 @@ function Header({ language, onLanguageChange }: { language: Language; onLanguage
         <div className="mx-auto flex max-w-[1100px] flex-wrap items-center justify-between gap-2 px-4 py-2 sm:px-6">
           <div className="flex items-center gap-2 text-[hsl(var(--muted-foreground))]">
             <Languages size={14} />
-            <span className="text-[.62rem] font-semibold uppercase tracking-[.12em]">Language</span>
+            <span className="text-[.62rem] font-semibold uppercase tracking-[.12em]">{ui.language}</span>
           </div>
           <nav className="flex flex-wrap items-center justify-end gap-1" aria-label="Language selection">
             {languages.map((item) => (
@@ -5488,7 +5558,12 @@ function SafetyPanel({ language }: { language: Language }) {
 
 function TradeTerms({ language, onOpenCalculators }: { language: Language; onOpenCalculators: () => void }) {
   const [search, setSearch] = useState('');
-  const groups = useMemo(() => Object.entries(tradeTerms).map(([language, terms]) => ({ language, terms: terms.filter((term) => term.toLowerCase().includes(search.toLowerCase())) })).filter((group) => group.terms.length > 0), [search]);
+  const selectedTradeLanguage = language === 'AF' ? 'Afrikaans' : language === 'XH' ? 'isiXhosa' : language === 'ZU' ? 'isiZulu' : 'English';
+  const groups = useMemo(() => {
+    const terms = tradeTerms[selectedTradeLanguage as keyof typeof tradeTerms] || [];
+    const filtered = terms.filter((term) => term.toLowerCase().includes(search.toLowerCase()));
+    return filtered.length ? [{ language: selectedTradeLanguage, terms: filtered }] : [];
+  }, [search, selectedTradeLanguage]);
   return (
     <section id="trade-terms" className="panel p-4 sm:p-5" aria-labelledby="terms-heading">
       <div className="mb-4 flex flex-col justify-between gap-3 sm:flex-row sm:items-end"><div><div className="eyebrow mb-2 flex items-center gap-2"><BookOpen size={14} /> {copy[language].termsLabel}</div><h2 id="terms-heading" className="section-heading">Say it at the bench</h2></div><label className="relative block w-full sm:w-56"><span className="sr-only">Search trade terms</span><input type="search" value={search} onChange={(event) => setSearch(event.target.value)} className="input-field pl-3" placeholder="Filter terms..." aria-label="Filter trade terms" data-testid="input-search-terms" /></label></div>
@@ -5613,6 +5688,7 @@ function Home() {
   const [learnGroup, setLearnGroup] = useState<'knowledge' | 'practical' | 'workplace'>('knowledge');
   const [activeModule, setActiveModule] = useState<string | null>(null);
   const current = copy[language];
+  const ui = workspaceCopy[language];
   const closeVideo = () => setIsVideoOpen(false);
 
   const knowledgeModules = [
@@ -5706,12 +5782,12 @@ function Home() {
     workplaceModules;
 
   const workspaceAreas = [
-    { label: 'HOME', value: 'home' as const, Icon: Wrench },
-    { label: 'LEARN', value: 'learn' as const, Icon: BookOpen },
-    { label: 'ASK', value: 'ask' as const, Icon: CheckCircle2 },
-    { label: 'TOOLS', value: 'tools' as const, Icon: Calculator },
-    { label: 'REFERENCE', value: 'reference' as const, Icon: Languages },
-    { label: 'CHECK', value: 'check' as const, Icon: ClipboardCheck },
+    { label: ui.home, value: 'home' as const, Icon: Wrench },
+    { label: ui.learn, value: 'learn' as const, Icon: BookOpen },
+    { label: ui.ask, value: 'ask' as const, Icon: CheckCircle2 },
+    { label: ui.tools, value: 'tools' as const, Icon: Calculator },
+    { label: ui.reference, value: 'reference' as const, Icon: Languages },
+    { label: ui.check, value: 'check' as const, Icon: ClipboardCheck },
   ];
 
   return (
@@ -5752,29 +5828,29 @@ function Home() {
             <div className="panel bracket-corner p-4 sm:p-5">
               <div className="eyebrow mb-2 flex items-center gap-2"><Wrench size={14} /> Mzansi Artisan · Diesel Mechanic</div>
               <h2 className="display-font text-[1.8rem] font-bold uppercase leading-none tracking-tight text-[hsl(var(--foreground))] sm:text-[2.3rem]">
-                Learn. Practise. Prepare.
+                {ui.slogan}
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
-                SAQA 117237 · Curriculum 653306-000-01-00 · NQF 4 · 544 credits. Choose one workspace area above.
+                SAQA 117237 · Curriculum 653306-000-01-00 · NQF 4 · 544 credits. {ui.chooseArea}
               </p>
             </div>
             <div className="border border-[rgba(234,96,83,.28)] bg-[rgba(234,96,83,.06)] px-4 py-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
-              <strong>Safety:</strong> {current.safetyLead} Practical work remains supervised and must follow the approved provider or workplace process.
+              <strong>{ui.safety}:</strong> {current.safetyLead} Practical work remains supervised and must follow the approved provider or workplace process.
             </div>
           </section>
         ) : section === 'learn' ? (
           <>
             <section className="panel bracket-corner p-4">
-              <div className="eyebrow mb-2">Official qualification structure</div>
-              <h2 className="section-heading">Choose KM, PM or WM.</h2>
+              <div className="eyebrow mb-2">{ui.qualification}</div>
+              <h2 className="section-heading">{ui.chooseKmPmWm}</h2>
               <p className="mt-2 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
                 PWA learning support does not replace supervised practical competence, workplace experience or external assessment requirements.
               </p>
               <div className="mt-4 grid gap-2 sm:grid-cols-3">
                 {[
-                  ['knowledge', 'KM', 'Knowledge Modules', '8 modules · 108 credits'],
-                  ['practical', 'PM', 'Practical Skill Modules', '18 modules · 162 credits'],
-                  ['workplace', 'WM', 'Work Experience Modules', '14 modules · 274 credits'],
+                  ['knowledge', 'KM', ui.knowledge, '8 modules · 108 credits'],
+                  ['practical', 'PM', ui.practical, '18 modules · 162 credits'],
+                  ['workplace', 'WM', ui.workplace, '14 modules · 274 credits'],
                 ].map(([value, code, title, meta]) => (
                   <button
                     key={value}
@@ -5803,7 +5879,7 @@ function Home() {
                       <ChevronDown size={17} className="-rotate-90 shrink-0 text-[hsl(var(--muted-foreground))]" />
                     </div>
                     <div className="mt-3 text-[.68rem] text-[hsl(var(--muted-foreground))]">
-                      {progress > 0 ? `${progress} item(s) marked on this device` : 'Not started'}
+                      {progress > 0 ? `${progress} item(s) marked on this device` : ui.notStarted}
                     </div>
                   </button>
                 );
@@ -5813,10 +5889,10 @@ function Home() {
         ) : section === 'ask' ? (
           <>
             <section className="panel bracket-corner p-4">
-              <div className="eyebrow mb-2">Ask / find</div>
-              <h2 className="section-heading">Use the existing offline learner help.</h2>
+              <div className="eyebrow mb-2">{ui.askFind}</div>
+              <h2 className="section-heading">{ui.askTitle}</h2>
               <p className="mt-2 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
-                Diesel does not use a separate online tutor engine. Use the existing local trade-term search below; when a direct match is unavailable, the existing safe fallback guides you to verified learning support.
+                {ui.askLead}
               </p>
             </section>
             <section className="mt-4"><TradeTerms language={language} onOpenCalculators={() => setIsCalculatorsOpen(true)} /></section>
@@ -5824,28 +5900,28 @@ function Home() {
         ) : section === 'tools' ? (
           <section className="panel bracket-corner p-4 sm:p-5">
             <div className="eyebrow mb-2">Tools</div>
-            <h2 className="section-heading">Existing diesel theory calculators.</h2>
+            <h2 className="section-heading">{ui.toolsTitle}</h2>
             <p className="mt-2 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
               Classroom calculation support only. No calculator authorises hazardous workshop work or replaces approved specifications.
             </p>
             <button type="button" onClick={() => setIsCalculatorsOpen(true)} className="mt-4 flex w-full items-center justify-center gap-2 border border-[hsl(var(--primary))] bg-[rgba(233,184,54,.08)] px-4 py-3 text-sm font-bold uppercase tracking-[.08em] text-[hsl(var(--primary))]">
-              <Calculator size={18} /> Open calculators
+              <Calculator size={18} /> {ui.openCalculators}
             </button>
           </section>
         ) : section === 'reference' ? (
           <>
             <section className="panel bracket-corner p-4 sm:p-5">
               <div className="eyebrow mb-2">Reference</div>
-              <h2 className="section-heading">Safety and controlled visual resources.</h2>
+              <h2 className="section-heading">{ui.referenceTitle}</h2>
               <div className="mt-4 grid gap-2 sm:grid-cols-2">
                 <button type="button" onClick={() => setIsVideoOpen(true)} className="border border-[hsl(var(--border))] p-3 text-left">
                   <BookOpen size={18} className="text-[hsl(var(--primary))]" />
-                  <div className="mt-2 font-bold">Visual learning library</div>
+                  <div className="mt-2 font-bold">{ui.visualLibrary}</div>
                   <div className="mt-1 text-xs text-[hsl(var(--muted-foreground))]">Controlled online concept resources; written learning stays offline.</div>
                 </button>
                 <button type="button" onClick={() => openSection('ask')} className="border border-[hsl(var(--border))] p-3 text-left">
                   <Languages size={18} className="text-[hsl(var(--primary))]" />
-                  <div className="mt-2 font-bold">Trade terminology</div>
+                  <div className="mt-2 font-bold">{ui.terminology}</div>
                   <div className="mt-1 text-xs text-[hsl(var(--muted-foreground))]">Open the existing local terminology search under Ask.</div>
                 </button>
               </div>
@@ -5856,7 +5932,7 @@ function Home() {
           <>
             <section className="panel bracket-corner p-4 sm:p-5">
               <div className="eyebrow mb-2">Check</div>
-              <h2 className="section-heading">Progress and learning checks.</h2>
+              <h2 className="section-heading">{ui.checkTitle}</h2>
               <p className="mt-2 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
                 Existing learning checks remain inside their verified modules. Progress is stored locally on this browser/device; no learner account is required.
               </p>
