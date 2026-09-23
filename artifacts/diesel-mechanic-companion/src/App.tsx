@@ -88,14 +88,14 @@ const copy: Record<Language, {
 };
 
 const workspaceCopy: Record<Language, {
-  language: string; home: string; learn: string; ask: string; tools: string; reference: string; check: string;
+  language: string; home: string; learn: string; ask: string; tools: string; reference: string; check: string; practicalSupervision: string; footer: string;
   slogan: string; chooseArea: string; safety: string; qualification: string; chooseKmPmWm: string; learningBoundary: string;
   knowledge: string; practical: string; workplace: string; askFind: string; askTitle: string; askLead: string;
   toolsTitle: string; toolsLead: string; openCalculators: string; referenceTitle: string; visualLibrary: string; visualLead: string;
   terminology: string; terminologyLead: string; checkTitle: string; checkLead: string; currentCheck: string; notStarted: string;
 }> = {
   EN: {
-    language:'Language', home:'HOME', learn:'LEARN', ask:'ASK', tools:'TOOLS', reference:'REFERENCE', check:'CHECK',
+    language:'Language', home:'HOME', learn:'LEARN', ask:'ASK', tools:'TOOLS', reference:'REFERENCE', check:'CHECK', practicalSupervision:'Practical work remains supervised and must follow the approved provider or workplace process.', footer:'Educational support only · supervised practical work required',
     slogan:'LEARN. PRACTISE. PREPARE.', chooseArea:'Choose one workspace area above.', safety:'Safety',
     qualification:'Official qualification structure', chooseKmPmWm:'Choose KM, PM or WM.',
     learningBoundary:'{ui.learningBoundary}',
@@ -110,7 +110,7 @@ const workspaceCopy: Record<Language, {
     currentCheck:'{ui.currentCheck}', notStarted:'Not started'
   },
   AF: {
-    language:'Taal', home:'TUIS', learn:'LEER', ask:'VRA', tools:'GEREEDSKAP', reference:'VERWYSING', check:'KONTROLE',
+    language:'Taal', home:'TUIS', learn:'LEER', ask:'VRA', tools:'GEREEDSKAP', reference:'VERWYSING', check:'KONTROLE', practicalSupervision:'Praktiese werk bly onder toesig en moet die goedgekeurde verskaffer- of werkplekproses volg.', footer:'Slegs opvoedkundige ondersteuning · praktiese werk onder toesig vereis',
     slogan:'LEER. OEFEN. BEREI VOOR.', chooseArea:'Kies een werkruimte hier bo.', safety:'Veiligheid',
     qualification:'Amptelike kwalifikasiestruktuur', chooseKmPmWm:'Kies KM, PM of WM.',
     learningBoundary:'PWA-leerondersteuning vervang nie praktiese bevoegdheid onder toesig, werkplekervaring of eksterne assesseringsvereistes nie.',
@@ -125,7 +125,7 @@ const workspaceCopy: Record<Language, {
     currentCheck:'Maak huidige leerkontrole oop', notStarted:'Nog nie begin nie'
   },
   XH: {
-    language:'Ulwimi', home:'IKHAYA', learn:'FUNDA', ask:'BUZA', tools:'IZIXHOBO', reference:'IZALATHISO', check:'HLOLA',
+    language:'Ulwimi', home:'IKHAYA', learn:'FUNDA', ask:'BUZA', tools:'IZIXHOBO', reference:'IZALATHISO', check:'HLOLA', practicalSupervision:'Umsebenzi osebenzayo uhlala uphantsi kolawulo kwaye kufuneka ulandele inkqubo evunyiweyo yomboneleli okanye yendawo yokusebenza.', footer:'Inkxaso yemfundo kuphela · umsebenzi osebenzayo phantsi kolawulo uyafuneka',
     slogan:'FUNDA. ZIQHELISE. LUNGISELELA.', chooseArea:'Khetha indawo enye yokusebenza apha ngasentla.', safety:'Ukhuseleko',
     qualification:'Ulwakhiwo olusemthethweni lwesiqinisekiso', chooseKmPmWm:'Khetha i-KM, PM okanye WM.',
     learningBoundary:'Inkxaso yokufunda ye-PWA ayithathi indawo yobuchule bokusebenza phantsi kolawulo, amava omsebenzi okanye iimfuno zovavanyo lwangaphandle.',
@@ -140,7 +140,7 @@ const workspaceCopy: Record<Language, {
     currentCheck:'Vula ukuhlolwa kokufunda kwangoku', notStarted:'Akukaqalwa'
   },
   ZU: {
-    language:'Ulimi', home:'IKHAYA', learn:'FUNDA', ask:'BUZA', tools:'AMATHULUZI', reference:'IZINKOMBA', check:'HLOLA',
+    language:'Ulimi', home:'IKHAYA', learn:'FUNDA', ask:'BUZA', tools:'AMATHULUZI', reference:'IZINKOMBA', check:'HLOLA', practicalSupervision:'Umsebenzi osebenzayo uhlala uqondisiwe futhi kufanele ulandele inqubo egunyaziwe yomhlinzeki noma yasemsebenzini.', footer:'Ukusekelwa kwemfundo kuphela · umsebenzi osebenzayo oqondisiwe uyadingeka',
     slogan:'FUNDA. ZIJWAYEZE. LUNGISELELA.', chooseArea:'Khetha indawo eyodwa yokusebenza ngenhla.', safety:'Ukuphepha',
     qualification:'Isakhiwo esisemthethweni seziqu', chooseKmPmWm:'Khetha i-KM, PM noma WM.',
     learningBoundary:'Ukusekelwa kokufunda kwe-PWA akuthathi indawo yobuchwepheshe obuqondisiwe, isipiliyoni sasemsebenzini noma izidingo zokuhlolwa zangaphandle.',
@@ -5835,7 +5835,7 @@ function Home() {
               </p>
             </div>
             <div className="border border-[rgba(234,96,83,.28)] bg-[rgba(234,96,83,.06)] px-4 py-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
-              <strong>{ui.safety}:</strong> {current.safetyLead} Practical work remains supervised and must follow the approved provider or workplace process.
+              <strong>{ui.safety}:</strong> {current.safetyLead} {ui.practicalSupervision}
             </div>
           </section>
         ) : section === 'learn' ? (
@@ -5962,7 +5962,7 @@ function Home() {
         )}
 
         <footer className="mt-8 border-t border-[hsl(var(--border))] pt-4 text-[.65rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">
-          Diesel Mechanic · SAQA 117237 · educational support only · supervised practical work required
+          Diesel Mechanic · SAQA 117237 · {ui.footer}
         </footer>
       </main>
 
