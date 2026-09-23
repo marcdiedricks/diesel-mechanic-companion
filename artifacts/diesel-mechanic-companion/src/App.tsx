@@ -92,7 +92,7 @@ const workspaceCopy: Record<Language, {
   slogan: string; chooseArea: string; safety: string; qualification: string; chooseKmPmWm: string; learningBoundary: string;
   knowledge: string; practical: string; workplace: string; askFind: string; askTitle: string; askLead: string;
   toolsTitle: string; toolsLead: string; openCalculators: string; referenceTitle: string; visualLibrary: string; visualLead: string;
-  terminology: string; terminologyLead: string; checkTitle: string; checkLead: string; currentCheck: string; notStarted: string;
+  terminology: string; terminologyLead: string; checkTitle: string; checkLead: string; currentCheck: string; notStarted: string; readinessLabel: string; readinessNote: string; completedItems: string;
 }> = {
   EN: {
     language:'Language', home:'HOME', learn:'LEARN', ask:'ASK', tools:'TOOLS', reference:'REFERENCE', check:'CHECK', practicalSupervision:'Practical work remains supervised and must follow the approved provider or workplace process.', footer:'Educational support only · supervised practical work required',
@@ -108,7 +108,7 @@ const workspaceCopy: Record<Language, {
     visualLibrary:'Visual learning library', visualLead:'Controlled online concept resources; written learning stays offline.',
     terminology:'Trade terminology', terminologyLead:'Open the existing local terminology search under Ask.',
     checkTitle:'Progress and learning checks.', checkLead:'Existing learning checks remain inside their verified modules. Progress is stored locally on this browser/device; no learner account is required.',
-    currentCheck:'Open current learning check', notStarted:'Not started'
+    currentCheck:'Open current learning check', notStarted:'Not started', readinessLabel:'Learning readiness', readinessNote:'Based only on completed in-app learning items. It does not certify practical competence, workplace competence or trade-test readiness.', completedItems:'learning items completed'
   },
   AF: {
     language:'Taal', home:'TUIS', learn:'LEER', ask:'VRA', tools:'GEREEDSKAP', reference:'VERWYSING', check:'KONTROLE', practicalSupervision:'Praktiese werk bly onder toesig en moet die goedgekeurde verskaffer- of werkplekproses volg.', footer:'Slegs opvoedkundige ondersteuning · praktiese werk onder toesig vereis',
@@ -124,7 +124,7 @@ const workspaceCopy: Record<Language, {
     visualLibrary:'Visuele leerbiblioteek', visualLead:'Beheerde aanlyn konsepbronne; geskrewe leer bly aflyn.',
     terminology:'Vakterminologie', terminologyLead:'Maak die bestaande plaaslike terminologiesoektog onder Vra oop.',
     checkTitle:'Vordering en leerkontroles.', checkLead:'Bestaande leerkontroles bly binne hul geverifieerde modules. Vordering word plaaslik op hierdie toestel gestoor; geen leerderrekening is nodig nie.',
-    currentCheck:'Maak huidige leerkontrole oop', notStarted:'Nog nie begin nie'
+    currentCheck:'Maak huidige leerkontrole oop', notStarted:'Nog nie begin nie', readinessLabel:'Leergereedheid', readinessNote:'Gebaseer slegs op voltooide leeritems in die app. Dit sertifiseer nie praktiese bevoegdheid, werkplekbevoegdheid of gereedheid vir die ambagstoets nie.', completedItems:'leeritems voltooi'
   },
   XH: {
     language:'Ulwimi', home:'IKHAYA', learn:'FUNDA', ask:'BUZA', tools:'IZIXHOBO', reference:'IZALATHISO', check:'HLOLA', practicalSupervision:'Umsebenzi osebenzayo uhlala uphantsi kolawulo kwaye kufuneka ulandele inkqubo evunyiweyo yomboneleli okanye yendawo yokusebenza.', footer:'Inkxaso yemfundo kuphela · umsebenzi osebenzayo phantsi kolawulo uyafuneka',
@@ -140,7 +140,7 @@ const workspaceCopy: Record<Language, {
     visualLibrary:'Ithala lokufunda ngemifanekiso', visualLead:'Izixhobo zekhonsepthi ezilawulwayo kwi-intanethi; ukufunda okubhaliweyo kuhlala kusebenza ngaphandle kwe-intanethi.',
     terminology:'Amagama omsebenzi', terminologyLead:'Vula uphendlo lwamagama olukhoyo phantsi ko-Buza.',
     checkTitle:'Inkqubela kunye nokuhlolwa kokufunda.', checkLead:'Ukuhlolwa kokufunda okukhoyo kuhlala kwiimodyuli eziqinisekisiweyo. Inkqubela igcinwa kule bhrawuza/isixhobo; akukho akhawunti yomfundi ifunekayo.',
-    currentCheck:'Vula ukuhlolwa kokufunda kwangoku', notStarted:'Akukaqalwa'
+    currentCheck:'Vula ukuhlolwa kokufunda kwangoku', notStarted:'Akukaqalwa', readinessLabel:'Ukulungela ukufunda', readinessNote:'Kusekelwe kuphela kwizinto zokufunda ezigqityiweyo ngaphakathi kwe-app. Akuqinisekisi ubuchule bokusebenza, ubuchule basemsebenzini okanye ukulungela uvavanyo lomsebenzi.', completedItems:'izinto zokufunda ezigqityiweyo'
   },
   ZU: {
     language:'Ulimi', home:'IKHAYA', learn:'FUNDA', ask:'BUZA', tools:'AMATHULUZI', reference:'IZINKOMBA', check:'HLOLA', practicalSupervision:'Umsebenzi osebenzayo uhlala uqondisiwe futhi kufanele ulandele inqubo egunyaziwe yomhlinzeki noma yasemsebenzini.', footer:'Ukusekelwa kwemfundo kuphela · umsebenzi osebenzayo oqondisiwe uyadingeka',
@@ -156,7 +156,7 @@ const workspaceCopy: Record<Language, {
     visualLibrary:'Umtapo wokufunda ngezithombe', visualLead:'Izinsiza zekhonsepthi ezilawulwayo ku-inthanethi; ukufunda okubhaliwe kuhlala kutholakala ngaphandle kwe-inthanethi.',
     terminology:'Amagama omsebenzi', terminologyLead:'Vula usesho lwamagama olukhona ngaphansi kuka-Buza.',
     checkTitle:'Inqubekela phambili nokuhlolwa kokufunda.', checkLead:'Ukuhlolwa kokufunda okukhona kuhlala kumamojula aqinisekisiwe. Inqubekela igcinwa kule bhrawuza/idivayisi; akukho akhawunti yomfundi edingekayo.',
-    currentCheck:'Vula ukuhlolwa kokufunda kwamanje', notStarted:'Akukaqalwa'
+    currentCheck:'Vula ukuhlolwa kokufunda kwamanje', notStarted:'Akukaqalwa', readinessLabel:'Ukulungela ukufunda', readinessNote:'Kusekelwe kuphela ezintweni zokufunda eziqediwe ngaphakathi kohlelo. Akuqinisekisi ikhono lokusebenza, ikhono lasemsebenzini noma ukulungela ukuhlolwa komsebenzi.', completedItems:'izinto zokufunda eziqediwe'
   }
 };
 
@@ -5745,6 +5745,15 @@ function Home() {
   ];
 
   const allModules = [...knowledgeModules, ...practicalModules, ...workplaceModules];
+
+  const moduleItemTotals: Record<string, number> = {
+    'KM-01': 4, 'KM-02': 5, 'KM-03': 5, 'KM-04': 5, 'KM-05': 5, 'KM-06': 6, 'KM-07': 7, 'KM-08': 5,
+    'PM-01': 4, 'PM-02': 5, 'PM-03': 5, 'PM-04': 5, 'PM-05': 5, 'PM-06': 5, 'PM-07': 5,
+    'PM-08': 6, 'PM-09': 6, 'PM-10': 6, 'PM-11': 6, 'PM-12': 6, 'PM-13': 6, 'PM-14': 6, 'PM-15': 6, 'PM-16': 6, 'PM-17': 6, 'PM-18': 6,
+    'WM-01': 5, 'WM-02': 5, 'WM-03': 5, 'WM-04': 5, 'WM-05': 7, 'WM-06': 6, 'WM-07': 6, 'WM-08': 6, 'WM-09': 6, 'WM-10': 6, 'WM-11': 6, 'WM-12': 6, 'WM-13': 6, 'WM-14': 6,
+  };
+  const totalLearningItems = Object.values(moduleItemTotals).reduce((sum, count) => sum + count, 0);
+
   const activeEntry = activeModule ? allModules.find((item) => item.code === activeModule) : null;
   const ActiveComponent = activeEntry?.Component;
 
@@ -5760,6 +5769,8 @@ function Home() {
 
   const startedCount = (items: typeof knowledgeModules) => items.filter((item) => progressFor(item.code) > 0).length;
   const completedModules = allModules.filter((item) => progressFor(item.code) > 0).length;
+  const completedLearningItems = allModules.reduce((sum, item) => sum + Math.min(progressFor(item.code), moduleItemTotals[item.code] || 0), 0);
+  const readinessScore = totalLearningItems > 0 ? Math.round((completedLearningItems / totalLearningItems) * 100) : 0;
   const lastStarted = [...allModules].reverse().find((item) => progressFor(item.code) > 0) || knowledgeModules[0];
 
   const openSection = (next: typeof section) => {
@@ -5940,6 +5951,18 @@ function Home() {
               <p className="mt-2 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
                 {ui.checkLead}
               </p>
+              <div className="mt-4 border border-[hsl(var(--primary))] bg-[rgba(233,184,54,.06)] p-4">
+                <div className="flex items-end justify-between gap-4">
+                  <div>
+                    <div className="eyebrow">{ui.readinessLabel}</div>
+                    <div className="mt-1 text-4xl font-bold text-[hsl(var(--primary))]">{readinessScore}%</div>
+                  </div>
+                  <div className="text-right text-[.68rem] uppercase tracking-[.08em] text-[hsl(var(--muted-foreground))]">
+                    {completedLearningItems}/{totalLearningItems}<br />{ui.completedItems}
+                  </div>
+                </div>
+                <p className="mt-3 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">{ui.readinessNote}</p>
+              </div>
               <div className="mt-4 grid grid-cols-3 gap-2">
                 <div className="border border-[hsl(var(--border))] p-3 text-center">
                   <div className="text-xl font-bold text-[hsl(var(--primary))]">{startedCount(knowledgeModules)}/8</div>
