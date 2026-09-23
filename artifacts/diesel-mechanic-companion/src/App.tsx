@@ -10,7 +10,6 @@ import {
   HardHat,
   Languages,
   LockKeyhole,
-  Menu,
   ShieldAlert,
   Siren,
   Wind,
@@ -5422,52 +5421,32 @@ function TurboInjectorMark() {
   );
 }
 
-function Header({ language, onLanguageChange, onOpenMenu, onOpenCalculators }: { language: Language; onLanguageChange: (language: Language) => void; onOpenMenu: () => void; onOpenCalculators: () => void }) {
+function Header({ language, onLanguageChange }: { language: Language; onLanguageChange: (language: Language) => void }) {
   return (
-    <header className="border-b border-[hsl(var(--border))] bg-[rgba(8,15,23,.86)]">
-      <div className="mx-auto flex max-w-[1500px] items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-10">
-        <div className="flex min-w-0 items-center gap-3">
-          <div className="grid size-12 shrink-0 place-items-center border border-[hsl(var(--primary))] bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]" aria-label="Diesel Mechanic Companion mark">
-            <TurboInjectorMark />
-          </div>
-          <div className="min-w-0">
-            <div className="eyebrow mb-1 flex items-center gap-2"><span className="status-dot" /> workshop mode / offline-ready</div>
-            <h1 className="display-font truncate text-[clamp(1.5rem,3.5vw,2.45rem)] font-bold uppercase leading-none tracking-tight text-[hsl(var(--foreground))]">Diesel Mechanic Companion™</h1>
-            <p className="mono-font mt-1 truncate text-[.62rem] uppercase tracking-[.12em] text-[hsl(var(--muted-foreground))]">SAQA ID: 117237 <span className="text-[hsl(var(--primary))]">|</span> NQF Level 4 <span className="text-[hsl(var(--primary))]">|</span> MERSETA / NAMB</p>
-          </div>
+    <header className="border-b border-[hsl(var(--border))] bg-[rgba(8,15,23,.92)]">
+      <div className="mx-auto flex max-w-[1100px] items-center gap-3 px-4 py-3 sm:px-6">
+        <div className="grid size-10 shrink-0 place-items-center border border-[hsl(var(--primary))] bg-[rgba(233,184,54,.1)] text-[hsl(var(--primary))]" aria-label="Diesel Mechanic Companion mark">
+          <TurboInjectorMark />
         </div>
-        <div className="flex shrink-0 items-center gap-2">
-          <button type="button" onClick={onOpenMenu} className="grid size-10 place-items-center border border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))] transition hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))] md:hidden" aria-label="Open quick navigation" data-testid="button-open-navigation">
-            <Menu size={18} />
-          </button>
+        <div className="min-w-0">
+          <div className="eyebrow mb-1 flex items-center gap-2"><span className="status-dot" /> workshop mode / offline-ready</div>
+          <h1 className="display-font text-[clamp(1.15rem,5vw,1.9rem)] font-bold uppercase leading-[1.05] tracking-tight text-[hsl(var(--foreground))]">Diesel Mechanic Companion™</h1>
+          <p className="mono-font mt-1 text-[.58rem] uppercase leading-relaxed tracking-[.1em] text-[hsl(var(--muted-foreground))]">SAQA 117237 <span className="text-[hsl(var(--primary))]">|</span> NQF 4 <span className="text-[hsl(var(--primary))]">|</span> 544 credits <span className="text-[hsl(var(--primary))]">|</span> MERSETA / NAMB</p>
         </div>
       </div>
       <div className="border-t border-[rgba(255,255,255,.055)] bg-[rgba(255,255,255,.018)]">
-        <div className="mx-auto flex max-w-[1500px] items-center justify-between gap-3 px-4 py-2 sm:px-6 lg:px-10">
+        <div className="mx-auto flex max-w-[1100px] flex-wrap items-center justify-between gap-2 px-4 py-2 sm:px-6">
           <div className="flex items-center gap-2 text-[hsl(var(--muted-foreground))]">
-            <Languages size={15} />
-            <span className="hidden text-[.68rem] font-semibold uppercase tracking-[.14em] sm:inline">Language / taal / ulwimi</span>
+            <Languages size={14} />
+            <span className="text-[.62rem] font-semibold uppercase tracking-[.12em]">Language</span>
           </div>
-           <div className="flex min-w-0 items-center gap-2">
-             <nav className="flex items-center gap-1" aria-label="Language selection">
-               {languages.map((item) => (
-                 <button type="button" key={item} onClick={() => onLanguageChange(item)} className={`language-button px-3 py-1.5 text-[.7rem] font-bold tracking-[.12em] ${language === item ? 'active' : 'text-[hsl(var(--muted-foreground))] hover:bg-[rgba(255,255,255,.06)] hover:text-[hsl(var(--foreground))]'}`} aria-pressed={language === item} data-testid={`button-language-${item.toLowerCase()}`}>
-                   {item}
-                 </button>
-               ))}
-             </nav>
-             <button
-               type="button"
-               onClick={onOpenCalculators}
-               className="flex shrink-0 items-center gap-2 border border-[hsl(var(--primary))] bg-[rgba(233,184,54,.08)] px-2.5 py-1.5 text-[.65rem] font-bold uppercase tracking-[.08em] text-[hsl(var(--primary))] transition hover:bg-[hsl(var(--primary))] hover:text-[hsl(var(--primary-foreground))] sm:px-3"
-               aria-label="Open Workshop Calculators"
-               data-testid="button-open-trade-calculators"
-             >
-               <span aria-hidden="true">📐</span>
-               <span className="hidden sm:inline">Workshop Calculators</span>
-               <span className="sm:hidden">Calculators</span>
-             </button>
-           </div>
+          <nav className="flex flex-wrap items-center justify-end gap-1" aria-label="Language selection">
+            {languages.map((item) => (
+              <button type="button" key={item} onClick={() => onLanguageChange(item)} className={`language-button px-2.5 py-1.5 text-[.68rem] font-bold tracking-[.1em] ${language === item ? 'active' : 'text-[hsl(var(--muted-foreground))] hover:bg-[rgba(255,255,255,.06)] hover:text-[hsl(var(--foreground))]'}`} aria-pressed={language === item} data-testid={`button-language-${item.toLowerCase()}`}>
+                {item}
+              </button>
+            ))}
+          </nav>
         </div>
       </div>
     </header>
@@ -5629,60 +5608,60 @@ function Home() {
   const [language, setLanguage] = useState<Language>('EN');
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(0);
-  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isCalculatorsOpen, setIsCalculatorsOpen] = useState(false);
-  const [section, setSection] = useState<'home' | 'knowledge' | 'practical' | 'workplace' | 'resources'>('home');
+  const [section, setSection] = useState<'home' | 'learn' | 'ask' | 'tools' | 'reference' | 'check'>('home');
+  const [learnGroup, setLearnGroup] = useState<'knowledge' | 'practical' | 'workplace'>('knowledge');
   const [activeModule, setActiveModule] = useState<string | null>(null);
   const current = copy[language];
   const closeVideo = () => setIsVideoOpen(false);
 
   const knowledgeModules = [
-    { code: 'KM-01', title: 'Workplace Fundamentals', Component: KM01Module },
-    { code: 'KM-02', title: 'Foundational Concepts for Mechanics', Component: KM02Module },
-    { code: 'KM-03', title: 'Vehicle and Equipment Fundamentals', Component: KM03Module },
-    { code: 'KM-04', title: 'Basic Engine Systems', Component: KM04Module },
-    { code: 'KM-05', title: 'Vehicle, Equipment and Propulsion Systems', Component: KM05Module },
-    { code: 'KM-06', title: 'Electrical, Electronic, Hydraulic and Pneumatic Principles', Component: KM06Module },
-    { code: 'KM-07', title: 'Advanced Vehicle and Equipment Systems', Component: KM07Module },
-    { code: 'KM-08', title: 'Problem Solving and Engine Optimisation', Component: KM08Module },
+    { code: 'KM-01', title: 'Workplace Fundamentals', credits: 9, Component: KM01Module },
+    { code: 'KM-02', title: 'Foundational Concepts for Mechanics', credits: 14, Component: KM02Module },
+    { code: 'KM-03', title: 'Vehicle and Equipment Fundamentals', credits: 8, Component: KM03Module },
+    { code: 'KM-04', title: 'Basic Engine Systems', credits: 8, Component: KM04Module },
+    { code: 'KM-05', title: 'Vehicle, Equipment and Propulsion Systems', credits: 13, Component: KM05Module },
+    { code: 'KM-06', title: 'Electrical Systems and Basic Electronic, Hydraulic and Pneumatic Principles', credits: 16, Component: KM06Module },
+    { code: 'KM-07', title: 'Advanced Vehicle and Equipment Systems', credits: 30, Component: KM07Module },
+    { code: 'KM-08', title: 'Problem Solving and Engine Optimisation', credits: 10, Component: KM08Module },
   ];
 
   const practicalModules = [
-    { code: 'PM-01', title: 'Work Safely and Respond to Emergencies', Component: PM01Module },
-    { code: 'PM-02', title: 'Use Tools and Equipment', Component: PM02Module },
-    { code: 'PM-03', title: 'Cut and Join Metals', Component: PM03Module },
-    { code: 'PM-04', title: 'Remove and Install Mechanical Components', Component: PM04Module },
-    { code: 'PM-05', title: 'Auto-electric and Auto-electronic Components', Component: PM05Module },
-    { code: 'PM-06', title: 'Fluid Power Components', Component: PM06Module },
-    { code: 'PM-07', title: 'Maintain and Service Vehicles', Component: PM07Module },
-    { code: 'PM-08', title: 'Engines and Engine Sub-assemblies', Component: PM08Module },
-    { code: 'PM-09', title: 'Cooling Systems', Component: PM09Module },
-    { code: 'PM-10', title: 'Brake Systems', Component: PM10Module },
-    { code: 'PM-11', title: 'Drive Train Components', Component: PM11Module },
-    { code: 'PM-12', title: 'Steering and Suspension Systems', Component: PM12Module },
-    { code: 'PM-13', title: 'Basic Hydraulic Systems', Component: PM13Module },
-    { code: 'PM-14', title: 'Engines and Vehicle Components', Component: PM14Module },
-    { code: 'PM-15', title: 'Diagnose and Repair Vehicle Systems', Component: PM15Module },
-    { code: 'PM-16', title: 'Diagnose and Repair Electrical Systems', Component: PM16Module },
-    { code: 'PM-17', title: 'Electronically Controlled Vehicle Systems', Component: PM17Module },
-    { code: 'PM-18', title: 'Air Conditioning System', Component: PM18Module },
+    { code: 'PM-01', title: 'Work Safely and Respond to Emergencies', credits: 6, Component: PM01Module },
+    { code: 'PM-02', title: 'Use Tools and Equipment', credits: 20, Component: PM02Module },
+    { code: 'PM-03', title: 'Cut and Join Metals', credits: 5, Component: PM03Module },
+    { code: 'PM-04', title: 'Remove and Install Mechanical Components (Gaskets, Seals, Bearings and Locking Devices)', credits: 6, Component: PM04Module },
+    { code: 'PM-05', title: 'Work with Auto-electric and Auto-electronic Components', credits: 2, Component: PM05Module },
+    { code: 'PM-06', title: 'Work with Fluid Power Components', credits: 2, Component: PM06Module },
+    { code: 'PM-07', title: 'Maintain and Service Vehicles and Vehicle Components', credits: 5, Component: PM07Module },
+    { code: 'PM-08', title: 'Dismantle, Assess and Reassemble Engines and Engine Sub-assemblies', credits: 16, Component: PM08Module },
+    { code: 'PM-09', title: 'Dismantle, Assess and Reassemble Cooling Systems', credits: 8, Component: PM09Module },
+    { code: 'PM-10', title: 'Dismantle, Assess and Reassemble Brake Systems (including Hydraulic and Pneumatic Components)', credits: 5, Component: PM10Module },
+    { code: 'PM-11', title: 'Dismantle, Assess and Reassemble Drive Train System Components', credits: 5, Component: PM11Module },
+    { code: 'PM-12', title: 'Dismantle, Assess and Reassemble Steering and Suspension Systems (including Hydraulic and Pneumatic Components)', credits: 5, Component: PM12Module },
+    { code: 'PM-13', title: 'Dismantle, Assess and Reassemble Basic Hydraulic Systems', credits: 5, Component: PM13Module },
+    { code: 'PM-14', title: 'Remove, Test, Repair and Refit Engines and Vehicle Components', credits: 15, Component: PM14Module },
+    { code: 'PM-15', title: 'Diagnose and Repair Vehicle Systems', credits: 30, Component: PM15Module },
+    { code: 'PM-16', title: 'Diagnose and Repair Electrical Systems', credits: 12, Component: PM16Module },
+    { code: 'PM-17', title: 'Diagnose and Repair Electronically Controlled Vehicle Systems', credits: 10, Component: PM17Module },
+    { code: 'PM-18', title: 'Diagnose and Repair Air Conditioning System', credits: 5, Component: PM18Module },
   ];
 
   const workplaceModules = [
-    { code: 'WM-01', title: 'Routine Scheduled Services', Component: WM01Module },
-    { code: 'WM-02', title: 'Engine Sub-system Components', Component: WM02Module },
-    { code: 'WM-03', title: 'Other Vehicle Sub-system Components', Component: WM03Module },
-    { code: 'WM-04', title: 'Engine Removal and Installation Processes', Component: WM04Module },
-    { code: 'WM-05', title: 'Vehicle Sub-system Repair Processes', Component: WM05Module },
-    { code: 'WM-06', title: 'Cooling System', Component: WM06Module },
-    { code: 'WM-07', title: 'Electrical Systems', Component: WM07Module },
-    { code: 'WM-08', title: 'Air Conditioning System', Component: WM08Module },
-    { code: 'WM-09', title: 'Electronic Control Systems', Component: WM09Module },
-    { code: 'WM-10', title: 'Engines and Engine Sub-systems', Component: WM10Module },
-    { code: 'WM-11', title: 'Hydraulic and Pneumatic Systems', Component: WM11Module },
-    { code: 'WM-12', title: 'Brake Systems', Component: WM12Module },
-    { code: 'WM-13', title: 'Drive Train Systems', Component: WM13Module },
-    { code: 'WM-14', title: 'Steering and Suspension Systems', Component: WM14Module },
+    { code: 'WM-01', title: 'Routine Scheduled Services', credits: 16, Component: WM01Module },
+    { code: 'WM-02', title: 'Removal and Replacement of Engine Sub-system Components (including Batteries)', credits: 16, Component: WM02Module },
+    { code: 'WM-03', title: 'Removal and Replacement of Other Vehicle Sub-system Components', credits: 20, Component: WM03Module },
+    { code: 'WM-04', title: 'Engine Removal and Installation Processes', credits: 18, Component: WM04Module },
+    { code: 'WM-05', title: 'Repair Processes for Vehicle Sub-systems', credits: 50, Component: WM05Module },
+    { code: 'WM-06', title: 'Removal and Replacement of Cooling System', credits: 20, Component: WM06Module },
+    { code: 'WM-07', title: 'Diagnosis and Repair of Electrical Systems (Charging, Starting, Lighting and Auxiliary)', credits: 18, Component: WM07Module },
+    { code: 'WM-08', title: 'Diagnose and Repair Air Conditioning System', credits: 8, Component: WM08Module },
+    { code: 'WM-09', title: 'Diagnosis and Repair of Electronic Control Systems', credits: 18, Component: WM09Module },
+    { code: 'WM-10', title: 'Diagnosis and Repair of Engines and Engine Sub-systems', credits: 18, Component: WM10Module },
+    { code: 'WM-11', title: 'Diagnosis and Repair of Hydraulic and Pneumatic Systems', credits: 18, Component: WM11Module },
+    { code: 'WM-12', title: 'Diagnosis and Repair of Brake Systems', credits: 18, Component: WM12Module },
+    { code: 'WM-13', title: 'Diagnosis and Repair of Drive Train Systems', credits: 18, Component: WM13Module },
+    { code: 'WM-14', title: 'Diagnosis and Repair of Steering and Suspension Systems', credits: 18, Component: WM14Module },
   ];
 
   const allModules = [...knowledgeModules, ...practicalModules, ...workplaceModules];
@@ -5699,11 +5678,19 @@ function Home() {
     }
   };
 
+  const startedCount = (items: typeof knowledgeModules) => items.filter((item) => progressFor(item.code) > 0).length;
   const completedModules = allModules.filter((item) => progressFor(item.code) > 0).length;
   const lastStarted = [...allModules].reverse().find((item) => progressFor(item.code) > 0) || knowledgeModules[0];
 
   const openSection = (next: typeof section) => {
     setSection(next);
+    setActiveModule(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const openLearnGroup = (next: typeof learnGroup) => {
+    setSection('learn');
+    setLearnGroup(next);
     setActiveModule(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -5714,213 +5701,186 @@ function Home() {
   };
 
   const sectionModules =
-    section === 'knowledge' ? knowledgeModules :
-    section === 'practical' ? practicalModules :
-    section === 'workplace' ? workplaceModules : [];
+    learnGroup === 'knowledge' ? knowledgeModules :
+    learnGroup === 'practical' ? practicalModules :
+    workplaceModules;
+
+  const workspaceAreas = [
+    { label: 'HOME', value: 'home' as const, Icon: Wrench },
+    { label: 'LEARN', value: 'learn' as const, Icon: BookOpen },
+    { label: 'ASK', value: 'ask' as const, Icon: CheckCircle2 },
+    { label: 'TOOLS', value: 'tools' as const, Icon: Calculator },
+    { label: 'REFERENCE', value: 'reference' as const, Icon: Languages },
+    { label: 'CHECK', value: 'check' as const, Icon: ClipboardCheck },
+  ];
 
   return (
     <div className="workshop-app">
-      <Header
-        language={language}
-        onLanguageChange={setLanguage}
-        onOpenMenu={() => setIsMobileNavOpen(true)}
-        onOpenCalculators={() => setIsCalculatorsOpen(true)}
-      />
-
-      {isMobileNavOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-[rgba(6,11,17,.8)] md:hidden"
-          role="presentation"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) setIsMobileNavOpen(false);
-          }}
-        >
-          <aside className="h-full w-[min(320px,88vw)] border-r border-[hsl(var(--border))] bg-[hsl(var(--sidebar))] p-5 shadow-2xl">
-            <div className="mb-6 flex items-center justify-between">
-              <span className="eyebrow">Diesel navigation</span>
-              <button type="button" onClick={() => setIsMobileNavOpen(false)} className="text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--primary))]" aria-label="Close navigation">
-                <X size={19} />
-              </button>
-            </div>
-            <div className="grid gap-2">
-              {[
-                ['Home', 'home'],
-                ['Knowledge', 'knowledge'],
-                ['Practical', 'practical'],
-                ['Workplace', 'workplace'],
-                ['Resources', 'resources'],
-              ].map(([label, value]) => (
-                <button
-                  key={value}
-                  type="button"
-                  onClick={() => {
-                    openSection(value as typeof section);
-                    setIsMobileNavOpen(false);
-                  }}
-                  className="border border-[hsl(var(--border))] px-4 py-3 text-left text-sm font-semibold uppercase tracking-wide text-[hsl(var(--foreground))]"
-                >
-                  {label}
-                </button>
-              ))}
-              <button
-                type="button"
-                onClick={() => {
-                  setIsCalculatorsOpen(true);
-                  setIsMobileNavOpen(false);
-                }}
-                className="border border-[hsl(var(--primary))] px-4 py-3 text-left text-sm font-semibold uppercase tracking-wide text-[hsl(var(--primary))]"
-              >
-                Calculators
-              </button>
-            </div>
-          </aside>
-        </div>
-      )}
+      <Header language={language} onLanguageChange={setLanguage} />
 
       <main className="mx-auto max-w-[1100px] px-4 pb-24 pt-4 sm:px-6">
-        <div className="mb-4 hidden gap-2 md:flex">
-          {[
-            ['Home', 'home'],
-            ['Knowledge', 'knowledge'],
-            ['Practical', 'practical'],
-            ['Workplace', 'workplace'],
-            ['Resources', 'resources'],
-          ].map(([label, value]) => (
+        <nav className="mb-4 grid grid-cols-3 gap-2 sm:grid-cols-6" aria-label="Student workspace">
+          {workspaceAreas.map(({ label, value, Icon }) => (
             <button
               key={value}
               type="button"
-              onClick={() => openSection(value as typeof section)}
-              className={`border px-4 py-2 text-xs font-bold uppercase tracking-[.08em] ${
-                section === value
-                  ? 'border-[hsl(var(--primary))] bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]'
-                  : 'border-[hsl(var(--border))] text-[hsl(var(--muted-foreground))]'
-              }`}
+              onClick={() => openSection(value)}
+              className={`flex min-h-12 items-center justify-center gap-2 border px-2 py-2 text-[.66rem] font-bold uppercase tracking-[.08em] ${section === value
+                ? 'border-[hsl(var(--primary))] bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]'
+                : 'border-[hsl(var(--border))] bg-[rgba(255,255,255,.02)] text-[hsl(var(--muted-foreground))]'}`}
+              aria-current={section === value ? 'page' : undefined}
             >
-              {label}
+              <Icon size={15} className="shrink-0" />
+              <span>{label}</span>
             </button>
           ))}
-        </div>
+        </nav>
 
         {activeEntry && ActiveComponent ? (
           <>
-            <button
-              type="button"
-              onClick={() => setActiveModule(null)}
-              className="mb-3 text-xs font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))]"
-            >
-              ← Back to {section}
+            <button type="button" onClick={() => setActiveModule(null)} className="mb-3 text-xs font-bold uppercase tracking-[.1em] text-[hsl(var(--primary))]">
+              ← Back to Learn
             </button>
             <div className="mb-3 panel p-3">
               <div className="eyebrow">Current module</div>
-              <div className="mt-1 text-sm font-semibold text-[hsl(var(--foreground))]">{activeEntry.code} · {activeEntry.title}</div>
+              <div className="mt-1 break-words text-sm font-semibold text-[hsl(var(--foreground))]">{activeEntry.code} · {activeEntry.title} · {activeEntry.credits} credits</div>
             </div>
             <ActiveComponent />
           </>
         ) : section === 'home' ? (
-          <>
-            <section className="panel bracket-corner p-5 sm:p-6">
+          <section className="space-y-3">
+            <div className="panel bracket-corner p-4 sm:p-5">
               <div className="eyebrow mb-2 flex items-center gap-2"><Wrench size={14} /> Mzansi Artisan · Diesel Mechanic</div>
-              <h2 className="display-font text-[2.5rem] font-bold uppercase leading-[.9] tracking-tight text-[hsl(var(--foreground))] sm:text-[3.5rem]">
-                Learn the trade.<br />
-                <span className="text-[hsl(var(--primary))]">One module at a time.</span>
+              <h2 className="display-font text-[1.8rem] font-bold uppercase leading-none tracking-tight text-[hsl(var(--foreground))] sm:text-[2.3rem]">
+                Learn. Practise. Prepare.
               </h2>
-              <p className="mt-4 max-w-2xl text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
-                SAQA 117237 · NQF Level 4 · 544 credits. Use the dashboard to move directly to Knowledge, Practical preparation or Workplace evidence without scrolling through the full curriculum.
-              </p>
-            </section>
-
-            <section className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <button type="button" onClick={() => openSection('knowledge')} className="panel p-4 text-left">
-                <BookOpen size={20} className="text-[hsl(var(--primary))]" />
-                <div className="mt-3 text-xl font-bold">8</div>
-                <div className="text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">Knowledge modules</div>
-              </button>
-              <button type="button" onClick={() => openSection('practical')} className="panel p-4 text-left">
-                <ClipboardCheck size={20} className="text-[hsl(var(--primary))]" />
-                <div className="mt-3 text-xl font-bold">18</div>
-                <div className="text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">Practical modules</div>
-              </button>
-              <button type="button" onClick={() => openSection('workplace')} className="panel p-4 text-left">
-                <HardHat size={20} className="text-[hsl(var(--primary))]" />
-                <div className="mt-3 text-xl font-bold">14</div>
-                <div className="text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">Workplace modules</div>
-              </button>
-              <button type="button" onClick={() => setIsCalculatorsOpen(true)} className="panel p-4 text-left">
-                <Calculator size={20} className="text-[hsl(var(--primary))]" />
-                <div className="mt-3 text-xl font-bold">Tools</div>
-                <div className="text-[.68rem] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]">Calculators</div>
-              </button>
-            </section>
-
-            <section className="mt-4 grid gap-3 sm:grid-cols-[1.2fr_.8fr]">
-              <button type="button" onClick={() => { openSection(lastStarted.code.startsWith('KM') ? 'knowledge' : lastStarted.code.startsWith('PM') ? 'practical' : 'workplace'); setTimeout(() => openModule(lastStarted.code), 0); }} className="panel bracket-corner p-5 text-left">
-                <div className="eyebrow">Continue learning</div>
-                <div className="mt-2 text-lg font-bold text-[hsl(var(--foreground))]">{lastStarted.code} · {lastStarted.title}</div>
-                <div className="mt-2 text-xs text-[hsl(var(--muted-foreground))]">
-                  {progressFor(lastStarted.code) > 0 ? `${progressFor(lastStarted.code)} item(s) already marked` : 'Start with the first knowledge module'}
-                </div>
-              </button>
-              <div className="panel p-5">
-                <div className="eyebrow">Progress snapshot</div>
-                <div className="mt-2 text-3xl font-bold text-[hsl(var(--primary))]">{completedModules}/40</div>
-                <div className="mt-1 text-xs text-[hsl(var(--muted-foreground))]">modules started on this device</div>
-              </div>
-            </section>
-
-            <section className="mt-4">
-              <SafetyPanel language={language} />
-            </section>
-          </>
-        ) : section === 'resources' ? (
-          <>
-            <section className="panel bracket-corner p-5">
-              <div className="eyebrow mb-2">Learning resources</div>
-              <h2 className="section-heading">Use only what you need.</h2>
               <p className="mt-3 text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
-                Resources are separated from the core curriculum so they do not create another endless scroll.
+                SAQA 117237 · Curriculum 653306-000-01-00 · NQF 4 · 544 credits. Choose one workspace area above.
               </p>
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                <button type="button" onClick={() => setIsVideoOpen(true)} className="border border-[hsl(var(--border))] p-4 text-left">
-                  <BookOpen size={18} className="text-[hsl(var(--primary))]" />
-                  <div className="mt-2 font-bold">Visual learning library</div>
-                  <div className="mt-1 text-xs text-[hsl(var(--muted-foreground))]">Controlled visual references and status</div>
-                </button>
-                <button type="button" onClick={() => setIsCalculatorsOpen(true)} className="border border-[hsl(var(--border))] p-4 text-left">
-                  <Calculator size={18} className="text-[hsl(var(--primary))]" />
-                  <div className="mt-2 font-bold">Theory calculators</div>
-                  <div className="mt-1 text-xs text-[hsl(var(--muted-foreground))]">Classroom calculation support only</div>
-                </button>
+            </div>
+            <div className="border border-[rgba(234,96,83,.28)] bg-[rgba(234,96,83,.06)] px-4 py-3 text-xs leading-relaxed text-[hsl(var(--foreground))]">
+              <strong>Safety:</strong> {current.safetyLead} Practical work remains supervised and must follow the approved provider or workplace process.
+            </div>
+          </section>
+        ) : section === 'learn' ? (
+          <>
+            <section className="panel bracket-corner p-4">
+              <div className="eyebrow mb-2">Official qualification structure</div>
+              <h2 className="section-heading">Choose KM, PM or WM.</h2>
+              <p className="mt-2 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
+                PWA learning support does not replace supervised practical competence, workplace experience or external assessment requirements.
+              </p>
+              <div className="mt-4 grid gap-2 sm:grid-cols-3">
+                {[
+                  ['knowledge', 'KM', 'Knowledge Modules', '8 modules · 108 credits'],
+                  ['practical', 'PM', 'Practical Skill Modules', '18 modules · 162 credits'],
+                  ['workplace', 'WM', 'Work Experience Modules', '14 modules · 274 credits'],
+                ].map(([value, code, title, meta]) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => openLearnGroup(value as typeof learnGroup)}
+                    className={`min-w-0 border p-3 text-left ${learnGroup === value ? 'border-[hsl(var(--primary))] bg-[rgba(233,184,54,.07)]' : 'border-[hsl(var(--border))]'}`}
+                  >
+                    <div className="mono-font text-[.68rem] font-bold uppercase tracking-[.12em] text-[hsl(var(--primary))]">{code}</div>
+                    <div className="mt-1 break-words text-sm font-bold text-[hsl(var(--foreground))]">{title}</div>
+                    <div className="mt-1 text-[.66rem] text-[hsl(var(--muted-foreground))]">{meta}</div>
+                  </button>
+                ))}
               </div>
             </section>
-            <section className="mt-4"><TradeTerms language={language} onOpenCalculators={() => setIsCalculatorsOpen(true)} /></section>
-          </>
-        ) : (
-          <>
-            <section className="panel bracket-corner p-5">
-              <div className="eyebrow mb-2">{section === 'knowledge' ? 'Knowledge modules' : section === 'practical' ? 'Practical preparation' : 'Workplace evidence'}</div>
-              <h2 className="section-heading">{section === 'knowledge' ? 'Choose one module' : section === 'practical' ? 'Choose one practical-support module' : 'Choose one workplace module'}</h2>
-              <p className="mt-2 text-sm text-[hsl(var(--muted-foreground))]">
-                Open only the module you need. Your existing progress remains stored on this device.
-              </p>
-            </section>
+
             <section className="mt-4 grid gap-3 sm:grid-cols-2">
               {sectionModules.map((item) => {
                 const progress = progressFor(item.code);
                 return (
-                  <button key={item.code} type="button" onClick={() => openModule(item.code)} className="panel p-4 text-left">
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <div className="mono-font text-[.68rem] font-bold uppercase tracking-[.12em] text-[hsl(var(--primary))]">{item.code}</div>
-                        <div className="mt-1 text-sm font-bold text-[hsl(var(--foreground))]">{item.title}</div>
+                  <button key={item.code} type="button" onClick={() => openModule(item.code)} className="panel min-w-0 p-4 text-left">
+                    <div className="flex min-w-0 items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <div className="mono-font text-[.68rem] font-bold uppercase tracking-[.12em] text-[hsl(var(--primary))]">{item.code} · {item.credits} credits</div>
+                        <div className="mt-1 break-words text-sm font-bold leading-snug text-[hsl(var(--foreground))]">{item.title}</div>
                       </div>
                       <ChevronDown size={17} className="-rotate-90 shrink-0 text-[hsl(var(--muted-foreground))]" />
                     </div>
                     <div className="mt-3 text-[.68rem] text-[hsl(var(--muted-foreground))]">
-                      {progress > 0 ? `${progress} item(s) marked` : 'Not started'}
+                      {progress > 0 ? `${progress} item(s) marked on this device` : 'Not started'}
                     </div>
                   </button>
                 );
               })}
+            </section>
+          </>
+        ) : section === 'ask' ? (
+          <>
+            <section className="panel bracket-corner p-4">
+              <div className="eyebrow mb-2">Ask / find</div>
+              <h2 className="section-heading">Use the existing offline learner help.</h2>
+              <p className="mt-2 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
+                Diesel does not use a separate online tutor engine. Use the existing local trade-term search below; when a direct match is unavailable, the existing safe fallback guides you to verified learning support.
+              </p>
+            </section>
+            <section className="mt-4"><TradeTerms language={language} onOpenCalculators={() => setIsCalculatorsOpen(true)} /></section>
+          </>
+        ) : section === 'tools' ? (
+          <section className="panel bracket-corner p-4 sm:p-5">
+            <div className="eyebrow mb-2">Tools</div>
+            <h2 className="section-heading">Existing diesel theory calculators.</h2>
+            <p className="mt-2 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
+              Classroom calculation support only. No calculator authorises hazardous workshop work or replaces approved specifications.
+            </p>
+            <button type="button" onClick={() => setIsCalculatorsOpen(true)} className="mt-4 flex w-full items-center justify-center gap-2 border border-[hsl(var(--primary))] bg-[rgba(233,184,54,.08)] px-4 py-3 text-sm font-bold uppercase tracking-[.08em] text-[hsl(var(--primary))]">
+              <Calculator size={18} /> Open calculators
+            </button>
+          </section>
+        ) : section === 'reference' ? (
+          <>
+            <section className="panel bracket-corner p-4 sm:p-5">
+              <div className="eyebrow mb-2">Reference</div>
+              <h2 className="section-heading">Safety and controlled visual resources.</h2>
+              <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                <button type="button" onClick={() => setIsVideoOpen(true)} className="border border-[hsl(var(--border))] p-3 text-left">
+                  <BookOpen size={18} className="text-[hsl(var(--primary))]" />
+                  <div className="mt-2 font-bold">Visual learning library</div>
+                  <div className="mt-1 text-xs text-[hsl(var(--muted-foreground))]">Controlled online concept resources; written learning stays offline.</div>
+                </button>
+                <button type="button" onClick={() => openSection('ask')} className="border border-[hsl(var(--border))] p-3 text-left">
+                  <Languages size={18} className="text-[hsl(var(--primary))]" />
+                  <div className="mt-2 font-bold">Trade terminology</div>
+                  <div className="mt-1 text-xs text-[hsl(var(--muted-foreground))]">Open the existing local terminology search under Ask.</div>
+                </button>
+              </div>
+            </section>
+            <section className="mt-4"><SafetyPanel language={language} /></section>
+          </>
+        ) : (
+          <>
+            <section className="panel bracket-corner p-4 sm:p-5">
+              <div className="eyebrow mb-2">Check</div>
+              <h2 className="section-heading">Progress and learning checks.</h2>
+              <p className="mt-2 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
+                Existing learning checks remain inside their verified modules. Progress is stored locally on this browser/device; no learner account is required.
+              </p>
+              <div className="mt-4 grid grid-cols-3 gap-2">
+                <div className="border border-[hsl(var(--border))] p-3 text-center">
+                  <div className="text-xl font-bold text-[hsl(var(--primary))]">{startedCount(knowledgeModules)}/8</div>
+                  <div className="mt-1 text-[.62rem] uppercase tracking-[.08em] text-[hsl(var(--muted-foreground))]">KM started</div>
+                </div>
+                <div className="border border-[hsl(var(--border))] p-3 text-center">
+                  <div className="text-xl font-bold text-[hsl(var(--primary))]">{startedCount(practicalModules as typeof knowledgeModules)}/18</div>
+                  <div className="mt-1 text-[.62rem] uppercase tracking-[.08em] text-[hsl(var(--muted-foreground))]">PM started</div>
+                </div>
+                <div className="border border-[hsl(var(--border))] p-3 text-center">
+                  <div className="text-xl font-bold text-[hsl(var(--primary))]">{startedCount(workplaceModules as typeof knowledgeModules)}/14</div>
+                  <div className="mt-1 text-[.62rem] uppercase tracking-[.08em] text-[hsl(var(--muted-foreground))]">WM started</div>
+                </div>
+              </div>
+              <div className="mt-4 border border-[hsl(var(--border))] p-3 text-xs leading-relaxed text-[hsl(var(--muted-foreground))]">
+                <strong className="text-[hsl(var(--foreground))]">Continue:</strong> {lastStarted.code} · {lastStarted.title}. {progressFor(lastStarted.code) > 0 ? `${progressFor(lastStarted.code)} item(s) already marked.` : 'No local progress marked yet.'}
+              </div>
+              <button type="button" onClick={() => { setSection('learn'); setLearnGroup(lastStarted.code.startsWith('KM') ? 'knowledge' : lastStarted.code.startsWith('PM') ? 'practical' : 'workplace'); setActiveModule(lastStarted.code); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="mt-3 w-full border border-[hsl(var(--primary))] px-4 py-3 text-sm font-bold uppercase tracking-[.08em] text-[hsl(var(--primary))]">
+                Open current learning check
+              </button>
+              <div className="mt-3 text-[.65rem] uppercase tracking-[.08em] text-[hsl(var(--muted-foreground))]">Modules started on this device: {completedModules}/40</div>
             </section>
           </>
         )}
